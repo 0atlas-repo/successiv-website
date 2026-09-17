@@ -30,7 +30,8 @@ client names and internal repo slugs. It fails the build on a hit.
 ## Stack
 
 Astro + Tailwind v4 + TypeScript, static output, deployed to GitHub Pages on the
-custom domain `successiv.com`.
+custom domain `successiv.com`. Deployment, and the open hosting blocker, are in
+`docs/DEPLOYMENT.md`.
 
 `docs/BUILD.md` suggests Next.js; Astro was chosen instead because the existing
 work at `successiv.com/rebuild/` was already Astro with the brand tokens in
@@ -42,8 +43,9 @@ place, and static output is a cleaner fit for Pages.
   are data, not markup — change them there, not in a page.
 - Components use semantic colour tokens only (`bg-bg`, `text-fg`, `bg-action`).
   Never a raw hex, or the light theme breaks.
-- Two themes ship. Dark is the brand; light is derived. Check both before
-  calling a change done.
+- Two themes ship. Light is the default surface, per
+  `docs/hiring/DESIGNER_BRIEF.md`; dark is the alternate, applied on explicit
+  choice or when the OS asks for it. Check both before calling a change done.
 
 ## Prefer
 
