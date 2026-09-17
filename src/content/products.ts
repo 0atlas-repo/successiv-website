@@ -5,13 +5,17 @@
 // page: three paragraphs minimum, enforced by scripts/verify.mjs, and every
 // claim in it traceable to something the product actually does.
 //
-// Two deliberate exceptions, both founder decisions, both recorded in
+// Two entries are hidden and one is qualified, all founder decisions, recorded in
 // local_pm/projects/capability-depth/specs/capability-depth.md:
 //
-//   1line.ai is a working product, but it has not been cleared for publication.
-//   Its page stays a placeholder and stays noindex. `needsCopy` exempts it from
-//   the three-paragraph rule. Do not "fix" this in a later pass — publishing it
-//   is a commercial decision, not a content gap.
+//   1line.ai and Leave are hidden (2026-09-17). `hidden` keeps the entry here but
+//   takes it off the grid and stops its page being built, so nothing about either
+//   product ships. The copy is kept rather than deleted because both are real:
+//   1line.ai is a working LLM gateway the founder has not cleared for publication,
+//   and Leave's copy was grounded only in a one-shot importer, so it claims
+//   nothing about screens or balances. Unhiding is one line; do not do it without
+//   asking. `needsCopy` on 1line.ai still exempts it from the three-paragraph rule
+//   if it ever comes back.
 //
 //   Accounting is pre-release. It is described as what it is, with `preRelease`
 //   set so the page says so plainly. No launch date is claimed, because none
@@ -54,11 +58,13 @@ export interface Product {
   needsCopy?: boolean;
   /** Set when the product is real but not yet released. */
   preRelease?: boolean;
+  /** Set to take the product off the site entirely — no card, no page, no sitemap entry. */
+  hidden?: boolean;
   /** The product's own site, when it has one. */
   url?: string;
 }
 
-export const products: Product[] = [
+const allProducts: Product[] = [
   {
     // Content below is taken from the product's own site, creatorsphere.sg, and
     // from the product itself. Note the product brands itself "Creators Sphere"
@@ -149,6 +155,7 @@ export const products: Product[] = [
     screens: ['calendar'],
     cta: 'Talk to us',
     category: 'Microsoft 365',
+    hidden: true,
   },
   {
     slug: 'accounting',
@@ -190,7 +197,12 @@ export const products: Product[] = [
     cta: 'Talk to us',
     category: 'In development',
     needsCopy: true,
+    hidden: true,
   },
 ];
+
+// Everything downstream — the grid, the routes, the sitemap — reads this, so a
+// hidden product disappears from the site by being filtered once, here.
+export const products: Product[] = allProducts.filter((p) => !p.hidden);
 
 export const getProduct = (slug: string) => products.find((p) => p.slug === slug);

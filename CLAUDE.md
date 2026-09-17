@@ -9,7 +9,7 @@ Build the Successiv marketing site from those docs. Product-led. No real client 
 
 ## Products on the homepage product grid
 
-Creators Sphere, Shopmgr, KYC, Leave, Accounting, 1line.ai.
+Creators Sphere, Shopmgr, KYC, Accounting.
 
 Accounting was added 2026-09-17. It is a real product in closed beta, shipped
 with `preRelease: true` so the page says so. No launch date is claimed because
@@ -18,15 +18,21 @@ none has been given.
 The product brands itself "Creators Sphere" (plural) on its own site at
 creatorsphere.sg. `docs/BRIEF.md` calls it "Creator Sphere"; the live product wins.
 
-1line.ai was added on the founder's explicit sign-off (2026-09-17), which is the
-confirmation `docs/BRIEF.md` asked for. Its copy is honest placeholder and is
-flagged with `needsCopy: true` in `src/content/products.ts`.
+## Hidden products (2026-09-17)
 
-**1line.ai is not a content gap.** It is a working product — an LLM gateway with
-metering and billing — that the founder has not cleared for publication. The
-placeholder is the decision, not an omission. Do not write copy for it without
-asking. `scripts/verify.mjs` exempts it from the three-paragraph rule by name
-and asserts it stays a noindexed placeholder.
+**1line.ai and Leave are hidden at the founder's instruction.** Both carry
+`hidden: true` in `src/content/products.ts`. The entries stay in the file; the
+`products` export filters them, so there is no card, no `/products/<slug>/` page,
+and no sitemap entry. `scripts/verify.mjs` asserts both pages are absent, so
+unhiding one by accident fails the build.
+
+Neither is a content gap. 1line.ai is a working LLM gateway with metering and
+billing that has not been cleared for publication — the `needsCopy` placeholder
+and the depth exemption in `scripts/verify.mjs` still apply if it returns. Leave
+is real but its copy was grounded only in a one-shot importer, so it claimed
+nothing about screens or balances. Do not unhide either without asking.
+
+Two previously live URLs now 404: `/products/leave/` and `/products/1line-ai/`.
 
 ## Claims must trace to code (2026-09-17)
 

@@ -22,6 +22,13 @@
 > A sixth product, **Accounting**, was added pre-release. Where this brief and
 > `local_pm/projects/capability-depth/specs/capability-depth.md` disagree, the spec
 > is newer and wins.
+>
+> **Later the same day, two products were hidden** at the founder's instruction:
+> **Leave** and **1line.ai**. Both are listed as products below and neither is on
+> the site — no card, no page, no sitemap entry. The copy is kept behind a
+> `hidden: true` flag in `src/content/products.ts`. Do not reinstate either from
+> this brief; see the `## Hidden products` section of `CLAUDE.md`. Four products
+> ship: Creators Sphere, Shopmgr, KYC, Accounting.
 
 ---
 

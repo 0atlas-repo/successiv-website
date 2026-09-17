@@ -173,3 +173,18 @@ So 13 entries take new copy, not 15.
 A recon agent flagged a possible open-redirect on a live public marketing site in
 the CMS group: a contact form forwards to a CRM using a URL taken from the
 request. Not verified, not this task, not our repo — but worth telling the owner.
+
+---
+
+## Addendum — 2026-09-17, after shipping
+
+The founder then asked to hide two of the six products: **1line.ai** and
+**Leave**. Both carry `hidden: true` in `src/content/products.ts`; the `products`
+export filters them, so no card, page or sitemap entry is produced. The copy is
+kept rather than deleted, because both products are real and the decision is
+about publication, not accuracy.
+
+This supersedes the counts in this spec. Four products ship: Creators Sphere,
+Shopmgr, KYC, Accounting. The depth exemption for 1line.ai in `scripts/verify.mjs`
+is retained for the case where it is unhidden. Detail is in the session entry in
+`local_pm/logs/2026-09-17.md`.

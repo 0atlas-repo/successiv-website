@@ -5,14 +5,17 @@ One row per active plan. If it is not here, it does not exist.
 | Plan | Status | Next action |
 |---|---|---|
 | [Product-led site build](projects/product-led-site/plans/build.md) | built, awaiting sign-off | Founder review, then enable Pages + DNS |
-| [Capability depth](projects/capability-depth/specs/capability-depth.md) | merged to main, not deployed | Push to origin when ready — pushing publishes the live site |
+| [Capability depth](projects/capability-depth/specs/capability-depth.md) | shipped and live at cb92cd7 | Done. Two products hidden since, see loose tasks |
 
 ## Loose tasks
 
-- 1line.ai: the placeholder is a DECISION, not a gap. It is a working LLM gateway
-  the founder has not cleared for publication. Do not write copy for it without asking.
-- Leave: no product repo exists, only a one-shot importer, so its copy claims nothing
-  about screens or balances. Rewrite if the founder supplies real detail.
+- HIDDEN 2026-09-17: 1line.ai and Leave both carry `hidden: true`, so no card, no
+  page, no sitemap entry. The copy is kept in src/content/products.ts, not deleted.
+  Unhiding is one line each — do not do it without asking.
+  - 1line.ai: a working LLM gateway the founder has not cleared for publication.
+    The placeholder is a DECISION, not a gap.
+  - Leave: no product repo exists, only a one-shot importer, so its copy claimed
+    nothing about screens or balances. Rewrite before unhiding.
 - Run a cross-entry noun diff across the entries that trace to one client relationship.
   The tender/contract pair was softened by hand; the rest was not systematically checked.
 - Decide whether the second creator marketplace (unpublished) is an earlier incarnation

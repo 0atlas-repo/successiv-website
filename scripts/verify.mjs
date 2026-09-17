@@ -81,7 +81,7 @@ console.log('\n2. Routes — every route in the sitemap must exist');
 const routes = [
   '', 'products', 'work', 'capabilities', 'about', 'contact',
   'products/creators-sphere', 'products/shopmgr', 'products/kyc',
-  'products/leave', 'products/accounting', 'products/1line-ai',
+  'products/accounting',
   'work/tender-rfp-management', 'work/contract-lifecycle',
   'work/document-bundling-redaction', 'work/ops-incident-support',
   'work/content-cms-platforms', 'work/sharepoint-extensions',
@@ -94,11 +94,25 @@ for (const r of routes) {
 
 // ---------------------------------------------------------------------------
 console.log('\n3. Products — BRIEF.md requires six fields on every product');
-const productsSrc = readFileSync(join(root, 'src/content/products.ts'), 'utf8');
-const slugs = [...productsSrc.matchAll(/slug: '([^']+)'/g)].map((m) => m[1]);
-slugs.length === 6
-  ? pass(`6 products defined: ${slugs.join(', ')}`)
-  : fail(`expected 6 products, found ${slugs.length}`);
+// Discover from the BUILT output, not from a grep of products.ts. The source
+// still holds the hidden entries, so a source grep counts products that never
+// ship — and would then read a page that does not exist, killing this script
+// instead of failing a check.
+const slugs = readdirSync(join(dist, 'products'), { withFileTypes: true })
+  .filter((e) => e.isDirectory())
+  .map((e) => e.name)
+  .sort();
+slugs.length === 4
+  ? pass(`4 products shipped: ${slugs.join(', ')}`)
+  : fail(`expected 4 products, found ${slugs.length}: ${slugs.join(', ')}`);
+
+// Hiding a product is a founder decision, so assert it rather than leaving the
+// count above to catch a regression by accident. The failure names what broke.
+for (const slug of ['leave', '1line-ai']) {
+  existsSync(join(dist, 'products', slug, 'index.html'))
+    ? fail(`${slug} is hidden but its page was built`)
+    : pass(`${slug}: hidden, no page built`);
+}
 
 for (const slug of slugs) {
   const html = readFileSync(join(dist, 'products', slug, 'index.html'), 'utf8');
@@ -130,8 +144,10 @@ const depthOf = (html, heading) => {
   return (html.slice(start, end).match(/<p[\s>]/g) || []).length;
 };
 
-// 1line.ai is a deliberate exception: a real product the founder has not
-// cleared for publication, so it ships as a placeholder. Exempt by name, so
+// 1line.ai is hidden as of 2026-09-17, so this loop never reaches it — `slugs`
+// now comes from the built output. The exemption stays because it is the rule
+// that applies if the product is ever unhidden: a real product the founder has
+// not cleared for publication, shipping as a placeholder. Exempt by name, so
 // that adding a second exemption is a visible decision rather than a quiet one.
 const depthExempt = new Set(['1line-ai']);
 
