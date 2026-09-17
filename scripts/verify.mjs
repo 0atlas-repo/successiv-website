@@ -6,6 +6,7 @@
 // one: it greps the BUILT output, because that is what actually ships.
 
 import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { join, relative } from 'node:path';
 
 const root = new URL('..', import.meta.url).pathname;
@@ -30,32 +31,50 @@ const allFiles = walk(dist);
 const htmlFiles = allFiles.filter((f) => f.endsWith('.html'));
 
 // ---------------------------------------------------------------------------
-console.log('\n1. Client safety — no real client name or internal slug may ship');
-// Real client names and the private repo slugs from the BRIEF.md mapping table.
-// "[redacted-client]" and "[redacted-client]" are matched with word boundaries so ordinary words do not trip them.
-const forbidden = [
-  /\b[redacted-client]\b/i, /\b[redacted-client]\b/i, /\b[redacted-client]\b/i, /\b[redacted-client]\b/i,
-  /\b[redacted-client]\b/i, /\b[redacted-client]\b/i, /\b[redacted-client]\b/i, /\b[redacted-client]\b/i,
-  /[redacted-slug]/i, /[redacted-slug]/i, /[redacted-slug]/i,
-  /[redacted-slug]/i, /[redacted-slug]/i, /[redacted-slug]/i, /[redacted-slug]/i,
-  // Former employers. The founder asked that neither be named: the site
-  // describes them instead ("a global investment bank", "a Fortune 100
-  // insurer"). Gated here so a later edit cannot reintroduce them.
-  /[redacted-employer]/i, /[redacted-employer]/i, /liberty\s*mutual/i,
-  /[redacted-slug]/i, /[redacted-slug]/i, /[redacted-slug]/i, /0atlas-repo/i,
-];
-let leaks = 0;
-for (const file of allFiles.filter((f) => /\.(html|css|js|txt|xml)$/.test(f))) {
-  const text = readFileSync(file, 'utf8');
-  for (const pattern of forbidden) {
-    const hit = text.match(pattern);
-    if (hit) {
-      fail(`${relative(dist, file)} contains "${hit[0]}"`);
-      leaks++;
+console.log('\n1. Client safety - no real client name or internal slug may ship');
+// The terms themselves are NOT stored here. This repository is public, and a
+// plaintext list of forbidden client names leaks exactly what the site exists
+// to protect: the list is as revealing as the mapping table it guards.
+//
+// scripts/forbidden-hashes.json holds salted SHA-256 prefixes instead. The built
+// output is tokenised, each token and adjacent pair is hashed the same way, and
+// the hashes are compared.
+//
+// Be clear about what this is: obfuscation, not secrecy. The salt is committed,
+// so anyone who already suspects a specific name can confirm it by hashing their
+// guess. What it does stop is the thing that actually happens - the repo being
+// grepped, or indexed, and handing the client list over for free. For real
+// secrecy, move the list to a CI secret and inject it at build time.
+const { salt, separator, hashes } = JSON.parse(
+  readFileSync(join(root, 'scripts/forbidden-hashes.json'), 'utf8')
+);
+const forbiddenHashes = new Set(hashes);
+const digest = (term) =>
+  createHash('sha256').update(salt + separator + term).digest('hex').slice(0, 32);
+
+function scanForbidden(text) {
+  // Hyphens and underscores stay inside tokens so slugs survive tokenising.
+  const tokens = text.toLowerCase().match(/[a-z0-9][a-z0-9_-]*/g) || [];
+  const hits = new Set();
+  for (let i = 0; i < tokens.length; i++) {
+    if (forbiddenHashes.has(digest(tokens[i]))) hits.add(tokens[i]);
+    if (i + 1 < tokens.length) {
+      const pair = tokens[i] + ' ' + tokens[i + 1];
+      if (forbiddenHashes.has(digest(pair))) hits.add(pair);
     }
   }
+  return [...hits];
 }
-if (leaks === 0) pass(`no forbidden terms in ${allFiles.length} built files`);
+
+let leaks = 0;
+for (const file of allFiles.filter((f) => /\.(html|css|js|txt|xml)$/.test(f))) {
+  for (const hit of scanForbidden(readFileSync(file, 'utf8'))) {
+    // Do not echo the term - this output can land in a public CI log.
+    fail(relative(dist, file) + ' contains a forbidden term (' + hit.length + ' chars)');
+    leaks++;
+  }
+}
+if (leaks === 0) pass('no forbidden terms in ' + allFiles.length + ' built files');
 
 // ---------------------------------------------------------------------------
 console.log('\n2. Routes — every route in the sitemap must exist');
