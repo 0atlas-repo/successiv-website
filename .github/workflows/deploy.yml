@@ -25,7 +25,7 @@ jobs:
       # static_site_generator: next|astro — it injects a base path derived from
       # the Pages URL, which is wrong for a custom domain served at the root.
       # astro.config.mjs sets `site` explicitly instead.
-      - uses: withastro/action@v4
+      - uses: withastro/action@v6
 
   deploy:
     needs: build

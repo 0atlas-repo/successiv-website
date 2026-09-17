@@ -18,7 +18,11 @@ const { product } = Astro.props;
 
 const others = products.filter((p) => p.slug !== product.slug);
 ---
-<Base title={product.name} description={`${product.oneLiner} ${product.problem}`}>
+<Base
+  title={product.name}
+  description={product.needsCopy ? product.oneLiner : `${product.oneLiner} ${product.problem}`}
+  noindex={product.needsCopy}
+>
   <!-- Intro: claim on the left, the product screen on the right. -->
   <section class="hero-wash border-b border-line pb-20 pt-[88px]">
     <div class="mx-auto max-w-[1180px] px-6">
