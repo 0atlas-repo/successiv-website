@@ -1,0 +1,229 @@
+@import "tailwindcss";
+
+/* ============================================================
+   Successiv — brand tokens
+
+   Brand constants come from the official logo artwork
+   (reference/successiv-logo-h.svg) and the shipped site CSS:
+
+     cyan   #5acaed   logo + site
+     ink    #231f20   logo's true black
+     indigo #384f9e   logo's blue
+     navy   #0047bb   site's "Deep Tech Blue"
+
+   Dark is the brand default. Light is derived, not inverted:
+   cyan on white is ~1.9:1 and fails AA, so light mode promotes
+   navy to the action colour and demotes cyan to decoration.
+   ============================================================ */
+
+@theme {
+  /* Brand constants — identical in both themes */
+  --color-cyan: #5acaed;
+  --color-navy: #0047bb;
+  --color-navy-deep: #0a1a4a;
+  --color-indigo: #384f9e;
+  --color-ink: #231f20;
+
+  /* Semantic tokens — these flip per theme. Components use only these. */
+  --color-bg: #0e0d0f;
+  --color-surface: #17151a;
+  --color-surface-2: #201d24;
+  --color-fg: #ffffff;
+  --color-fg-muted: #9aa0b4;
+  --color-fg-subtle: #7d8399;
+  --color-line: rgba(255, 255, 255, 0.09);
+  --color-line-strong: rgba(255, 255, 255, 0.18);
+  --color-action: #5acaed;
+  --color-on-action: #0a1a4a;
+  --color-accent: #5acaed;
+
+  --font-head: "Space Grotesk", "DM Sans", sans-serif;
+  --font-body: "DM Sans", sans-serif;
+
+  --ease-brand: cubic-bezier(0.16, 1, 0.3, 1);
+  --radius-brand: 16px;
+}
+
+/* ---------- Light theme ----------
+   Applied when the system asks for light and the visitor has not
+   explicitly chosen dark, or when they have explicitly chosen light.
+   Contrast on #ffffff: ink 16.3:1 · navy 8.0:1 · muted 7.4:1 · subtle 5.4:1
+*/
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --color-bg: #ffffff;
+    --color-surface: #f6f7f9;
+    --color-surface-2: #eef1f5;
+    --color-fg: #231f20;
+    --color-fg-muted: #56545e;
+    --color-fg-subtle: #6b6975;
+    --color-line: rgba(35, 31, 32, 0.12);
+    --color-line-strong: rgba(35, 31, 32, 0.24);
+    --color-action: #0047bb;
+    --color-on-action: #ffffff;
+    --color-accent: #0047bb;
+  }
+}
+
+:root[data-theme="light"] {
+  --color-bg: #ffffff;
+  --color-surface: #f6f7f9;
+  --color-surface-2: #eef1f5;
+  --color-fg: #231f20;
+  --color-fg-muted: #56545e;
+  --color-fg-subtle: #6b6975;
+  --color-line: rgba(35, 31, 32, 0.12);
+  --color-line-strong: rgba(35, 31, 32, 0.24);
+  --color-action: #0047bb;
+  --color-on-action: #ffffff;
+  --color-accent: #0047bb;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--color-bg);
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 200ms var(--ease-brand), color 200ms var(--ease-brand);
+}
+
+h1, h2, h3 {
+  font-family: var(--font-head);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+/* Theme-aware logo: show one wordmark, hide the other. */
+[data-logo="dark"] { display: none; }
+[data-logo="light"] { display: block; }
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) [data-logo="light"] { display: none; }
+  :root:not([data-theme="dark"]) [data-logo="dark"] { display: block; }
+}
+:root[data-theme="light"] [data-logo="light"] { display: none; }
+:root[data-theme="light"] [data-logo="dark"] { display: block; }
+:root[data-theme="dark"] [data-logo="light"] { display: block; }
+:root[data-theme="dark"] [data-logo="dark"] { display: none; }
+
+/* ---------- Hero wash ----------
+   Cyan/navy bloom. Rebalanced in light mode or it turns muddy.
+*/
+.hero-wash {
+  background:
+    radial-gradient(1100px 620px at 82% -10%, color-mix(in oklab, var(--color-cyan) 16%, transparent), transparent 60%),
+    radial-gradient(900px 500px at 10% 10%, color-mix(in oklab, var(--color-navy) 28%, transparent), transparent 55%),
+    var(--color-bg);
+}
+:root[data-theme="light"] .hero-wash {
+  background:
+    radial-gradient(1100px 620px at 82% -10%, color-mix(in oklab, var(--color-cyan) 22%, transparent), transparent 62%),
+    radial-gradient(900px 500px at 10% 10%, color-mix(in oklab, var(--color-navy) 10%, transparent), transparent 58%),
+    var(--color-bg);
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) .hero-wash {
+    background:
+      radial-gradient(1100px 620px at 82% -10%, color-mix(in oklab, var(--color-cyan) 22%, transparent), transparent 62%),
+      radial-gradient(900px 500px at 10% 10%, color-mix(in oklab, var(--color-navy) 10%, transparent), transparent 58%),
+      var(--color-bg);
+  }
+}
+
+/* Card surface — a subtle lift off the page background. */
+.surface-card {
+  background: linear-gradient(160deg, var(--color-surface-2), var(--color-surface));
+}
+
+/* Reveal-on-scroll */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 700ms var(--ease-brand), transform 700ms var(--ease-brand);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Gradient text — cyan→navy reads on dark; navy→indigo on light. */
+.grad-text {
+  background: linear-gradient(100deg, var(--color-cyan) 10%, var(--color-navy) 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+:root[data-theme="light"] .grad-text {
+  background: linear-gradient(100deg, var(--color-navy) 10%, var(--color-indigo) 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) .grad-text {
+    background: linear-gradient(100deg, var(--color-navy) 10%, var(--color-indigo) 90%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
+
+/* Marquee */
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee-track {
+  animation: marquee-scroll 26s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .marquee-track { animation: none; }
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* ---------- Mock UI chrome ----------
+   The mocked product screens are the hero element on this site, so their frame
+   does the same work a real screenshot's would: lift it off the page, give it
+   an edge, and let a coloured wash sit behind it.
+*/
+.mock-frame {
+  box-shadow:
+    0 32px 64px -28px color-mix(in oklab, var(--color-navy) 55%, transparent),
+    0 4px 12px -4px rgba(0, 0, 0, 0.35);
+}
+:root[data-theme="light"] .mock-frame {
+  box-shadow:
+    0 32px 64px -28px color-mix(in oklab, var(--color-navy) 22%, transparent),
+    0 2px 8px -4px rgba(35, 31, 32, 0.12);
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) .mock-frame {
+    box-shadow:
+      0 32px 64px -28px color-mix(in oklab, var(--color-navy) 22%, transparent),
+      0 2px 8px -4px rgba(35, 31, 32, 0.12);
+  }
+}
+
+/* A soft bloom behind a floating mock. */
+.mock-wash {
+  background: radial-gradient(60% 55% at 50% 40%, color-mix(in oklab, var(--color-cyan) 18%, transparent), transparent 70%);
+}

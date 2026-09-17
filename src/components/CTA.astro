@@ -1,0 +1,25 @@
+---
+import { site } from '../content/site';
+import Btn from './Btn.astro';
+
+interface Props {
+  kicker?: string;
+  title?: string;
+  lede?: string;
+}
+const {
+  kicker = 'Get in touch',
+  title = 'Have a problem worth building for?',
+  lede = 'Tell us what you’re building. We’ll say if a product fits or if it’s a build.',
+} = Astro.props;
+---
+<section class="border-t border-line bg-surface py-[110px] text-center">
+  <div class="mx-auto max-w-[640px] px-6">
+    <p class="reveal mb-5 font-head text-[13px] font-semibold uppercase tracking-[0.14em] text-accent">{kicker}</p>
+    <h2 class="reveal text-[clamp(28px,4.5vw,44px)] text-fg">{title}</h2>
+    <p class="reveal mb-9 mt-4 text-[17px] text-fg-muted">{lede}</p>
+    <div class="reveal flex justify-center">
+      <Btn href={`mailto:${site.email}`} size="lg">{site.email}</Btn>
+    </div>
+  </div>
+</section>

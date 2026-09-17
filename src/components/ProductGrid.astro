@@ -1,0 +1,20 @@
+---
+import { products } from '../content/products';
+import ProductCard from './ProductCard.astro';
+import SectionHead from './SectionHead.astro';
+
+interface Props { kicker?: string; title?: string; lede?: string }
+const {
+  kicker = '01 — Our products',
+  title = 'Five products we build and run ourselves.',
+  lede = 'Each one solves a problem we kept meeting in delivery work. Every screen below is an illustration, not a customer’s data.',
+} = Astro.props;
+---
+<section id="products" class="py-[100px]">
+  <div class="mx-auto max-w-[1180px] px-6">
+    <SectionHead kicker={kicker} title={title} lede={lede} />
+    <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+      {products.map((p) => <ProductCard product={p} />)}
+    </div>
+  </div>
+</section>

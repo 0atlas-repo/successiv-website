@@ -1,0 +1,78 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import WorkMock from '../../components/mocks/WorkMock.astro';
+import CTA from '../../components/CTA.astro';
+import { featuredWork, listedWork } from '../../content/work';
+---
+<Base
+  title="Work"
+  description="Anonymised delivery work: tender and contract portals, document signing, incident reporting, and more."
+>
+  <PageHero
+    kicker="Work"
+    title="We usually can't name clients. So we show how the systems work."
+    lede="Each engagement below is titled by what it does, not who it was for. The screens are illustrations we drew, not customer software."
+  />
+
+  <section class="py-[90px]">
+    <div class="mx-auto max-w-[1180px] px-6">
+      <div class="space-y-6">
+        {featuredWork.map((w, i) => (
+          <article class="reveal grid gap-8 overflow-hidden rounded-[18px] border border-line surface-card p-6 md:p-8 lg:grid-cols-[1fr_0.8fr] lg:items-center">
+            <div class:list={[i % 2 === 1 ? 'lg:order-2' : '']}>
+              <span class="font-head text-[11px] uppercase tracking-[0.1em] text-fg-subtle">{w.angle}</span>
+              <h2 class="mt-2 font-head text-[clamp(22px,3vw,28px)] font-semibold text-fg">{w.title}</h2>
+
+              <dl class="mt-5 space-y-4">
+                <div>
+                  <dt class="font-head text-[11px] font-semibold uppercase tracking-[0.1em] text-accent">Problem</dt>
+                  <dd class="mt-1 text-[15px] text-fg-muted">{w.problem}</dd>
+                </div>
+                <div>
+                  <dt class="font-head text-[11px] font-semibold uppercase tracking-[0.1em] text-accent">Approach</dt>
+                  <dd class="mt-1 text-[15px] text-fg-muted">{w.approach}</dd>
+                </div>
+                <div>
+                  <dt class="font-head text-[11px] font-semibold uppercase tracking-[0.1em] text-accent">Outcome</dt>
+                  <dd class="mt-1 text-[15px] text-fg-muted">{w.outcome}</dd>
+                </div>
+              </dl>
+            </div>
+
+            <div class="relative max-lg:mx-auto max-lg:max-w-[420px]">
+              <div class="mock-wash pointer-events-none absolute -inset-8" aria-hidden="true"></div>
+              <div class="relative"><WorkMock mock={w.mock} /></div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="border-t border-line py-[90px]">
+    <div class="mx-auto max-w-[1180px] px-6">
+      <div class="reveal mb-10 max-w-[640px]">
+        <span class="mb-4 inline-block font-head text-[13px] font-semibold uppercase tracking-[0.12em] text-accent">
+          Also delivered
+        </span>
+        <h2 class="text-[clamp(28px,4vw,40px)] text-fg">Other systems we've built.</h2>
+      </div>
+
+      <div class="border-t border-line">
+        {listedWork.map((w) => (
+          <div class="reveal grid grid-cols-1 items-baseline gap-1 border-b border-line py-6 sm:grid-cols-[1fr_auto] sm:gap-6">
+            <h3 class="font-head text-[18px] font-medium text-fg">{w.title}</h3>
+            <p class="text-[14px] text-fg-subtle">{w.angle}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CTA
+    kicker="Get in touch"
+    title="Recognise your own problem in one of these?"
+    lede="Tell us what you're trying to solve. We'll say honestly whether it's a product fit or a build."
+  />
+</Base>

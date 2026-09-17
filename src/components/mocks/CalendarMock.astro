@@ -1,0 +1,41 @@
+---
+import MockFrame from './MockFrame.astro';
+const days = ['M', 'T', 'W', 'T', 'F'];
+const people = [
+  { name: 'Team member A', out: [2, 3] },
+  { name: 'Team member B', out: [] },
+  { name: 'Team member C', out: [4] },
+];
+---
+<MockFrame title="Leave — March" meta="Team view">
+  <div class="space-y-3">
+    <div class="grid grid-cols-[1fr_repeat(5,22px)] items-center gap-1.5">
+      <span></span>
+      {days.map((d) => (
+        <span class="text-center font-head text-[9px] font-semibold uppercase text-fg-subtle">{d}</span>
+      ))}
+    </div>
+
+    {people.map((p) => (
+      <div class="grid grid-cols-[1fr_repeat(5,22px)] items-center gap-1.5">
+        <span class="truncate text-[10.5px] text-fg">{p.name}</span>
+        {[0, 1, 2, 3, 4].map((i) => (
+          <span
+            class:list={[
+              'h-5 rounded-[5px] border',
+              p.out.includes(i) ? 'border-transparent bg-action' : 'border-line bg-bg/40',
+            ]}
+          ></span>
+        ))}
+      </div>
+    ))}
+
+    <div class="flex items-center gap-2 rounded-lg border border-line bg-bg/40 px-2.5 py-2">
+      <div class="min-w-0 flex-1">
+        <div class="truncate font-head text-[10.5px] font-medium text-fg">Annual leave · 2 days</div>
+        <div class="text-[10px] text-fg-subtle">Balance after: 11.5 days</div>
+      </div>
+      <span class="shrink-0 rounded-full bg-action px-2.5 py-1 font-head text-[9px] font-semibold text-on-action">Approve</span>
+    </div>
+  </div>
+</MockFrame>

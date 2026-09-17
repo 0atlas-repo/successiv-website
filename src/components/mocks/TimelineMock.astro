@@ -1,0 +1,32 @@
+---
+import MockFrame from './MockFrame.astro';
+const events = [
+  { label: 'Contract awarded', date: 'Jan', done: true },
+  { label: 'Variation 01 approved', date: 'Apr', done: true },
+  { label: 'Interim certificate', date: 'Jul', done: true },
+  { label: 'Claim under review', date: 'Now', done: false },
+];
+---
+<MockFrame title="Contract — CW-204" meta="Active">
+  <div class="space-y-0">
+    {events.map((e, i) => (
+      <div class="grid grid-cols-[14px_1fr] gap-2.5">
+        <div class="flex flex-col items-center">
+          <span
+            class:list={[
+              'mt-0.5 block h-2.5 w-2.5 shrink-0 rounded-full border-2',
+              e.done ? 'border-action bg-action' : 'border-action bg-bg',
+            ]}
+          ></span>
+          {i < events.length - 1 && <span class="w-px flex-1 bg-line"></span>}
+        </div>
+        <div class:list={[i < events.length - 1 ? 'pb-3.5' : '']}>
+          <div class="flex items-baseline gap-2">
+            <span class:list={['truncate text-[10.5px]', e.done ? 'text-fg-muted' : 'font-medium text-fg']}>{e.label}</span>
+            <span class="ml-auto shrink-0 font-head text-[9px] uppercase tracking-[0.08em] text-fg-subtle">{e.date}</span>
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+</MockFrame>

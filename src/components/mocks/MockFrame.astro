@@ -1,0 +1,42 @@
+---
+// Shared chrome for every mocked screen.
+//
+// These are hand-built representations, never real screenshots — CLAUDE.md
+// forbids using proprietary UI. Labels inside are deliberately neutral
+// ("Store A", "Vendor", "Applicant").
+interface Props {
+  title: string;
+  /** Small right-aligned label in the title bar, e.g. a count or status. */
+  meta?: string;
+  class?: string;
+}
+const { title, meta, class: className = '' } = Astro.props;
+---
+
+<div
+  class:list={[
+    'mock-frame surface-card overflow-hidden rounded-[14px] border border-line',
+    className,
+  ]}
+  role="img"
+  aria-label={`Illustrative mockup: ${title}`}
+>
+  <div class="flex items-center gap-2 border-b border-line px-4 py-2.5">
+    <span aria-hidden="true" class="flex gap-1.5">
+      <span class="block h-2 w-2 rounded-full bg-fg-subtle/40"></span>
+      <span class="block h-2 w-2 rounded-full bg-fg-subtle/40"></span>
+      <span class="block h-2 w-2 rounded-full bg-fg-subtle/40"></span>
+    </span>
+    <span class="ml-1 truncate font-head text-[11px] font-medium tracking-[0.04em] text-fg-subtle">
+      {title}
+    </span>
+    {meta && (
+      <span class="ml-auto shrink-0 font-head text-[10px] uppercase tracking-[0.1em] text-fg-subtle">
+        {meta}
+      </span>
+    )}
+  </div>
+  <div class="p-4" aria-hidden="true">
+    <slot />
+  </div>
+</div>

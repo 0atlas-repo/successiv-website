@@ -1,0 +1,15 @@
+---
+interface Props {
+  kicker: string;
+  title: string;
+  lede?: string;
+}
+const { kicker, title, lede } = Astro.props;
+---
+<section class="hero-wash border-b border-line pb-16 pt-[88px]">
+  <div class="mx-auto max-w-[1180px] px-6">
+    <p class="reveal mb-5 font-head text-[13px] font-semibold uppercase tracking-[0.14em] text-accent">{kicker}</p>
+    <h1 class="reveal max-w-[820px] text-[clamp(32px,5vw,54px)] text-fg">{title}</h1>
+    {lede && <p class="reveal mt-5 max-w-[620px] text-[17px] text-fg-muted">{lede}</p>}
+  </div>
+</section>

@@ -1,0 +1,50 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Btn from '../../components/Btn.astro';
+import { site } from '../../content/site';
+---
+<Base
+  title="Contact"
+  description={`Tell us what you're building. Email ${site.email}.`}
+>
+  <PageHero
+    kicker="Contact"
+    title="Tell us what you're building."
+    lede="We'll say if one of our products fits, or if it's a build — and we'll say so honestly if it's neither."
+  />
+
+  <section class="py-[90px]">
+    <div class="mx-auto max-w-[1180px] px-6">
+      <div class="grid gap-10 md:grid-cols-[1fr_1fr]">
+        <div class="reveal">
+          <h2 class="font-head text-[22px] font-semibold text-fg">Email us</h2>
+          <p class="mt-2 max-w-[440px] text-[16px] text-fg-muted">
+            There's no form here on purpose — mail reaches a person directly.
+          </p>
+          <div class="mt-6">
+            <Btn href={`mailto:${site.email}`} size="lg">{site.email}</Btn>
+          </div>
+        </div>
+
+        <div class="reveal">
+          <h2 class="font-head text-[22px] font-semibold text-fg">Who you'll hear from</h2>
+          <ul class="mt-4 space-y-3">
+            {site.team.map((m) => (
+              <li class="flex flex-wrap items-baseline gap-x-3 gap-y-1 border-b border-line pb-3">
+                <span class="font-head text-[16px] font-medium text-fg">{m.name}</span>
+                <span class="font-head text-[11px] uppercase tracking-[0.1em] text-fg-subtle">{m.role}</span>
+                <a
+                  href={`mailto:${m.email}`}
+                  class="ml-auto cursor-pointer text-[14px] text-fg-muted transition-colors hover:text-accent"
+                >
+                  {m.email}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

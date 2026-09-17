@@ -1,0 +1,14 @@
+---
+import ScoringMock from './ScoringMock.astro';
+import TimelineMock from './TimelineMock.astro';
+import SignatureMock from './SignatureMock.astro';
+import IncidentsMock from './IncidentsMock.astro';
+import type { WorkItem } from '../../content/work';
+
+interface Props { mock: WorkItem['mock'] }
+const { mock } = Astro.props;
+---
+{mock === 'scoring' && <ScoringMock />}
+{mock === 'timeline' && <TimelineMock />}
+{mock === 'signature' && <SignatureMock />}
+{mock === 'incidents' && <IncidentsMock />}

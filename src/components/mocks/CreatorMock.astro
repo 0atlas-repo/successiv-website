@@ -1,0 +1,33 @@
+---
+import MockFrame from './MockFrame.astro';
+type Card = { t: string; m: string; flag?: boolean };
+const columns: { name: string; items: Card[] }[] = [
+  { name: 'Drafting', items: [{ t: 'Launch teaser', m: 'Video · 0:45' }, { t: 'Weekly note', m: 'Written' }] },
+  { name: 'Review', items: [{ t: 'Partner spot', m: 'Video · 1:20', flag: true }] },
+  { name: 'Scheduled', items: [{ t: 'Behind the scenes', m: 'Thu 09:00' }, { t: 'Q&A clips', m: 'Fri 17:30' }] },
+];
+---
+<MockFrame title="Creator Sphere — Pipeline" meta="5 items">
+  <div class="grid grid-cols-3 gap-2.5">
+    {columns.map((col) => (
+      <div class="min-w-0">
+        <div class="mb-2 flex items-center justify-between">
+          <span class="font-head text-[10px] font-semibold uppercase tracking-[0.1em] text-fg-subtle">{col.name}</span>
+          <span class="font-head text-[10px] text-fg-subtle">{col.items.length}</span>
+        </div>
+        <div class="space-y-2">
+          {col.items.map((it) => (
+            <div class="rounded-lg border border-line bg-bg/40 p-2.5">
+              <div class="truncate font-head text-[11px] font-medium text-fg">{it.t}</div>
+              <div class="mt-1 flex items-center gap-1.5">
+                <span class:list={['block h-1.5 w-1.5 rounded-full', it.flag ? 'bg-action' : 'bg-fg-subtle/50']}></span>
+                <span class="truncate text-[10px] text-fg-subtle">{it.m}</span>
+              </div>
+            </div>
+          ))}
+          <div class="rounded-lg border border-dashed border-line px-2.5 py-2 text-[10px] text-fg-subtle">+ Add</div>
+        </div>
+      </div>
+    ))}
+  </div>
+</MockFrame>

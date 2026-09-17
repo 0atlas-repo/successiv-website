@@ -1,0 +1,31 @@
+---
+import MockFrame from './MockFrame.astro';
+---
+<MockFrame title="Agreement.pdf" meta="2 signers">
+  <div class="space-y-2.5">
+    <div class="space-y-1.5 rounded-lg border border-line bg-bg/40 p-2.5">
+      <div class="h-1.5 w-full rounded-full bg-fg-subtle/20"></div>
+      <div class="h-1.5 w-11/12 rounded-full bg-fg-subtle/20"></div>
+      <div class="h-1.5 w-4/5 rounded-full bg-fg-subtle/20"></div>
+      <div class="pt-2">
+        <div class="rounded-md border border-dashed border-action bg-action/10 px-2.5 py-3">
+          <div class="font-head text-[9px] uppercase tracking-[0.1em] text-accent">Sign here</div>
+          <svg viewBox="0 0 120 22" class="mt-1 h-5 w-24 text-fg" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+            <path d="M2 16c6-10 10 4 15-2s7-9 11 1 6 6 10 0 8-8 13 0 9 5 14-3 10 2 14 4" />
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="flex items-center gap-1.5 rounded-full border border-line px-2 py-1">
+        <span class="block h-1.5 w-1.5 rounded-full bg-action"></span>
+        <span class="font-head text-[9px] text-fg-muted">Signer 1 · Signed</span>
+      </span>
+      <span class="flex items-center gap-1.5 rounded-full border border-line px-2 py-1">
+        <span class="block h-1.5 w-1.5 rounded-full bg-fg-subtle/50"></span>
+        <span class="font-head text-[9px] text-fg-subtle">Signer 2 · Waiting</span>
+      </span>
+    </div>
+    <p class="text-[10px] text-fg-subtle">Executed copy returns to the case automatically.</p>
+  </div>
+</MockFrame>

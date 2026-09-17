@@ -1,0 +1,114 @@
+---
+import Base from '../../layouts/Base.astro';
+import Btn from '../../components/Btn.astro';
+import ProductMock from '../../components/mocks/ProductMock.astro';
+import CTA from '../../components/CTA.astro';
+import { products, type Product } from '../../content/products';
+import { site } from '../../content/site';
+
+export function getStaticPaths() {
+  return products.map((product) => ({
+    params: { slug: product.slug },
+    props: { product },
+  }));
+}
+
+interface Props { product: Product }
+const { product } = Astro.props;
+
+const others = products.filter((p) => p.slug !== product.slug);
+---
+<Base title={product.name} description={`${product.oneLiner} ${product.problem}`}>
+  <!-- Intro: claim on the left, the product screen on the right. -->
+  <section class="hero-wash border-b border-line pb-20 pt-[88px]">
+    <div class="mx-auto max-w-[1180px] px-6">
+      <div class="grid items-center gap-14 lg:grid-cols-[1fr_0.9fr]">
+        <div>
+          <p class="reveal mb-5 font-head text-[13px] font-semibold uppercase tracking-[0.14em] text-accent">
+            {product.category}
+          </p>
+          <h1 class="reveal text-[clamp(34px,5vw,56px)] text-fg">{product.name}</h1>
+          <p class="reveal mt-4 max-w-[540px] text-[clamp(18px,2vw,21px)] text-fg-muted">{product.oneLiner}</p>
+
+          {product.needsCopy && (
+            <p class="reveal mt-5 max-w-[540px] rounded-[12px] border border-dashed border-line px-4 py-3 text-[14px] text-fg-subtle">
+              This page is a placeholder. We have not published a description of this product yet,
+              so nothing here claims what it does.
+            </p>
+          )}
+
+          <div class="reveal mt-8 flex flex-wrap gap-4">
+            <Btn href={`mailto:${site.email}`}>{product.cta}</Btn>
+            <Btn href="/products/" variant="ghost">All products</Btn>
+          </div>
+        </div>
+
+        <div class="reveal relative max-lg:mx-auto max-lg:max-w-[420px]">
+          <div class="mock-wash pointer-events-none absolute -inset-10" aria-hidden="true"></div>
+          <div class="relative lg:rotate-[1.2deg]"><ProductMock mock={product.mock} /></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Problem -->
+  <section class="py-[90px]">
+    <div class="mx-auto grid max-w-[1180px] grid-cols-1 gap-10 px-6 md:grid-cols-[260px_1fr]">
+      <div class="reveal">
+        <span class="font-head text-[13px] font-semibold uppercase tracking-[0.12em] text-accent">The problem</span>
+      </div>
+      <p class="reveal max-w-[720px] font-head text-[clamp(20px,2.6vw,28px)] font-medium leading-[1.4] text-fg">
+        {product.problem}
+      </p>
+    </div>
+  </section>
+
+  <!-- How it works: editorial rows, the direction chosen in the previews exercise. -->
+  <section class="border-t border-line py-[90px]">
+    <div class="mx-auto max-w-[1180px] px-6">
+      <div class="reveal mb-10 max-w-[640px]">
+        <span class="mb-4 inline-block font-head text-[13px] font-semibold uppercase tracking-[0.12em] text-accent">
+          How it works
+        </span>
+        <h2 class="text-[clamp(28px,4vw,40px)] text-fg">{product.steps.length} steps, start to finish.</h2>
+      </div>
+
+      <div class="border-t border-line">
+        {product.steps.map((step, i) => (
+          <article class="reveal grid grid-cols-[40px_1fr] items-baseline gap-4 border-b border-line py-[30px] sm:grid-cols-[64px_1fr] sm:gap-6">
+            <span class="font-head text-[15px] font-bold text-accent">
+              {String(i + 1).padStart(2, '0')}
+            </span>
+            <div>
+              <h3 class="mb-1.5 font-head text-[20px] font-semibold text-fg">{step.title}</h3>
+              <p class="max-w-[640px] text-[15px] text-fg-muted">{step.body}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Other products -->
+  <section class="border-t border-line py-[90px]">
+    <div class="mx-auto max-w-[1180px] px-6">
+      <h2 class="reveal mb-8 font-head text-[22px] font-semibold text-fg">Other products</h2>
+      <div class="flex flex-wrap gap-3">
+        {others.map((p) => (
+          <a
+            href={`/products/${p.slug}/`}
+            class="reveal cursor-pointer rounded-full border border-line px-5 py-2.5 font-head text-[14px] font-medium text-fg-muted transition-all duration-200 hover:-translate-y-0.5 hover:border-action hover:text-accent"
+          >
+            {p.name}
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CTA
+    kicker="Next step"
+    title={`Want to see ${product.name} on your own data?`}
+    lede="Send us a line describing your setup and we'll show you the parts that matter."
+  />
+</Base>

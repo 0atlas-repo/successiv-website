@@ -1,0 +1,34 @@
+---
+import ProductMock from './mocks/ProductMock.astro';
+import type { Product } from '../content/products';
+
+interface Props { product: Product }
+const { product } = Astro.props;
+---
+<article class="reveal group relative flex flex-col overflow-hidden rounded-[18px] border border-line surface-card transition-all duration-300 hover:-translate-y-1 hover:border-action/40">
+  <a href={`/products/${product.slug}/`} class="absolute inset-0 z-10" aria-label={`${product.name} — ${product.oneLiner}`}></a>
+
+  <!-- The mock is the hero of the card: floated on a wash, clipped at the bottom. -->
+  <div class="relative overflow-hidden px-6 pt-6">
+    <div class="mock-wash pointer-events-none absolute inset-0" aria-hidden="true"></div>
+    <div class="relative translate-y-1 transition-transform duration-500 group-hover:translate-y-0">
+      <ProductMock mock={product.mock} />
+    </div>
+  </div>
+
+  <div class="flex flex-1 flex-col p-6 pt-5">
+    <div class="flex items-center gap-2">
+      <h3 class="font-head text-[19px] font-semibold text-fg">{product.name}</h3>
+      {product.needsCopy && (
+        <span class="rounded-full border border-line px-2 py-0.5 font-head text-[9px] uppercase tracking-[0.08em] text-fg-subtle">
+          In development
+        </span>
+      )}
+    </div>
+    <p class="mt-1.5 flex-1 text-[15px] text-fg-muted">{product.oneLiner}</p>
+    <span class="mt-4 inline-flex items-center gap-1.5 font-head text-[13px] font-semibold text-accent">
+      Explore
+      <span aria-hidden="true" class="transition-transform duration-300 group-hover:translate-x-1">&rarr;</span>
+    </span>
+  </div>
+</article>

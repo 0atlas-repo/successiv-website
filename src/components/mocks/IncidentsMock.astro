@@ -1,0 +1,37 @@
+---
+import MockFrame from './MockFrame.astro';
+const incidents = [
+  { ref: 'INC-1042', sev: 'High', desc: 'Barrier fault, entry C', owner: 'Duty manager', open: true },
+  { ref: 'INC-1041', sev: 'Low', desc: 'Signage damage', owner: 'Facilities', open: true },
+  { ref: 'INC-1038', sev: 'Med', desc: 'Spill reported', owner: 'Cleaning', open: false },
+];
+---
+<MockFrame title="Incidents — Today" meta="2 open">
+  <div class="space-y-1.5">
+    {incidents.map((i) => (
+      <div class="flex items-center gap-2.5 rounded-lg border border-line bg-bg/40 px-2.5 py-2">
+        <span
+          class:list={[
+            'block h-6 w-[3px] shrink-0 rounded-full',
+            i.sev === 'High' ? 'bg-action' : i.sev === 'Med' ? 'bg-fg-subtle' : 'bg-fg-subtle/40',
+          ]}
+        ></span>
+        <div class="min-w-0 flex-1">
+          <div class="flex items-baseline gap-1.5">
+            <span class="shrink-0 font-head text-[9px] tracking-[0.06em] text-fg-subtle">{i.ref}</span>
+            <span class="truncate text-[10.5px] text-fg">{i.desc}</span>
+          </div>
+          <div class="mt-0.5 text-[10px] text-fg-subtle">Owner: {i.owner}</div>
+        </div>
+        <span
+          class:list={[
+            'shrink-0 rounded-full px-2 py-0.5 font-head text-[9px] uppercase tracking-[0.08em]',
+            i.open ? 'border border-line text-fg-muted' : 'text-fg-subtle',
+          ]}
+        >
+          {i.open ? 'Open' : 'Closed'}
+        </span>
+      </div>
+    ))}
+  </div>
+</MockFrame>

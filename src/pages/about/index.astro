@@ -1,0 +1,45 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Principles from '../../components/Principles.astro';
+import Team from '../../components/Team.astro';
+import CTA from '../../components/CTA.astro';
+import { site } from '../../content/site';
+---
+<Base
+  title="About"
+  description="Successiv is the product brand of 0atlas. We build and ship our own products, and take on complex delivery when the fit is right."
+>
+  <PageHero kicker="About" title={`${site.name} by ${site.parent.name}.`} />
+
+  <section class="py-[90px]">
+    <div class="mx-auto grid max-w-[1180px] grid-cols-1 gap-10 px-6 md:grid-cols-[260px_1fr]">
+      <div class="reveal">
+        <span class="font-head text-[13px] font-semibold uppercase tracking-[0.12em] text-accent">Who we are</span>
+      </div>
+      <div class="reveal">
+        <p class="max-w-[720px] font-head text-[clamp(22px,3vw,30px)] font-medium leading-[1.35] text-fg">
+          Successiv is the product brand of
+          <a href={site.parent.url} class="underline decoration-line underline-offset-[6px] transition-colors hover:text-accent">{site.parent.name}</a>,
+          an AI software house.
+        </p>
+        <p class="mt-5 max-w-[640px] text-[17px] text-fg-muted">
+          We build and ship our own products, and we take on complex delivery when the fit is right.
+          We usually can't name clients — so we show how the systems work instead.
+        </p>
+        <p class="mt-4 max-w-[640px] text-[17px] text-fg-muted">
+          No hype decks, no black-box magic. We scope tightly, ship something real early,
+          and let each successive release earn the next. That's the whole philosophy —
+          it's in the name.
+        </p>
+        <p class="mt-8 font-head text-[clamp(18px,2.2vw,22px)] font-medium text-fg">
+          <span class="grad-text">{site.legacyTagline}</span>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <Principles />
+  <Team />
+  <CTA />
+</Base>

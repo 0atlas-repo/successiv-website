@@ -1,0 +1,20 @@
+---
+import { site } from '../content/site';
+import SectionHead from './SectionHead.astro';
+---
+<section id="approach" class="border-t border-line py-[100px]">
+  <div class="mx-auto max-w-[1180px] px-6">
+    <SectionHead kicker="02 — How we work" title="Three principles, every engagement." />
+    <div class="grid gap-6 md:grid-cols-3">
+      {site.principles.map((p) => (
+        <article class="reveal rounded-[16px] border border-line surface-card p-8 transition-all duration-300 hover:-translate-y-1 hover:border-action/40">
+          <div class="mb-5 inline-flex h-[34px] w-[34px] items-center justify-center rounded-full bg-action/12 font-head text-[13px] font-bold text-accent">
+            {p.num}
+          </div>
+          <h3 class="mb-2.5 font-head text-[19px] font-semibold text-fg">{p.title}</h3>
+          <p class="text-[15px] text-fg-muted">{p.body}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

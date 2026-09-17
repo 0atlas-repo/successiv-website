@@ -1,0 +1,15 @@
+---
+import MockFrame from './MockFrame.astro';
+// Deliberately sparse: this stands in for a product whose public description is
+// not written yet. Better an honest empty state than an invented screen.
+---
+<MockFrame title="1line.ai" meta="In development">
+  <div class="space-y-2.5">
+    <div class="h-2 w-2/3 rounded-full bg-fg-subtle/25"></div>
+    <div class="h-2 w-1/2 rounded-full bg-fg-subtle/20"></div>
+    <div class="rounded-lg border border-dashed border-line px-3 py-5 text-center">
+      <p class="font-head text-[10.5px] text-fg-subtle">Public preview not published yet</p>
+    </div>
+    <div class="h-2 w-3/5 rounded-full bg-fg-subtle/20"></div>
+  </div>
+</MockFrame>

@@ -1,0 +1,18 @@
+---
+// Dispatcher: maps a product's `mock` field to its component, so pages stay
+// data-driven and no page hardcodes which screen belongs to which product.
+import CreatorMock from './CreatorMock.astro';
+import ChatMock from './ChatMock.astro';
+import IdentityMock from './IdentityMock.astro';
+import CalendarMock from './CalendarMock.astro';
+import GenericMock from './GenericMock.astro';
+import type { Product } from '../../content/products';
+
+interface Props { mock: Product['mock'] }
+const { mock } = Astro.props;
+---
+{mock === 'creator' && <CreatorMock />}
+{mock === 'chat' && <ChatMock />}
+{mock === 'identity' && <IdentityMock />}
+{mock === 'calendar' && <CalendarMock />}
+{mock === 'generic' && <GenericMock />}

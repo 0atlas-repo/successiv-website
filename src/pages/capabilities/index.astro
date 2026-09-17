@@ -1,0 +1,40 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import CTA from '../../components/CTA.astro';
+import { capabilities } from '../../content/capabilities';
+---
+<Base
+  title="Capabilities"
+  description="AI apps, Shopify, SharePoint and Microsoft 365, document workflows, identity, and operations portals."
+>
+  <PageHero
+    kicker="Capabilities"
+    title="What we're actually good at."
+    lede="Six areas we've shipped into production more than once. If your problem sits in one of them, we've likely met it before."
+  />
+
+  <section class="py-[90px]">
+    <div class="mx-auto max-w-[1180px] px-6">
+      <div class="border-t border-line">
+        {capabilities.map((c) => (
+          <article class="reveal group grid grid-cols-[40px_1fr] items-center gap-4 border-b border-line py-[30px] transition-colors duration-300 hover:border-b-action/40 sm:grid-cols-[64px_1fr_40px] sm:gap-6">
+            <span class="font-head text-[15px] font-bold text-accent">{c.num}</span>
+            <div>
+              <h2 class="mb-1.5 font-head text-[20px] font-semibold text-fg">{c.title}</h2>
+              <p class="max-w-[680px] text-[15px] text-fg-muted">{c.body}</p>
+            </div>
+            <span
+              aria-hidden="true"
+              class="hidden -translate-x-1.5 justify-self-end text-[22px] text-fg-subtle opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:text-accent group-hover:opacity-100 sm:block"
+            >
+              &rarr;
+            </span>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CTA />
+</Base>

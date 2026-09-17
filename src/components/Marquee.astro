@@ -1,0 +1,13 @@
+---
+import { site } from '../content/site';
+const doubled = [...site.marquee, ...site.marquee];
+---
+<section aria-hidden="true" class="overflow-hidden border-y border-line bg-surface py-[18px]">
+  <div class="marquee-track flex w-max gap-14">
+    {doubled.map((label) => (
+      <span class="whitespace-nowrap font-head text-sm font-semibold tracking-[0.16em] text-fg-subtle after:ml-14 after:text-accent after:content-['•']">
+        {label}
+      </span>
+    ))}
+  </div>
+</section>

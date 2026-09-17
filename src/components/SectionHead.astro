@@ -1,0 +1,18 @@
+---
+interface Props {
+  kicker?: string;
+  title: string;
+  lede?: string;
+  class?: string;
+}
+const { kicker, title, lede, class: className = '' } = Astro.props;
+---
+<div class:list={['reveal mb-12 max-w-[640px]', className]}>
+  {kicker && (
+    <span class="mb-4 inline-block font-head text-[13px] font-semibold uppercase tracking-[0.12em] text-accent">
+      {kicker}
+    </span>
+  )}
+  <h2 class="text-[clamp(28px,4vw,40px)] text-fg">{title}</h2>
+  {lede && <p class="mt-4 text-[17px] text-fg-muted">{lede}</p>}
+</div>

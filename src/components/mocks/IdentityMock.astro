@@ -1,0 +1,48 @@
+---
+import MockFrame from './MockFrame.astro';
+const checks = [
+  { label: 'Document readable', state: 'pass' },
+  { label: 'Face match', state: 'pass' },
+  { label: 'Expiry date valid', state: 'pass' },
+  { label: 'Address proof', state: 'review' },
+];
+---
+<MockFrame title="KYC — Case #4821" meta="Review">
+  <div class="space-y-3">
+    <div class="flex items-center gap-2.5">
+      <div class="h-10 w-10 shrink-0 rounded-full bg-fg-subtle/20"></div>
+      <div class="min-w-0">
+        <div class="font-head text-[11px] font-medium text-fg">Applicant</div>
+        <div class="text-[10px] text-fg-subtle">Submitted 2 min ago · Web</div>
+      </div>
+      <span class="ml-auto shrink-0 rounded-full border border-line px-2 py-1 font-head text-[9px] uppercase tracking-[0.08em] text-fg-subtle">
+        Pending
+      </span>
+    </div>
+
+    <div class="space-y-1.5">
+      {checks.map((c) => (
+        <div class="flex items-center gap-2 rounded-lg border border-line bg-bg/40 px-2.5 py-1.5">
+          {c.state === 'pass' ? (
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-action" aria-hidden="true">
+              <path d="m20 6-11 11-5-5" />
+            </svg>
+          ) : (
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="shrink-0 text-fg-subtle" aria-hidden="true">
+              <circle cx="12" cy="12" r="9" /><path d="M12 8v4" /><path d="M12 16h.01" />
+            </svg>
+          )}
+          <span class="flex-1 truncate text-[10.5px] text-fg">{c.label}</span>
+          <span class="shrink-0 font-head text-[9px] uppercase tracking-[0.08em] text-fg-subtle">
+            {c.state === 'pass' ? 'Pass' : 'Check'}
+          </span>
+        </div>
+      ))}
+    </div>
+
+    <div class="flex gap-2 border-t border-line pt-2.5">
+      <span class="flex-1 rounded-full bg-action py-1.5 text-center font-head text-[10px] font-semibold text-on-action">Approve</span>
+      <span class="flex-1 rounded-full border border-line py-1.5 text-center font-head text-[10px] font-semibold text-fg-muted">Request more</span>
+    </div>
+  </div>
+</MockFrame>
