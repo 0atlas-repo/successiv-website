@@ -1,0 +1,24 @@
+Scale (https://scale.com)
+Captured at desktop viewport ~1280x800.
+
+Files saved:
+- scale-home-hero.png — homepage hero
+- scale-home-01.png — reliable AI / AI stack section
+- scale-home-02.png — applications / AI systems that actually work section
+- scale-home-03.png — generative AI proof/statistic section
+- scale-data-engine-hero.png — Data Engine secondary-page hero
+- scale-about-hero.png — About secondary-page hero
+- scale-customers-time-hero.png — TIME customer story hero
+
+Top-level navigation observed:
+- Products (menu)
+- Solutions (menu)
+- Research (menu)
+- Resources (menu)
+- Log In (https://dashboard.scale.com/login)
+- Get Started (/demo)
+
+Secondary pages visited:
+- /data-engine (Data Engine)
+- /about (About Us)
+- /customers/time (TIME customer story)

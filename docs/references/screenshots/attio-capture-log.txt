@@ -1,0 +1,27 @@
+Attio (https://attio.com)
+Captured at desktop viewport ~1280x800; cookie banner rejected before capture.
+
+Files saved:
+- attio-home-hero.png — homepage hero / Welcome to agentic revenue
+- attio-home-01.png — platform product UI and customer logos
+- attio-home-02.png — intelligent system / platform section intro
+- attio-home-03.png — agentic workflow and lead qualification UI
+- attio-home-04.png — run sales motions / revenue-owner section
+- attio-platform-workflows-hero.png — Workflows product page hero
+- attio-pricing-hero.png — pricing page hero and plans
+- attio-customers-hero.png — customers page hero
+
+Top-level navigation observed:
+- Platform (menu)
+- Resources (menu)
+- Customers (/customers)
+- Pricing (/pricing)
+- Sign in (https://app.attio.com/)
+- Start for free (https://app.attio.com/welcome/sign-in)
+- Announcement link: Orchestrate revenue agents with Workflows (/platform/workflows)
+- Attio logo/home (/)
+
+Secondary pages visited:
+- /platform/workflows (Agents and automations)
+- /pricing (Plans & Pricing)
+- /customers (Customers)

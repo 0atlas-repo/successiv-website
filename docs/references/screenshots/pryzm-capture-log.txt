@@ -1,0 +1,24 @@
+Pryzm (https://pryzm.design)
+Captured at desktop viewport ~1280x800; cookie banner accepted before capture.
+
+Files saved:
+- pryzm-home-hero.png — homepage hero / background gallery intro
+- pryzm-home-01.png — Studio UI mockup section
+- pryzm-home-02.png — Flow graph section intro
+- pryzm-home-03.png — Inspiration gallery cards section
+- pryzm-gallery-hero.png — Inspiration Gallery page hero
+- pryzm-lab-hero.png — Lab editor hero
+- pryzm-about-hero.png — About page hero
+
+Top-level navigation observed:
+- Inspiration (/gallery)
+- Lab (BETA) (/lab)
+- Pricing (/#pricing)
+- Open studio (/studio)
+- Sign in (/signin?next=%2F)
+- Pryzm logo/home (/)
+
+Secondary pages visited:
+- /gallery (Inspiration Gallery)
+- /lab (Lab: multipass)
+- /about (About)
