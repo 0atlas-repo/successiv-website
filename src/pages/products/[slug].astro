@@ -43,7 +43,14 @@ const others = products.filter((p) => p.slug !== product.slug);
 
           <div class="reveal mt-8 flex flex-wrap gap-4">
             <Btn href={`mailto:${site.email}`}>{product.cta}</Btn>
-            <Btn href="/products/" variant="ghost">All products</Btn>
+            {product.url ? (
+              <Btn href={product.url} variant="ghost">
+                Visit the site
+                <span aria-hidden="true">&#8599;</span>
+              </Btn>
+            ) : (
+              <Btn href="/products/" variant="ghost">All products</Btn>
+            )}
           </div>
         </div>
 

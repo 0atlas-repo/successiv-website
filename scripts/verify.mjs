@@ -61,7 +61,7 @@ if (leaks === 0) pass(`no forbidden terms in ${allFiles.length} built files`);
 console.log('\n2. Routes — every route in the sitemap must exist');
 const routes = [
   '', 'products', 'work', 'capabilities', 'about', 'contact',
-  'products/creator-sphere', 'products/shopmgr', 'products/kyc',
+  'products/creators-sphere', 'products/shopmgr', 'products/kyc',
   'products/leave', 'products/1line-ai',
 ];
 for (const r of routes) {

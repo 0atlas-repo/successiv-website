@@ -1,33 +1,52 @@
 ---
 import MockFrame from './MockFrame.astro';
-type Card = { t: string; m: string; flag?: boolean };
-const columns: { name: string; items: Card[] }[] = [
-  { name: 'Drafting', items: [{ t: 'Launch teaser', m: 'Video · 0:45' }, { t: 'Weekly note', m: 'Written' }] },
-  { name: 'Review', items: [{ t: 'Partner spot', m: 'Video · 1:20', flag: true }] },
-  { name: 'Scheduled', items: [{ t: 'Behind the scenes', m: 'Thu 09:00' }, { t: 'Q&A clips', m: 'Fri 17:30' }] },
+
+// A gig feed, matching what the product actually does: creators browse paid
+// brand campaigns, see the payout before applying, and get invited to some.
+// Brands are neutral placeholders — never a real brand name.
+type Gig = { niche: string; fee: string; brand: string; detail: string; invited?: boolean };
+const gigs: Gig[] = [
+  { niche: 'Beauty', fee: '$180', brand: 'Brand A', detail: 'Summer campaign · 1 post' },
+  { niche: 'Food', fee: '$90', brand: 'Café B', detail: 'Reel · 1 post' },
+  { niche: 'Fashion', fee: '$240', brand: 'Brand C', detail: 'Invite only', invited: true },
 ];
 ---
-<MockFrame title="Creator Sphere — Pipeline" meta="5 items">
-  <div class="grid grid-cols-3 gap-2.5">
-    {columns.map((col) => (
-      <div class="min-w-0">
-        <div class="mb-2 flex items-center justify-between">
-          <span class="font-head text-[10px] font-semibold uppercase tracking-[0.1em] text-fg-subtle">{col.name}</span>
-          <span class="font-head text-[10px] text-fg-subtle">{col.items.length}</span>
+<MockFrame title="Creators Sphere — Gigs" meta="6 open">
+  <div class="space-y-2.5">
+    <div class="flex items-baseline justify-between rounded-lg border border-line bg-bg/40 px-2.5 py-2">
+      <span class="text-[10px] text-fg-subtle">Available to earn this week</span>
+      <span class="font-head text-[13px] font-bold text-fg">$510</span>
+    </div>
+
+    {gigs.map((g) => (
+      <div class="flex items-center gap-2.5 rounded-lg border border-line bg-bg/40 p-2.5">
+        <div class="h-8 w-8 shrink-0 rounded-md bg-fg-subtle/20"></div>
+        <div class="min-w-0 flex-1">
+          <div class="flex items-baseline gap-1.5">
+            <span class="truncate font-head text-[11px] font-medium text-fg">{g.brand}</span>
+            <span class="shrink-0 rounded-full border border-line px-1.5 font-head text-[9px] text-fg-subtle">{g.niche}</span>
+          </div>
+          <div class="mt-0.5 truncate text-[10px] text-fg-subtle">{g.detail}</div>
         </div>
-        <div class="space-y-2">
-          {col.items.map((it) => (
-            <div class="rounded-lg border border-line bg-bg/40 p-2.5">
-              <div class="truncate font-head text-[11px] font-medium text-fg">{it.t}</div>
-              <div class="mt-1 flex items-center gap-1.5">
-                <span class:list={['block h-1.5 w-1.5 rounded-full', it.flag ? 'bg-action' : 'bg-fg-subtle/50']}></span>
-                <span class="truncate text-[10px] text-fg-subtle">{it.m}</span>
-              </div>
-            </div>
-          ))}
-          <div class="rounded-lg border border-dashed border-line px-2.5 py-2 text-[10px] text-fg-subtle">+ Add</div>
+        <div class="shrink-0 text-right">
+          <div class="font-head text-[12px] font-bold text-fg">{g.fee}</div>
+          <span
+            class:list={[
+              'mt-0.5 inline-block rounded-full px-2 py-0.5 font-head text-[9px] font-semibold',
+              g.invited ? 'border border-line text-fg-muted' : 'bg-action text-on-action',
+            ]}
+          >
+            {g.invited ? 'Invited' : 'Apply'}
+          </span>
         </div>
       </div>
     ))}
+
+    <div class="flex items-center gap-2 rounded-lg border border-dashed border-line px-2.5 py-2">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-action" aria-hidden="true">
+        <path d="m20 6-11 11-5-5" />
+      </svg>
+      <span class="text-[10px] text-fg-subtle">Proof verified · payout confirmed</span>
+    </div>
   </div>
 </MockFrame>

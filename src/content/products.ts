@@ -22,23 +22,30 @@ export interface Product {
   category: string;
   /** Set when the copy is a placeholder awaiting founder detail. */
   needsCopy?: boolean;
+  /** The product's own site, when it has one. */
+  url?: string;
 }
 
 export const products: Product[] = [
   {
-    slug: 'creator-sphere',
-    name: 'Creator Sphere',
-    oneLiner: 'Your creator stack, designed to ship.',
+    // Content below is taken from the product's own site, creatorsphere.sg.
+    // Note the product brands itself "Creators Sphere" (plural), not "Creator
+    // Sphere" as docs/BRIEF.md has it. The live product wins.
+    slug: 'creators-sphere',
+    name: 'Creators Sphere',
+    oneLiner: 'Paid brand campaigns for creators — find the work, post it, get paid.',
     problem:
-      'Creator operations get spread across a content tool, a scheduling sheet, and a payments inbox. The work is visible in four places and owned in none of them.',
+      'Creator work runs on DMs and agency email threads. A creator rarely learns what a job pays until late in the conversation, and a brand has no dependable way to see who actually delivered.',
     steps: [
-      { title: 'Bring the work in', body: 'Content, collaborators, and schedules land in one place instead of three tools.' },
-      { title: 'Give it a shape', body: 'Each piece moves through states everyone can see, so nothing sits unowned.' },
-      { title: 'Ship on a cadence', body: 'Publishing is a step in the workflow, not a separate scramble.' },
+      { title: 'Discover gigs', body: 'Browse live brand campaigns, filtered to the niches you actually create in.' },
+      { title: 'Apply in seconds', body: 'Tap apply on an open campaign, or accept an invite-only one sent straight to you.' },
+      { title: 'Create and post', body: 'Make the content in your own voice and publish it to your linked Instagram account.' },
+      { title: 'Submit proof, get paid', body: 'Drop the post link, the brand verifies it, and the reward is confirmed in the app.' },
     ],
     mock: 'creator',
     cta: 'Book a demo',
-    category: 'Creator workflows',
+    category: 'Creator marketplace',
+    url: 'https://creatorsphere.sg',
   },
   {
     slug: 'shopmgr',

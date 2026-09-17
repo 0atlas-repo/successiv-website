@@ -9,7 +9,10 @@ Build the Successiv marketing site from those docs. Product-led. No real client 
 
 ## Products on the homepage product grid
 
-Creator Sphere, Shopmgr, KYC, Leave, 1line.ai.
+Creators Sphere, Shopmgr, KYC, Leave, 1line.ai.
+
+The product brands itself "Creators Sphere" (plural) on its own site at
+creatorsphere.sg. `docs/BRIEF.md` calls it "Creator Sphere"; the live product wins.
 
 1line.ai was added on the founder's explicit sign-off (2026-09-17), which is the
 confirmation `docs/BRIEF.md` asked for. Its copy is honest placeholder and is
