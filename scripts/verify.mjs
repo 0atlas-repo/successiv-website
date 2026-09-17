@@ -38,8 +38,10 @@ const forbidden = [
   /\b[redacted-client]\b/i, /\b[redacted-client]\b/i, /\b[redacted-client]\b/i, /\b[redacted-client]\b/i,
   /[redacted-slug]/i, /[redacted-slug]/i, /[redacted-slug]/i,
   /[redacted-slug]/i, /[redacted-slug]/i, /[redacted-slug]/i, /[redacted-slug]/i,
-  // Former employer the founder explicitly asked not to name.
-  /[redacted-employer]/i,
+  // Former employers. The founder asked that neither be named: the site
+  // describes them instead ("a global investment bank", "a Fortune 100
+  // insurer"). Gated here so a later edit cannot reintroduce them.
+  /[redacted-employer]/i, /[redacted-employer]/i, /liberty\s*mutual/i,
   /[redacted-slug]/i, /[redacted-slug]/i, /[redacted-slug]/i, /0atlas-repo/i,
 ];
 let leaks = 0;

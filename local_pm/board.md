@@ -10,5 +10,6 @@ One row per active plan. If it is not here, it does not exist.
 
 - Confirm which blue is canonical: logo `#384f9e` vs site `#0047bb`.
 - Replace the 1line.ai placeholder copy with a real one-liner.
+- Decide whether the three principles get reframed toward buyer value.
 - Replace `public/img/og-placeholder.png` with real Open Graph artwork.
 - Set GitHub Pages source to "GitHub Actions" and point successiv.com DNS at Pages.
