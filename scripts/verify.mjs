@@ -144,13 +144,26 @@ for (const [label, ok] of Object.entries(themeChecks)) {
 
 // ---------------------------------------------------------------------------
 console.log('\n6. Deploy — GitHub Pages needs these or the site breaks');
-existsSync(join(dist, 'CNAME')) ? pass('CNAME present') : fail('CNAME missing');
 existsSync(join(dist, '.nojekyll'))
   ? pass('.nojekyll present (Pages would otherwise drop _astro/)')
   : fail('.nojekyll missing');
-readFileSync(join(dist, 'CNAME'), 'utf8').trim() === 'successiv.com'
-  ? pass('CNAME points at successiv.com')
-  : fail('CNAME contents wrong');
+
+// A CNAME in the output forces the custom domain at the domain root, which
+// breaks the project-page URL. It is kept in deploy/ until the domain is ready.
+existsSync(join(dist, 'CNAME'))
+  ? fail('CNAME is in the build — it will override the project-page URL')
+  : pass('no CNAME in build (correct for the project-page URL)');
+
+// The whole point of the base path: every asset and internal link must carry it,
+// or the page loads with no CSS. Check what the HTML actually references.
+const base = (process.env.SITE_BASE ?? '/successiv-website').replace(/\/+$/, '');
+if (base) {
+  const refs = [...homeHtml.matchAll(/(?:href|src)="(\/[^"]*)"/g)].map((m) => m[1]);
+  const unprefixed = refs.filter((r) => !r.startsWith(base + '/') && r !== base);
+  unprefixed.length === 0
+    ? pass(`all ${refs.length} root-relative refs carry the base "${base}"`)
+    : fail(`${unprefixed.length} refs missing the base path, e.g. ${unprefixed.slice(0, 3).join(', ')}`);
+}
 
 // ---------------------------------------------------------------------------
 console.log('\n7. SEO — each page needs its own title and description');

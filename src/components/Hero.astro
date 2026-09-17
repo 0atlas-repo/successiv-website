@@ -1,4 +1,5 @@
 ---
+import { withBase } from '../base';
 import { site } from '../content/site';
 import Btn from './Btn.astro';
 import ChatMock from './mocks/ChatMock.astro';
@@ -11,7 +12,7 @@ import ChatMock from './mocks/ChatMock.astro';
     class="pointer-events-none absolute right-[-8%] top-1/2 z-0 w-[min(46vw,620px)] -translate-y-1/2 opacity-[0.10] max-lg:opacity-[0.07]"
   >
     <div class="ribbon-bob">
-      <img src="/img/logo-mark.svg" alt="" class="ribbon-tilt block w-full" />
+      <img src={withBase("/img/logo-mark.svg")} alt="" class="ribbon-tilt block w-full" />
     </div>
   </div>
 
@@ -29,8 +30,8 @@ import ChatMock from './mocks/ChatMock.astro';
           {site.description}
         </p>
         <div class="reveal mt-9 flex flex-wrap gap-4">
-          <Btn href="/products/">See products</Btn>
-          <Btn href="/contact/" variant="ghost">Talk to us</Btn>
+          <Btn href={withBase("/products/")}>See products</Btn>
+          <Btn href={withBase("/contact/")} variant="ghost">Talk to us</Btn>
         </div>
       </div>
 

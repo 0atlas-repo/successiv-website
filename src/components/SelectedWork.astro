@@ -1,4 +1,5 @@
 ---
+import { withBase } from '../base';
 import { featuredWork } from '../content/work';
 import WorkMock from './mocks/WorkMock.astro';
 import SectionHead from './SectionHead.astro';
@@ -32,7 +33,7 @@ const shown = featuredWork.slice(0, 2);
     </div>
 
     <div class="reveal mt-10">
-      <Btn href="/work/" variant="ghost">See all work</Btn>
+      <Btn href={withBase("/work/")} variant="ghost">See all work</Btn>
     </div>
   </div>
 </section>

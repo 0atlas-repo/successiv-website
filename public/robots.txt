@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://successiv.com/sitemap-index.xml
+Sitemap: https://0atlas-repo.github.io/successiv-website/sitemap-index.xml
