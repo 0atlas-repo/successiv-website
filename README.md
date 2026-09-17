@@ -31,3 +31,11 @@ npm run dev
 - [x] Brand decisions locked with founder
 - [ ] Site implementation
 - [ ] Domain / deploy (successiv.com)
+
+## Design references
+
+Inspiration (not clones): [Scale](https://scale.com), [Pryzm](https://pryzm.design), [Attio](https://attio.com).
+
+- [docs/references/DESIGN_REFERENCES.md](./docs/references/DESIGN_REFERENCES.md) — analysis + how to apply
+- [docs/references/screenshots/](./docs/references/screenshots/) — landing captures
+- [docs/hiring/DESIGNER_BRIEF.md](./docs/hiring/DESIGNER_BRIEF.md) — contract designer brief
