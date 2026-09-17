@@ -1,19 +1,128 @@
 {
   "tasks": [
-    { "id": "t1",  "subject": "Dual-theme semantic token layer",        "status": "pending", "blockedBy": [] },
-    { "id": "t2",  "subject": "Theme toggle + no-flash inline script",   "status": "pending", "blockedBy": ["t1"] },
-    { "id": "t3",  "subject": "Content layer (products/work/caps/site)", "status": "pending", "blockedBy": [] },
-    { "id": "t4",  "subject": "Theme-aware logo + favicon",              "status": "pending", "blockedBy": ["t1"] },
-    { "id": "t5",  "subject": "Base.astro real SEO/OG per page",         "status": "pending", "blockedBy": [] },
-    { "id": "t6",  "subject": "Mock UI primitive kit",                   "status": "pending", "blockedBy": ["t1"] },
-    { "id": "t7",  "subject": "5 product mocks",                         "status": "pending", "blockedBy": ["t6"] },
-    { "id": "t8",  "subject": "4 work-card mocks",                       "status": "pending", "blockedBy": ["t6"] },
-    { "id": "t9",  "subject": "Header/Footer rebuilt for 7-route nav",   "status": "pending", "blockedBy": ["t2","t4"] },
-    { "id": "t10", "subject": "Home page",                               "status": "pending", "blockedBy": ["t3","t7","t9"] },
-    { "id": "t11", "subject": "/products + /products/[slug]",            "status": "pending", "blockedBy": ["t3","t7","t9"] },
-    { "id": "t12", "subject": "/work",                                   "status": "pending", "blockedBy": ["t3","t8","t9"] },
-    { "id": "t13", "subject": "/capabilities /about /contact",           "status": "pending", "blockedBy": ["t3","t9"] },
-    { "id": "t14", "subject": "Deploy config: CNAME, .nojekyll, Action", "status": "pending", "blockedBy": [] },
-    { "id": "t15", "subject": "verify.mjs + full verification run",      "status": "pending", "blockedBy": ["t10","t11","t12","t13","t14"] }
+    {
+      "id": "t1",
+      "subject": "Dual-theme semantic token layer",
+      "status": "completed",
+      "blockedBy": []
+    },
+    {
+      "id": "t2",
+      "subject": "Theme toggle + no-flash inline script",
+      "status": "completed",
+      "blockedBy": [
+        "t1"
+      ]
+    },
+    {
+      "id": "t3",
+      "subject": "Content layer (products/work/caps/site)",
+      "status": "completed",
+      "blockedBy": []
+    },
+    {
+      "id": "t4",
+      "subject": "Theme-aware logo + favicon",
+      "status": "completed",
+      "blockedBy": [
+        "t1"
+      ]
+    },
+    {
+      "id": "t5",
+      "subject": "Base.astro real SEO/OG per page",
+      "status": "completed",
+      "blockedBy": []
+    },
+    {
+      "id": "t6",
+      "subject": "Mock UI primitive kit",
+      "status": "completed",
+      "blockedBy": [
+        "t1"
+      ]
+    },
+    {
+      "id": "t7",
+      "subject": "5 product mocks",
+      "status": "completed",
+      "blockedBy": [
+        "t6"
+      ]
+    },
+    {
+      "id": "t8",
+      "subject": "4 work-card mocks",
+      "status": "completed",
+      "blockedBy": [
+        "t6"
+      ]
+    },
+    {
+      "id": "t9",
+      "subject": "Header/Footer rebuilt for 7-route nav",
+      "status": "completed",
+      "blockedBy": [
+        "t2",
+        "t4"
+      ]
+    },
+    {
+      "id": "t10",
+      "subject": "Home page",
+      "status": "completed",
+      "blockedBy": [
+        "t3",
+        "t7",
+        "t9"
+      ]
+    },
+    {
+      "id": "t11",
+      "subject": "/products + /products/[slug]",
+      "status": "completed",
+      "blockedBy": [
+        "t3",
+        "t7",
+        "t9"
+      ]
+    },
+    {
+      "id": "t12",
+      "subject": "/work",
+      "status": "completed",
+      "blockedBy": [
+        "t3",
+        "t8",
+        "t9"
+      ]
+    },
+    {
+      "id": "t13",
+      "subject": "/capabilities /about /contact",
+      "status": "completed",
+      "blockedBy": [
+        "t3",
+        "t9"
+      ]
+    },
+    {
+      "id": "t14",
+      "subject": "Deploy config: CNAME, .nojekyll, Action",
+      "status": "completed",
+      "blockedBy": []
+    },
+    {
+      "id": "t15",
+      "subject": "verify.mjs + full verification run",
+      "status": "completed",
+      "blockedBy": [
+        "t10",
+        "t11",
+        "t12",
+        "t13",
+        "t14"
+      ]
+    }
   ]
 }

@@ -22,6 +22,9 @@
   --color-navy: #0047bb;
   --color-navy-deep: #0a1a4a;
   --color-indigo: #384f9e;
+  /* Navy lightened for use on the dark ground: #0047bb only reaches 2.4:1
+     against #0e0d0f, below the 3:1 floor even for display type. 5.9:1. */
+  --color-navy-lift: #4a90e2;
   --color-ink: #231f20;
 
   /* Semantic tokens — these flip per theme. Components use only these. */
@@ -159,9 +162,10 @@ h1, h2, h3 {
   transform: translateY(0);
 }
 
-/* Gradient text — cyan→navy reads on dark; navy→indigo on light. */
+/* Gradient text. On dark it runs cyan→lifted navy so the far end stays above
+   3:1; on light it runs navy→indigo, both of which clear 7:1 on white. */
 .grad-text {
-  background: linear-gradient(100deg, var(--color-cyan) 10%, var(--color-navy) 90%);
+  background: linear-gradient(100deg, var(--color-cyan) 10%, var(--color-navy-lift) 90%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
