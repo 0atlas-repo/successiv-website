@@ -1,18 +1,45 @@
 ---
-// Dispatcher: maps a product's `mock` field to its component, so pages stay
+// Dispatcher: maps a product's screen name to its component, so pages stay
 // data-driven and no page hardcodes which screen belongs to which product.
+//
+// Record<ProductMock, ...> means adding a name to the union without building
+// the screen is a build error, not a blank space someone notices in review.
 import CreatorMock from './CreatorMock.astro';
+import CreatorProofMock from './CreatorProofMock.astro';
+import CreatorInsightsMock from './CreatorInsightsMock.astro';
 import ChatMock from './ChatMock.astro';
+import ShopKnowledgeMock from './ShopKnowledgeMock.astro';
+import ShopTicketsMock from './ShopTicketsMock.astro';
 import IdentityMock from './IdentityMock.astro';
+import KycShareMock from './KycShareMock.astro';
+import KycReviewMock from './KycReviewMock.astro';
 import CalendarMock from './CalendarMock.astro';
+import AcctExtractMock from './AcctExtractMock.astro';
+import AcctJournalMock from './AcctJournalMock.astro';
+import AcctCloseMock from './AcctCloseMock.astro';
 import GenericMock from './GenericMock.astro';
-import type { Product } from '../../content/products';
+import type { ProductMock } from '../../content/products';
 
-interface Props { mock: Product['mock'] }
+interface Props { mock: ProductMock }
 const { mock } = Astro.props;
+
+const screens: Record<ProductMock, any> = {
+  'creator': CreatorMock,
+  'creator-proof': CreatorProofMock,
+  'creator-insights': CreatorInsightsMock,
+  'chat': ChatMock,
+  'shop-knowledge': ShopKnowledgeMock,
+  'shop-tickets': ShopTicketsMock,
+  'identity': IdentityMock,
+  'kyc-share': KycShareMock,
+  'kyc-review': KycReviewMock,
+  'calendar': CalendarMock,
+  'acct-extract': AcctExtractMock,
+  'acct-journal': AcctJournalMock,
+  'acct-close': AcctCloseMock,
+  'generic': GenericMock,
+};
+
+const Screen = screens[mock];
 ---
-{mock === 'creator' && <CreatorMock />}
-{mock === 'chat' && <ChatMock />}
-{mock === 'identity' && <IdentityMock />}
-{mock === 'calendar' && <CalendarMock />}
-{mock === 'generic' && <GenericMock />}
+{Screen && <Screen />}

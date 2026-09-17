@@ -1,14 +1,62 @@
 ---
+// Dispatcher: maps a work item's screen name to its component, so pages stay
+// data-driven and no page hardcodes which screen belongs to which engagement.
+//
+// A lookup map rather than a chain of conditionals — at this count the chain
+// stops being readable, and the Record<WorkMock, ...> type makes a missing key
+// a build error instead of a silently blank panel.
 import ScoringMock from './ScoringMock.astro';
 import TimelineMock from './TimelineMock.astro';
-import SignatureMock from './SignatureMock.astro';
-import IncidentsMock from './IncidentsMock.astro';
-import type { WorkItem } from '../../content/work';
+import BundleRedactionMock from './BundleRedactionMock.astro';
+import IncidentCasesMock from './IncidentCasesMock.astro';
+import TenderChecklistMock from './TenderChecklistMock.astro';
+import TenderRankingMock from './TenderRankingMock.astro';
+import ContractRegistryMock from './ContractRegistryMock.astro';
+import ContractClauseMock from './ContractClauseMock.astro';
+import BundleBuilderMock from './BundleBuilderMock.astro';
+import IncidentChatMock from './IncidentChatMock.astro';
+import IncidentActionsMock from './IncidentActionsMock.astro';
+import CmsEditorMock from './CmsEditorMock.astro';
+import CmsPublishMock from './CmsPublishMock.astro';
+import CmsNewsMock from './CmsNewsMock.astro';
+import SpPermissionsMock from './SpPermissionsMock.astro';
+import SpAccessMock from './SpAccessMock.astro';
+import SpLinksMock from './SpLinksMock.astro';
+import AwardsNominationMock from './AwardsNominationMock.astro';
+import AwardsShortlistMock from './AwardsShortlistMock.astro';
+import SchedMarketplaceMock from './SchedMarketplaceMock.astro';
+import SchedSlotsMock from './SchedSlotsMock.astro';
+import SchedCalendarMock from './SchedCalendarMock.astro';
+import type { WorkMock } from '../../content/work';
 
-interface Props { mock: WorkItem['mock'] }
+interface Props { mock: WorkMock }
 const { mock } = Astro.props;
+
+const screens: Record<WorkMock, any> = {
+  'scoring': ScoringMock,
+  'timeline': TimelineMock,
+  'bundle-redaction': BundleRedactionMock,
+  'incident-cases': IncidentCasesMock,
+  'tender-checklist': TenderChecklistMock,
+  'tender-ranking': TenderRankingMock,
+  'contract-registry': ContractRegistryMock,
+  'contract-clause': ContractClauseMock,
+  'bundle-builder': BundleBuilderMock,
+  'incident-chat': IncidentChatMock,
+  'incident-actions': IncidentActionsMock,
+  'cms-editor': CmsEditorMock,
+  'cms-publish': CmsPublishMock,
+  'cms-news': CmsNewsMock,
+  'sp-permissions': SpPermissionsMock,
+  'sp-access': SpAccessMock,
+  'sp-links': SpLinksMock,
+  'awards-nomination': AwardsNominationMock,
+  'awards-shortlist': AwardsShortlistMock,
+  'sched-marketplace': SchedMarketplaceMock,
+  'sched-slots': SchedSlotsMock,
+  'sched-calendar': SchedCalendarMock,
+};
+
+const Screen = screens[mock];
 ---
-{mock === 'scoring' && <ScoringMock />}
-{mock === 'timeline' && <TimelineMock />}
-{mock === 'signature' && <SignatureMock />}
-{mock === 'incidents' && <IncidentsMock />}
+{Screen && <Screen />}

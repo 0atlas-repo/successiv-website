@@ -23,13 +23,15 @@ export const capabilities: Capability[] = [
   },
   {
     num: '03',
-    title: 'Customers onboarded faster',
-    body: 'Identity and KYC checks as a guided flow or behind an API, leaving a reviewable record behind every decision.',
+    title: 'Customers onboarded without the paper chase',
+    body: 'Identity documents held once and shared deliberately, as a guided flow or behind an API, with a named reviewer and a date behind every decision.',
   },
   {
+    // Was "Contracts signed where the work is" until 2026-09. We do not build
+    // e-signature, and nothing on this site may imply that we do.
     num: '04',
-    title: 'Contracts signed where the work is',
-    body: 'Prepare, route, and execute documents inside the system that already owns the process, so nothing gets re-filed by hand.',
+    title: 'Documents assembled and released safely',
+    body: 'Merge a file from whatever formats it arrived in, black out what must not leave, and lock it — inside the system that already owns the process.',
   },
   {
     num: '05',

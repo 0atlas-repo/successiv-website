@@ -5,6 +5,7 @@ One row per active plan. If it is not here, it does not exist.
 | Plan | Status | Next action |
 |---|---|---|
 | [Product-led site build](projects/product-led-site/plans/build.md) | built, awaiting sign-off | Founder review, then enable Pages + DNS |
+| [Capability depth](projects/capability-depth/specs/capability-depth.md) | recon done, decisions taken, building | Schema + work detail pages, then copy for 13 entries, then ~31 mocks |
 
 ## Loose tasks
 

@@ -1,22 +1,26 @@
 ---
 import MockFrame from './MockFrame.astro';
+// These are documents a holder keeps, and their verification state — NOT
+// automated checks. This product has no face match, no liveness test and no
+// text recognition, and the page says so plainly, so the "Face match · Pass"
+// row this mock used to carry contradicted its own page.
 const checks = [
-  { label: 'Document readable', state: 'pass' },
-  { label: 'Face match', state: 'pass' },
-  { label: 'Expiry date valid', state: 'pass' },
-  { label: 'Address proof', state: 'review' },
+  { label: 'Passport', state: 'pass' },
+  { label: 'Phone · verified by code', state: 'pass' },
+  { label: 'Proof of address', state: 'review' },
+  { label: 'Email', state: 'review' },
 ];
 ---
-<MockFrame title="KYC — Case #4821" meta="Review">
+<MockFrame title="Identity — Documents" meta="Held">
   <div class="space-y-3">
     <div class="flex items-center gap-2.5">
       <div class="h-10 w-10 shrink-0 rounded-full bg-fg-subtle/20"></div>
       <div class="min-w-0">
-        <div class="font-head text-[11px] font-medium text-fg">Applicant</div>
-        <div class="text-[10px] text-fg-subtle">Submitted 2 min ago · Web</div>
+        <div class="font-head text-[11px] font-medium text-fg">Holder</div>
+        <div class="text-[10px] text-fg-subtle">4 documents held</div>
       </div>
       <span class="ml-auto shrink-0 rounded-full border border-line px-2 py-1 font-head text-[9px] uppercase tracking-[0.08em] text-fg-subtle">
-        Pending
+        2 pending
       </span>
     </div>
 
@@ -34,15 +38,15 @@ const checks = [
           )}
           <span class="flex-1 truncate text-[10.5px] text-fg">{c.label}</span>
           <span class="shrink-0 font-head text-[9px] uppercase tracking-[0.08em] text-fg-subtle">
-            {c.state === 'pass' ? 'Pass' : 'Check'}
+            {c.state === 'pass' ? 'Verified' : 'Pending'}
           </span>
         </div>
       ))}
     </div>
 
     <div class="flex gap-2 border-t border-line pt-2.5">
-      <span class="flex-1 rounded-full bg-action py-1.5 text-center font-head text-[10px] font-semibold text-on-action">Approve</span>
-      <span class="flex-1 rounded-full border border-line py-1.5 text-center font-head text-[10px] font-semibold text-fg-muted">Request more</span>
+      <span class="flex-1 rounded-full bg-action py-1.5 text-center font-head text-[10px] font-semibold text-on-action">Share</span>
+      <span class="flex-1 rounded-full border border-line py-1.5 text-center font-head text-[10px] font-semibold text-fg-muted">Add document</span>
     </div>
   </div>
 </MockFrame>

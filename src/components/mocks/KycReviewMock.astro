@@ -1,0 +1,36 @@
+---
+import MockFrame from './MockFrame.astro';
+const docs = [
+  { type: 'Passport', state: 'Verified', stamp: 'M. · 12 Sep' },
+  { type: 'Proof of address', state: 'Pending' },
+  { type: 'Phone', state: 'Unverified' },
+];
+---
+<MockFrame title="Identity — Review" meta="1 pending">
+  <div class="space-y-1.5">
+    {docs.map((d) => (
+      <div class="rounded-lg border border-line bg-bg/40 px-2.5 py-1.5">
+        <div class="flex items-center gap-2.5">
+          {d.state === 'Verified' ? (
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-action" aria-hidden="true">
+              <path d="m20 6-11 11-5-5" />
+            </svg>
+          ) : d.state === 'Pending' ? (
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="shrink-0 text-fg-subtle" aria-hidden="true">
+              <circle cx="12" cy="12" r="9" /><path d="M12 8v4" /><path d="M12 16h.01" />
+            </svg>
+          ) : (
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="shrink-0 text-fg-subtle" aria-hidden="true">
+              <circle cx="12" cy="12" r="9" /><path d="M9 9l6 6M15 9l-6 6" />
+            </svg>
+          )}
+          <span class="min-w-0 flex-1 truncate text-[10.5px] text-fg">{d.type}</span>
+          <span class="shrink-0 font-head text-[9px] uppercase tracking-[0.08em] text-fg-subtle">{d.state}</span>
+        </div>
+        {d.stamp && (
+          <div class="mt-1 pl-[21px] text-[9px] text-fg-subtle">Reviewed · {d.stamp}</div>
+        )}
+      </div>
+    ))}
+  </div>
+</MockFrame>

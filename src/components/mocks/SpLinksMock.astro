@@ -1,0 +1,37 @@
+---
+import MockFrame from './MockFrame.astro';
+const docs = [
+  { name: 'Policy handbook.docx', broken: false },
+  { name: 'Vendor terms.pdf', broken: true },
+  { name: 'Onboarding checklist.xlsx', broken: false },
+];
+---
+<MockFrame title="Governance — Link monitor" meta="1 broken">
+  <div class="space-y-2">
+    <div class="space-y-1.5">
+      {docs.map((d) => (
+        <div class="flex items-center gap-2.5 rounded-lg border border-line bg-bg/40 px-2.5 py-2">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-fg-subtle" aria-hidden="true">
+            <path d="M14 3v4a1 1 0 0 0 1 1h4" /><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z" />
+          </svg>
+          <span class="min-w-0 flex-1 truncate text-[10.5px] text-fg">{d.name}</span>
+          {d.broken ? (
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-action" aria-hidden="true">
+              <path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" />
+            </svg>
+          ) : (
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-fg-subtle" aria-hidden="true">
+              <path d="m20 6-11 11-5-5" />
+            </svg>
+          )}
+        </div>
+      ))}
+    </div>
+    <div class="flex items-center gap-2 border-t border-line pt-2.5">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-fg-subtle" aria-hidden="true">
+        <rect x="2" y="4" width="20" height="16" rx="2" /><path d="m22 6-10 7L2 6" />
+      </svg>
+      <span class="text-[10px] text-fg-subtle">Author notified of the broken link</span>
+    </div>
+  </div>
+</MockFrame>

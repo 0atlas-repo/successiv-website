@@ -1,0 +1,47 @@
+---
+// Replaces the old SignatureMock, which showed signers and a signature field.
+// That screen illustrated a capability we do not have: the service applies no
+// cryptographic signature and has no signer workflow. A mock that contradicts
+// the page it sits on is worse than no mock.
+//
+// This shows what the service actually does — mask regions by coordinate, then
+// lock the file.
+import MockFrame from './MockFrame.astro';
+---
+<MockFrame title="Case bundle — Masking" meta="2 regions">
+  <div class="space-y-2.5">
+    <div class="space-y-1.5 rounded-lg border border-line bg-bg/40 p-2.5">
+      <div class="h-1.5 w-full rounded-full bg-fg-subtle/20"></div>
+
+      <!-- A masked region: painted out, not merely covered. -->
+      <div class="flex items-center gap-1.5">
+        <div class="h-1.5 w-1/4 rounded-full bg-fg-subtle/20"></div>
+        <div class="h-3 w-2/5 rounded-[3px] border border-action/40 bg-fg"></div>
+      </div>
+
+      <div class="h-1.5 w-11/12 rounded-full bg-fg-subtle/20"></div>
+
+      <div class="flex items-center gap-1.5">
+        <div class="h-3 w-1/3 rounded-[3px] border border-action/40 bg-fg"></div>
+        <div class="h-1.5 w-2/5 rounded-full bg-fg-subtle/20"></div>
+      </div>
+
+      <div class="h-1.5 w-3/4 rounded-full bg-fg-subtle/20"></div>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-2">
+      <span class="flex items-center gap-1.5 rounded-full border border-line px-2 py-1">
+        <span class="block h-1.5 w-1.5 rounded-full bg-action"></span>
+        <span class="font-head text-[9px] text-fg-muted">Page 2 · 2 regions</span>
+      </span>
+      <span class="flex items-center gap-1.5 rounded-full border border-line px-2 py-1">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="shrink-0 text-fg-subtle" aria-hidden="true">
+          <rect x="3" y="11" width="18" height="10" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
+        </svg>
+        <span class="font-head text-[9px] text-fg-muted">Password set</span>
+      </span>
+    </div>
+
+    <p class="text-[10px] text-fg-subtle">Page rendered to an image before masking, so the text is gone, not hidden.</p>
+  </div>
+</MockFrame>
