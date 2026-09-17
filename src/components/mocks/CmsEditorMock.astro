@@ -1,0 +1,50 @@
+---
+import MockFrame from './MockFrame.astro';
+const languages = [
+  { code: 'EN', active: true, complete: true },
+  { code: 'TC', active: false, complete: true },
+  { code: 'SC', active: false, complete: false },
+];
+---
+<MockFrame title="CMS — Story editor" meta="3 languages">
+  <div class="space-y-2.5">
+    <div class="flex gap-1.5">
+      {languages.map((l) => (
+        <span
+          class:list={[
+            'rounded-full px-2.5 py-1 font-head text-[9px] font-semibold uppercase tracking-[0.08em]',
+            l.active ? 'bg-action text-on-action' : 'border border-line text-fg-subtle',
+          ]}
+        >
+          {l.code}
+        </span>
+      ))}
+    </div>
+
+    <div class="space-y-1.5 rounded-lg border border-line bg-bg/40 p-2.5">
+      <div class="font-head text-[9px] uppercase tracking-[0.08em] text-fg-subtle">Title</div>
+      <div class="text-[10.5px] font-medium text-fg">Quarterly update</div>
+      <div class="space-y-1.5 pt-1">
+        <div class="h-1.5 w-full rounded-full bg-fg-subtle/20"></div>
+        <div class="h-1.5 w-4/5 rounded-full bg-fg-subtle/20"></div>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-3 border-t border-line pt-2">
+      {languages.map((l) => (
+        <span class="flex items-center gap-1 font-head text-[9px] uppercase tracking-[0.06em] text-fg-subtle">
+          {l.complete ? (
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-action" aria-hidden="true">
+              <path d="m20 6-11 11-5-5" />
+            </svg>
+          ) : (
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="shrink-0 text-fg-subtle/50" aria-hidden="true">
+              <circle cx="12" cy="12" r="9" stroke-dasharray="4 3" />
+            </svg>
+          )}
+          {l.code}
+        </span>
+      ))}
+    </div>
+  </div>
+</MockFrame>

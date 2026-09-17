@@ -1,0 +1,53 @@
+---
+import MockFrame from './MockFrame.astro';
+const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+const activeDay = 3;
+const slots = [
+  { time: '9:00', state: 'available' },
+  { time: '9:45', state: 'unavailable' },
+  { time: '10:30', state: 'selected' },
+  { time: '11:15', state: 'available' },
+  { time: '12:00', state: 'unavailable' },
+  { time: '12:45', state: 'available' },
+];
+---
+<MockFrame title="Booking — Availability" meta="Thu">
+  <div class="space-y-2.5">
+    <div class="flex gap-1.5">
+      {days.map((d, i) => (
+        <span
+          class:list={[
+            'flex-1 rounded-full py-1 text-center font-head text-[9px] font-semibold uppercase tracking-[0.06em]',
+            i === activeDay ? 'bg-action text-on-action' : 'border border-line text-fg-muted',
+          ]}
+        >
+          {d}
+        </span>
+      ))}
+    </div>
+
+    <div class="grid grid-cols-3 gap-1.5">
+      {slots.map((s) => (
+        <span
+          class:list={[
+            'rounded-md border py-1.5 text-center text-[10px]',
+            s.state === 'selected'
+              ? 'border-transparent bg-action font-semibold text-on-action'
+              : s.state === 'unavailable'
+                ? 'border-line bg-fg-subtle/10 text-fg-subtle'
+                : 'border-line bg-bg/40 text-fg',
+          ]}
+        >
+          {s.time}
+        </span>
+      ))}
+    </div>
+
+    <div class="flex items-center gap-2 border-t border-line pt-2.5">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="shrink-0 text-fg-subtle" aria-hidden="true">
+        <rect x="3" y="11" width="18" height="10" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
+      </svg>
+      <span class="text-[10px] text-fg-subtle">Gap after each service is reserved automatically</span>
+    </div>
+  </div>
+</MockFrame>

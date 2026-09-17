@@ -13,7 +13,7 @@ const { product } = Astro.props;
   <div class="relative flex h-[268px] items-center overflow-hidden px-6 pt-6">
     <div class="mock-wash pointer-events-none absolute inset-0" aria-hidden="true"></div>
     <div class="relative w-full translate-y-1 transition-transform duration-500 group-hover:translate-y-0">
-      <ProductMock mock={product.mock} />
+      <ProductMock mock={product.screens[0]} />
     </div>
   </div>
 
@@ -23,6 +23,13 @@ const { product } = Astro.props;
       {product.needsCopy && (
         <span class="rounded-full border border-line px-2 py-0.5 font-head text-[9px] uppercase tracking-[0.08em] text-fg-subtle">
           In development
+        </span>
+      )}
+      {/* The grid is the most-seen surface. A pre-release product must say so
+          here, not only on its own page, or the card reads as launched. */}
+      {product.preRelease && (
+        <span class="rounded-full border border-line px-2 py-0.5 font-head text-[9px] uppercase tracking-[0.08em] text-fg-subtle">
+          Coming soon
         </span>
       )}
     </div>

@@ -81,7 +81,11 @@ console.log('\n2. Routes — every route in the sitemap must exist');
 const routes = [
   '', 'products', 'work', 'capabilities', 'about', 'contact',
   'products/creators-sphere', 'products/shopmgr', 'products/kyc',
-  'products/leave', 'products/1line-ai',
+  'products/leave', 'products/accounting', 'products/1line-ai',
+  'work/tender-rfp-management', 'work/contract-lifecycle',
+  'work/document-bundling-redaction', 'work/ops-incident-support',
+  'work/content-cms-platforms', 'work/sharepoint-extensions',
+  'work/awards-portals', 'work/scheduling-systems',
 ];
 for (const r of routes) {
   const f = join(dist, r, 'index.html');
@@ -92,9 +96,9 @@ for (const r of routes) {
 console.log('\n3. Products — BRIEF.md requires six fields on every product');
 const productsSrc = readFileSync(join(root, 'src/content/products.ts'), 'utf8');
 const slugs = [...productsSrc.matchAll(/slug: '([^']+)'/g)].map((m) => m[1]);
-slugs.length === 5
-  ? pass(`5 products defined: ${slugs.join(', ')}`)
-  : fail(`expected 5 products, found ${slugs.length}`);
+slugs.length === 6
+  ? pass(`6 products defined: ${slugs.join(', ')}`)
+  : fail(`expected 6 products, found ${slugs.length}`);
 
 for (const slug of slugs) {
   const html = readFileSync(join(dist, 'products', slug, 'index.html'), 'utf8');
@@ -109,6 +113,47 @@ for (const slug of slugs) {
   missing.length === 0
     ? pass(`${slug}: all required sections present`)
     : fail(`${slug}: missing ${missing.join(', ')}`);
+}
+
+// ---------------------------------------------------------------------------
+// The founder asked for at least three paragraphs of real capability detail on
+// every entry. A target nobody measures decays, so measure it — and measure the
+// rendered page rather than the source, because that is what a reader gets.
+console.log('\n3b. Depth — three paragraphs minimum on every entry');
+
+// Count <p> elements inside the long-form section of a built page.
+const depthOf = (html, heading) => {
+  const start = html.indexOf(heading);
+  if (start === -1) return 0;
+  const end = html.indexOf('</section>', start);
+  if (end === -1) return 0;
+  return (html.slice(start, end).match(/<p[\s>]/g) || []).length;
+};
+
+// 1line.ai is a deliberate exception: a real product the founder has not
+// cleared for publication, so it ships as a placeholder. Exempt by name, so
+// that adding a second exemption is a visible decision rather than a quiet one.
+const depthExempt = new Set(['1line-ai']);
+
+for (const slug of slugs) {
+  if (depthExempt.has(slug)) {
+    const html = readFileSync(join(dist, 'products', slug, 'index.html'), 'utf8');
+    /placeholder/i.test(html) && /noindex/.test(html)
+      ? pass(`${slug}: exempt placeholder, still marked noindex`)
+      : fail(`${slug}: exempt from depth but no longer a noindexed placeholder`);
+    continue;
+  }
+  const html = readFileSync(join(dist, 'products', slug, 'index.html'), 'utf8');
+  const n = depthOf(html, 'What it actually does');
+  n >= 3 ? pass(`${slug}: ${n} paragraphs`) : fail(`${slug}: ${n} paragraphs, needs 3`);
+}
+
+const workSrc = readFileSync(join(root, 'src/content/work.ts'), 'utf8');
+const workSlugs = [...workSrc.matchAll(/slug: '([^']+)'/g)].map((m) => m[1]);
+for (const slug of workSlugs) {
+  const html = readFileSync(join(dist, 'work', slug, 'index.html'), 'utf8');
+  const n = depthOf(html, 'What we built');
+  n >= 3 ? pass(`${slug}: ${n} paragraphs`) : fail(`${slug}: ${n} paragraphs, needs 3`);
 }
 
 // ---------------------------------------------------------------------------

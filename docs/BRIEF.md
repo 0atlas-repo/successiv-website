@@ -6,6 +6,23 @@
 
 > Locked with founder: “product — we have that experience but we want users to know our products.”
 
+> **Partly superseded, 2026-09-17.** Every product and engagement was read against
+> its source repository. Four items in this brief turned out not to match what the
+> code does, and the site no longer follows the brief on those points:
+>
+> - **Document signature workflow** → retitled *Document bundling & redaction*.
+>   There is no signing anywhere in that system. Nothing on the site may claim
+>   e-signature.
+> - **Retail / mall commerce ops** → removed. No repository supports it; the one it
+>   was mapped to is a SharePoint governance toolkit.
+> - **KYC** → no selfie, no face match, no text recognition, no bureau lookup.
+>   Review is manual.
+> - **Ops incident reporting** → no severity rules, no routing to a named owner.
+>
+> A sixth product, **Accounting**, was added pre-release. Where this brief and
+> `local_pm/projects/capability-depth/specs/capability-depth.md` disagree, the spec
+> is newer and wins.
+
 ---
 
 ## Brand voice

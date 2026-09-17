@@ -1,0 +1,41 @@
+---
+// Replaces the old IncidentsMock, which showed a severity bar and an "Owner:"
+// row on every incident. The system does neither — it has no severity field and
+// no assignment engine, and the page now says so. The mock has to agree.
+//
+// What it does have is an explicit case lifecycle, so that is what this shows.
+import MockFrame from './MockFrame.astro';
+
+const cases = [
+  { ref: 'C-1042', desc: 'Access fault at Site B', state: 'Open' },
+  { ref: 'C-1041', desc: 'Equipment alarm, unattended', state: 'Resolved' },
+  { ref: 'C-1038', desc: 'Reported spillage', state: 'Concluded' },
+  { ref: 'C-1035', desc: 'Delivery access blocked', state: 'Closed' },
+];
+---
+<MockFrame title="Cases — Today" meta="1 open">
+  <div class="space-y-1.5">
+    {cases.map((c) => (
+      <div class="flex items-center gap-2.5 rounded-lg border border-line bg-bg/40 px-2.5 py-2">
+        <div class="min-w-0 flex-1">
+          <div class="flex items-baseline gap-1.5">
+            <span class="shrink-0 font-head text-[9px] tracking-[0.06em] text-fg-subtle">{c.ref}</span>
+            <span class="truncate text-[10.5px] text-fg">{c.desc}</span>
+          </div>
+        </div>
+        <span
+          class:list={[
+            'shrink-0 rounded-full px-2 py-0.5 font-head text-[9px] uppercase tracking-[0.08em]',
+            c.state === 'Open' ? 'border border-line text-action' : 'text-fg-subtle',
+          ]}
+        >
+          {c.state}
+        </span>
+      </div>
+    ))}
+
+    <p class="border-t border-line pt-2.5 text-[10px] text-fg-subtle">
+      A case moves through its own states to close. Who handles it stays a human call.
+    </p>
+  </div>
+</MockFrame>

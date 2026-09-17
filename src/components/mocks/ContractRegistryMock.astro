@@ -1,0 +1,32 @@
+---
+import MockFrame from './MockFrame.astro';
+const contracts = [
+  { ref: 'CN-04', title: 'Service agreement', status: 'Live', open: 2 },
+  { ref: 'CN-11', title: 'Supply agreement', status: 'Live', open: 0 },
+  { ref: 'CN-15', title: 'Framework agreement', status: 'Renewal', open: 1 },
+  { ref: 'CN-18', title: 'Advisory retainer', status: 'Live', open: 3 },
+];
+---
+<MockFrame title="Contracts — Register" meta="4 active">
+  <div class="space-y-1.5">
+    {contracts.map((c) => (
+      <div class="flex items-center gap-2.5 rounded-lg border border-line bg-bg/40 px-2.5 py-2">
+        <div class="min-w-0 flex-1">
+          <div class="flex items-baseline gap-1.5">
+            <span class="shrink-0 font-head text-[9px] tracking-[0.06em] text-fg-subtle">{c.ref}</span>
+            <span class="truncate text-[10.5px] text-fg">{c.title}</span>
+          </div>
+          <div class="mt-0.5 text-[10px] text-fg-subtle">{c.open} open submission{c.open === 1 ? '' : 's'}</div>
+        </div>
+        <span
+          class:list={[
+            'shrink-0 rounded-full px-2 py-0.5 font-head text-[9px] uppercase tracking-[0.08em]',
+            c.status === 'Live' ? 'border border-line text-fg-muted' : 'text-fg-subtle',
+          ]}
+        >
+          {c.status}
+        </span>
+      </div>
+    ))}
+  </div>
+</MockFrame>

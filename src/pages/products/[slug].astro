@@ -18,6 +18,7 @@ interface Props { product: Product }
 const { product } = Astro.props;
 
 const others = products.filter((p) => p.slug !== product.slug);
+const restScreens = product.screens.slice(1);
 ---
 <Layout
   title={product.name}
@@ -42,6 +43,13 @@ const others = products.filter((p) => p.slug !== product.slug);
             </p>
           )}
 
+          {product.preRelease && (
+            <p class="reveal mt-5 max-w-[540px] rounded-[12px] border border-dashed border-line px-4 py-3 text-[14px] text-fg-subtle">
+              Not released yet. Everything described here is built and running in closed beta —
+              we have not set a launch date, so we are not claiming one.
+            </p>
+          )}
+
           <div class="reveal mt-8 flex flex-wrap gap-4">
             <Btn href={`mailto:${site.email}`}>{product.cta}</Btn>
             {product.url ? (
@@ -57,7 +65,7 @@ const others = products.filter((p) => p.slug !== product.slug);
 
         <div class="reveal relative max-lg:mx-auto max-lg:max-w-[420px]">
           <div class="mock-wash pointer-events-none absolute -inset-10" aria-hidden="true"></div>
-          <div class="relative lg:rotate-[1.2deg]"><ProductMock mock={product.mock} /></div>
+          <div class="relative lg:rotate-[1.2deg]"><ProductMock mock={product.screens[0]} /></div>
         </div>
       </div>
     </div>
@@ -74,6 +82,55 @@ const others = products.filter((p) => p.slug !== product.slug);
       </p>
     </div>
   </section>
+
+  <!-- The long form. Absent by design on a placeholder page. -->
+  {product.detail.length > 0 && (
+    <section class="border-t border-line py-[90px]">
+      <div class="mx-auto grid max-w-[1180px] grid-cols-1 gap-10 px-6 md:grid-cols-[260px_1fr]">
+        <div class="reveal">
+          <span class="font-head text-[13px] font-semibold uppercase tracking-[0.12em] text-accent">
+            What it actually does
+          </span>
+        </div>
+        <div class="reveal max-w-[720px] space-y-6">
+          {product.detail.map((para) => (
+            <p class="text-[16px] leading-[1.7] text-fg-muted">{para}</p>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Remaining screens. -->
+  {restScreens.length > 0 && (
+    <section class="border-t border-line py-[90px]">
+      <div class="mx-auto max-w-[1180px] px-6">
+        <div class="reveal mb-10 max-w-[640px]">
+          <span class="mb-4 inline-block font-head text-[13px] font-semibold uppercase tracking-[0.12em] text-accent">
+            Screens
+          </span>
+          <h2 class="text-[clamp(28px,4vw,40px)] text-fg">Drawn, not screenshotted.</h2>
+          <p class="mt-3 text-[15px] text-fg-muted">
+            Illustrations of the product. No customer data.
+          </p>
+        </div>
+
+        <div
+          class:list={[
+            'grid gap-8',
+            restScreens.length > 1 ? 'sm:grid-cols-2' : 'max-w-[520px]',
+          ]}
+        >
+          {restScreens.map((screen) => (
+            <div class="reveal relative">
+              <div class="mock-wash pointer-events-none absolute -inset-6" aria-hidden="true"></div>
+              <div class="relative"><ProductMock mock={screen} /></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
 
   <!-- How it works: editorial rows, the direction chosen in the previews exercise. -->
   <section class="border-t border-line py-[90px]">

@@ -1,0 +1,160 @@
+---
+// One page per engagement. Mirrors src/pages/products/[slug].astro so the two
+// halves of the site read the same way.
+//
+// Everything rendered here comes from src/content/work.ts. Nothing is written
+// in this file, deliberately: the anonymisation rules live with the data, and
+// splitting copy across data and markup is how a client name eventually slips
+// into a page nobody re-reads.
+import { withBase } from '../../base';
+import Layout from '../../layouts/Layout.astro';
+import Btn from '../../components/Btn.astro';
+import WorkMock from '../../components/mocks/WorkMock.astro';
+import CTA from '../../components/CTA.astro';
+import { work, type WorkItem } from '../../content/work';
+import { site } from '../../content/site';
+
+export function getStaticPaths() {
+  return work.map((item) => ({
+    params: { slug: item.slug },
+    props: { item },
+  }));
+}
+
+interface Props { item: WorkItem }
+const { item } = Astro.props;
+
+const others = work.filter((w) => w.slug !== item.slug);
+const [leadScreen, ...restScreens] = item.screens;
+---
+<Layout title={item.title} description={`${item.angle}. ${item.problem}`}>
+  <!-- Intro: what it was on the left, the lead screen on the right. -->
+  <section class="hero-wash border-b border-line pb-20 pt-[88px]">
+    <div class="mx-auto max-w-[1180px] px-6">
+      <div class="grid items-center gap-14 lg:grid-cols-[1fr_0.9fr]">
+        <div>
+          <p class="reveal mb-5 font-head text-[13px] font-semibold uppercase tracking-[0.14em] text-accent">
+            {item.angle}
+          </p>
+          <h1 class="reveal text-[clamp(34px,5vw,56px)] text-fg">{item.title}</h1>
+          <p class="reveal mt-4 max-w-[540px] text-[clamp(18px,2vw,21px)] text-fg-muted">{item.problem}</p>
+
+          <p class="reveal mt-5 max-w-[540px] rounded-[12px] border border-dashed border-line px-4 py-3 text-[14px] text-fg-subtle">
+            Named by what it does, not who it was for. The screens below are illustrations
+            we drew — never customer software.
+          </p>
+
+          <div class="reveal mt-8 flex flex-wrap gap-4">
+            <Btn href={`mailto:${site.email}`}>Talk to us</Btn>
+            <Btn href={withBase('/work/')} variant="ghost">All work</Btn>
+          </div>
+        </div>
+
+        {leadScreen && (
+          <div class="reveal relative max-lg:mx-auto max-lg:max-w-[420px]">
+            <div class="mock-wash pointer-events-none absolute -inset-10" aria-hidden="true"></div>
+            <div class="relative lg:rotate-[1.2deg]"><WorkMock mock={leadScreen} /></div>
+          </div>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <!-- The long form. -->
+  <section class="py-[90px]">
+    <div class="mx-auto grid max-w-[1180px] grid-cols-1 gap-10 px-6 md:grid-cols-[260px_1fr]">
+      <div class="reveal">
+        <span class="font-head text-[13px] font-semibold uppercase tracking-[0.12em] text-accent">
+          What we built
+        </span>
+      </div>
+      <div class="reveal max-w-[720px] space-y-6">
+        {item.detail.map((para, i) => (
+          <p
+            class:list={[
+              i === 0
+                ? 'font-head text-[clamp(19px,2.4vw,24px)] font-medium leading-[1.45] text-fg'
+                : 'text-[16px] leading-[1.7] text-fg-muted',
+            ]}
+          >
+            {para}
+          </p>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- The short form, kept because it is how the index card reads. -->
+  <section class="border-t border-line py-[90px]">
+    <div class="mx-auto max-w-[1180px] px-6">
+      <div class="grid gap-8 md:grid-cols-3">
+        {[
+          { k: 'Problem', v: item.problem },
+          { k: 'Approach', v: item.approach },
+          { k: 'Outcome', v: item.outcome },
+        ].map((row) => (
+          <div class="reveal border-t border-line pt-5">
+            <span class="font-head text-[11px] font-semibold uppercase tracking-[0.1em] text-accent">{row.k}</span>
+            <p class="mt-2 text-[15px] leading-[1.65] text-fg-muted">{row.v}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Remaining screens. -->
+  {restScreens.length > 0 && (
+    <section class="border-t border-line py-[90px]">
+      <div class="mx-auto max-w-[1180px] px-6">
+        <div class="reveal mb-10 max-w-[640px]">
+          <span class="mb-4 inline-block font-head text-[13px] font-semibold uppercase tracking-[0.12em] text-accent">
+            Screens
+          </span>
+          <h2 class="text-[clamp(28px,4vw,40px)] text-fg">Drawn, not screenshotted.</h2>
+          <p class="mt-3 text-[15px] text-fg-muted">
+            Illustrations of how the system worked. No customer data, no customer interface.
+          </p>
+        </div>
+
+        <div
+          class:list={[
+            'grid gap-8',
+            // One screen left over would sit in half a two-column grid and
+            // leave the other half visibly empty.
+            restScreens.length > 1 ? 'sm:grid-cols-2' : 'max-w-[520px]',
+          ]}
+        >
+          {restScreens.map((screen) => (
+            <div class="reveal relative">
+              <div class="mock-wash pointer-events-none absolute -inset-6" aria-hidden="true"></div>
+              <div class="relative"><WorkMock mock={screen} /></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Other work -->
+  <section class="border-t border-line py-[90px]">
+    <div class="mx-auto max-w-[1180px] px-6">
+      <h2 class="reveal mb-8 font-head text-[22px] font-semibold text-fg">Other work</h2>
+      <div class="flex flex-wrap gap-3">
+        {others.map((w) => (
+          <a
+            href={withBase(`/work/${w.slug}/`)}
+            class="reveal cursor-pointer rounded-full border border-line px-5 py-2.5 font-head text-[14px] font-medium text-fg-muted transition-all duration-200 hover:-translate-y-0.5 hover:border-action hover:text-accent"
+          >
+            {w.title}
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CTA
+    kicker="Get in touch"
+    title="Recognise your own problem here?"
+    lede="Tell us what you're trying to solve. We'll say honestly whether it's a product fit or a build."
+  />
+</Layout>
