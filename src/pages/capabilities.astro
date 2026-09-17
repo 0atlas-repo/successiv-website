@@ -1,10 +1,10 @@
 ---
-import Base from '../../layouts/Base.astro';
-import PageHero from '../../components/PageHero.astro';
-import CTA from '../../components/CTA.astro';
-import { capabilities } from '../../content/capabilities';
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import CTA from '../components/CTA.astro';
+import { capabilities } from '../content/capabilities';
 ---
-<Base
+<Layout
   title="Capabilities"
   description="AI apps, Shopify, SharePoint and Microsoft 365, document workflows, identity, and operations portals."
 >
@@ -37,4 +37,4 @@ import { capabilities } from '../../content/capabilities';
   </section>
 
   <CTA />
-</Base>
+</Layout>

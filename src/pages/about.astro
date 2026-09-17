@@ -1,12 +1,12 @@
 ---
-import Base from '../../layouts/Base.astro';
-import PageHero from '../../components/PageHero.astro';
-import Principles from '../../components/Principles.astro';
-import Team from '../../components/Team.astro';
-import CTA from '../../components/CTA.astro';
-import { site } from '../../content/site';
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import Principles from '../components/Principles.astro';
+import Team from '../components/Team.astro';
+import CTA from '../components/CTA.astro';
+import { site } from '../content/site';
 ---
-<Base
+<Layout
   title="About"
   description="Successiv is the product brand of 0atlas. We build and ship our own products, and take on complex delivery when the fit is right."
 >
@@ -49,4 +49,4 @@ import { site } from '../../content/site';
   <Principles />
   <Team />
   <CTA />
-</Base>
+</Layout>

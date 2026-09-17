@@ -1,5 +1,5 @@
 ---
-import Base from '../../layouts/Base.astro';
+import Layout from '../../layouts/Layout.astro';
 import Btn from '../../components/Btn.astro';
 import ProductMock from '../../components/mocks/ProductMock.astro';
 import CTA from '../../components/CTA.astro';
@@ -18,7 +18,7 @@ const { product } = Astro.props;
 
 const others = products.filter((p) => p.slug !== product.slug);
 ---
-<Base
+<Layout
   title={product.name}
   description={product.needsCopy ? product.oneLiner : `${product.oneLiner} ${product.problem}`}
   noindex={product.needsCopy}
@@ -122,4 +122,4 @@ const others = products.filter((p) => p.slug !== product.slug);
     title={`Want to see ${product.name} on your own data?`}
     lede="Send us a line describing your setup and we'll show you the parts that matter."
   />
-</Base>
+</Layout>

@@ -1,10 +1,10 @@
 ---
-import Base from '../../layouts/Base.astro';
-import PageHero from '../../components/PageHero.astro';
-import Btn from '../../components/Btn.astro';
-import { site } from '../../content/site';
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import Btn from '../components/Btn.astro';
+import { site } from '../content/site';
 ---
-<Base
+<Layout
   title="Contact"
   description={`Tell us what you're building. Email ${site.email}.`}
 >
@@ -47,4 +47,4 @@ import { site } from '../../content/site';
       </div>
     </div>
   </section>
-</Base>
+</Layout>

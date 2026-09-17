@@ -11,9 +11,10 @@
      indigo #384f9e   logo's blue
      navy   #0047bb   site's "Deep Tech Blue"
 
-   Dark is the brand default. Light is derived, not inverted:
-   cyan on white is ~1.9:1 and fails AA, so light mode promotes
-   navy to the action colour and demotes cyan to decoration.
+   Light is the default surface; dark is the alternate, offered via the
+   header toggle and honoured when the visitor's OS asks for it.
+   Cyan on white is ~1.9:1 and fails AA, so in light the action colour
+   is navy and cyan is demoted to decoration. In dark, cyan returns.
    ============================================================ */
 
 @theme {
@@ -27,48 +28,10 @@
   --color-navy-lift: #4a90e2;
   --color-ink: #231f20;
 
-  /* Semantic tokens — these flip per theme. Components use only these. */
-  --color-bg: #0e0d0f;
-  --color-surface: #17151a;
-  --color-surface-2: #201d24;
-  --color-fg: #ffffff;
-  --color-fg-muted: #9aa0b4;
-  --color-fg-subtle: #7d8399;
-  --color-line: rgba(255, 255, 255, 0.09);
-  --color-line-strong: rgba(255, 255, 255, 0.18);
-  --color-action: #5acaed;
-  --color-on-action: #0a1a4a;
-  --color-accent: #5acaed;
-
-  --font-head: "Space Grotesk", "DM Sans", sans-serif;
-  --font-body: "DM Sans", sans-serif;
-
-  --ease-brand: cubic-bezier(0.16, 1, 0.3, 1);
-  --radius-brand: 16px;
-}
-
-/* ---------- Light theme ----------
-   Applied when the system asks for light and the visitor has not
-   explicitly chosen dark, or when they have explicitly chosen light.
-   Contrast on #ffffff: ink 16.3:1 · navy 8.0:1 · muted 7.4:1 · subtle 5.4:1
-*/
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme="dark"]) {
-    --color-bg: #ffffff;
-    --color-surface: #f6f7f9;
-    --color-surface-2: #eef1f5;
-    --color-fg: #231f20;
-    --color-fg-muted: #56545e;
-    --color-fg-subtle: #6b6975;
-    --color-line: rgba(35, 31, 32, 0.12);
-    --color-line-strong: rgba(35, 31, 32, 0.24);
-    --color-action: #0047bb;
-    --color-on-action: #ffffff;
-    --color-accent: #0047bb;
-  }
-}
-
-:root[data-theme="light"] {
+  /* Semantic tokens — these flip per theme. Components use only these.
+     Light is the base: docs/hiring/DESIGNER_BRIEF.md asks for a "light, sharp
+     SaaS UI with one craft moment, not a full dark enterprise clone".
+     Contrast on #ffffff: ink 16.3:1 · navy 8.0:1 · muted 7.4:1 · subtle 5.4:1 */
   --color-bg: #ffffff;
   --color-surface: #f6f7f9;
   --color-surface-2: #eef1f5;
@@ -80,6 +43,46 @@
   --color-action: #0047bb;
   --color-on-action: #ffffff;
   --color-accent: #0047bb;
+
+  --font-head: "Space Grotesk", "DM Sans", sans-serif;
+  --font-body: "DM Sans", sans-serif;
+
+  --ease-brand: cubic-bezier(0.16, 1, 0.3, 1);
+  --radius-brand: 16px;
+}
+
+/* ---------- Dark theme ----------
+   Applied when the visitor explicitly chooses it, or when their OS asks for
+   dark and they have not explicitly chosen light.
+   Contrast on #0e0d0f: cyan 10.3:1 · fg 18.6:1 · muted 7.5:1 · subtle 5.2:1 */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+  --color-bg: #0e0d0f;
+  --color-surface: #17151a;
+  --color-surface-2: #201d24;
+  --color-fg: #ffffff;
+  --color-fg-muted: #9aa0b4;
+  --color-fg-subtle: #7d8399;
+  --color-line: rgba(255, 255, 255, 0.09);
+  --color-line-strong: rgba(255, 255, 255, 0.18);
+  --color-action: #5acaed;
+  --color-on-action: #0a1a4a;
+  --color-accent: #5acaed;
+  }
+}
+
+:root[data-theme="dark"] {
+  --color-bg: #0e0d0f;
+  --color-surface: #17151a;
+  --color-surface-2: #201d24;
+  --color-fg: #ffffff;
+  --color-fg-muted: #9aa0b4;
+  --color-fg-subtle: #7d8399;
+  --color-line: rgba(255, 255, 255, 0.09);
+  --color-line-strong: rgba(255, 255, 255, 0.18);
+  --color-action: #5acaed;
+  --color-on-action: #0a1a4a;
+  --color-accent: #5acaed;
 }
 
 html {
@@ -109,26 +112,27 @@ h1, h2, h3 {
   outline-offset: 3px;
 }
 
-/* Theme-aware logo: show one wordmark, hide the other. */
-[data-logo="dark"] { display: none; }
-[data-logo="light"] { display: block; }
+/* Theme-aware logo. data-logo="dark" is the ink artwork for light surfaces;
+   data-logo="light" is the white artwork for dark surfaces. */
+[data-logo="light"] { display: none; }
+[data-logo="dark"] { display: block; }
 
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme="dark"]) [data-logo="light"] { display: none; }
-  :root:not([data-theme="dark"]) [data-logo="dark"] { display: block; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) [data-logo="dark"] { display: none; }
+  :root:not([data-theme="light"]) [data-logo="light"] { display: block; }
 }
-:root[data-theme="light"] [data-logo="light"] { display: none; }
-:root[data-theme="light"] [data-logo="dark"] { display: block; }
-:root[data-theme="dark"] [data-logo="light"] { display: block; }
 :root[data-theme="dark"] [data-logo="dark"] { display: none; }
+:root[data-theme="dark"] [data-logo="light"] { display: block; }
+:root[data-theme="light"] [data-logo="dark"] { display: block; }
+:root[data-theme="light"] [data-logo="light"] { display: none; }
 
 /* ---------- Hero wash ----------
    Cyan/navy bloom. Rebalanced in light mode or it turns muddy.
 */
 .hero-wash {
   background:
-    radial-gradient(1100px 620px at 82% -10%, color-mix(in oklab, var(--color-cyan) 16%, transparent), transparent 60%),
-    radial-gradient(900px 500px at 10% 10%, color-mix(in oklab, var(--color-navy) 28%, transparent), transparent 55%),
+    radial-gradient(1100px 620px at 82% -10%, color-mix(in oklab, var(--color-cyan) 22%, transparent), transparent 62%),
+    radial-gradient(900px 500px at 10% 10%, color-mix(in oklab, var(--color-navy) 10%, transparent), transparent 58%),
     var(--color-bg);
 }
 :root[data-theme="light"] .hero-wash {
@@ -162,23 +166,23 @@ h1, h2, h3 {
   transform: translateY(0);
 }
 
-/* Gradient text. On dark it runs cyan→lifted navy so the far end stays above
-   3:1; on light it runs navy→indigo, both of which clear 7:1 on white. */
+/* Gradient text. On light it runs navy→indigo, both clearing 7:1 on white.
+   On dark it runs cyan→lifted navy so the far end stays above 3:1. */
 .grad-text {
-  background: linear-gradient(100deg, var(--color-cyan) 10%, var(--color-navy-lift) 90%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-:root[data-theme="light"] .grad-text {
   background: linear-gradient(100deg, var(--color-navy) 10%, var(--color-indigo) 90%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme="dark"]) .grad-text {
-    background: linear-gradient(100deg, var(--color-navy) 10%, var(--color-indigo) 90%);
+:root[data-theme="dark"] .grad-text {
+  background: linear-gradient(100deg, var(--color-cyan) 10%, var(--color-navy-lift) 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .grad-text {
+    background: linear-gradient(100deg, var(--color-cyan) 10%, var(--color-navy-lift) 90%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -211,19 +215,19 @@ h1, h2, h3 {
 */
 .mock-frame {
   box-shadow:
-    0 32px 64px -28px color-mix(in oklab, var(--color-navy) 55%, transparent),
-    0 4px 12px -4px rgba(0, 0, 0, 0.35);
-}
-:root[data-theme="light"] .mock-frame {
-  box-shadow:
     0 32px 64px -28px color-mix(in oklab, var(--color-navy) 22%, transparent),
     0 2px 8px -4px rgba(35, 31, 32, 0.12);
 }
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme="dark"]) .mock-frame {
+:root[data-theme="dark"] .mock-frame {
+  box-shadow:
+    0 32px 64px -28px color-mix(in oklab, var(--color-navy) 55%, transparent),
+    0 4px 12px -4px rgba(0, 0, 0, 0.35);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .mock-frame {
     box-shadow:
-      0 32px 64px -28px color-mix(in oklab, var(--color-navy) 22%, transparent),
-      0 2px 8px -4px rgba(35, 31, 32, 0.12);
+      0 32px 64px -28px color-mix(in oklab, var(--color-navy) 55%, transparent),
+      0 4px 12px -4px rgba(0, 0, 0, 0.35);
   }
 }
 

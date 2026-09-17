@@ -1,11 +1,11 @@
 ---
-import Base from '../../layouts/Base.astro';
-import PageHero from '../../components/PageHero.astro';
-import WorkMock from '../../components/mocks/WorkMock.astro';
-import CTA from '../../components/CTA.astro';
-import { featuredWork, listedWork } from '../../content/work';
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import WorkMock from '../components/mocks/WorkMock.astro';
+import CTA from '../components/CTA.astro';
+import { featuredWork, listedWork } from '../content/work';
 ---
-<Base
+<Layout
   title="Work"
   description="Anonymised delivery work: tender and contract portals, document signing, incident reporting, and more."
 >
@@ -75,4 +75,4 @@ import { featuredWork, listedWork } from '../../content/work';
     title="Recognise your own problem in one of these?"
     lede="Tell us what you're trying to solve. We'll say honestly whether it's a product fit or a build."
   />
-</Base>
+</Layout>
