@@ -4,14 +4,19 @@ import SectionHead from './SectionHead.astro';
 ---
 <section id="team" class="border-t border-line py-[100px]">
   <div class="mx-auto max-w-[1180px] px-6">
-    <SectionHead kicker="Who you'll work with" title="Founder-led. Engineer-run." />
-    <div class="grid gap-6 sm:grid-cols-2">
+    <SectionHead
+      kicker="Who you'll work with"
+      title="Founder-led. Built by AI developers."
+      lede={site.teamNote}
+    />
+    <div class="grid items-start gap-6 sm:grid-cols-2">
       {site.team.map((m) => (
         <article class="reveal rounded-[16px] border border-line surface-card p-8 transition-all duration-300 hover:-translate-y-1 hover:border-action/40">
           <span class="inline-block rounded-full bg-action/10 px-3 py-1.5 font-head text-[12px] font-semibold uppercase tracking-[0.1em] text-accent">
             {m.role}
           </span>
-          <h3 class="mb-3 mt-4 font-head text-[22px] font-semibold text-fg">{m.name}</h3>
+          <h3 class="mb-2 mt-4 font-head text-[22px] font-semibold text-fg">{m.name}</h3>
+          {m.bio && <p class="mb-4 text-[15px] text-fg-muted">{m.bio}</p>}
           <a
             href={`mailto:${m.email}`}
             class="cursor-pointer border-b border-line pb-0.5 text-[15px] text-fg-muted transition-colors duration-200 hover:border-action hover:text-accent"

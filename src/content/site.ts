@@ -12,7 +12,7 @@ export const site = {
   legacyTagline: 'Intelligence, applied successively.',
 
   description:
-    'Successiv builds AI software products for operators — commerce, identity, leave, and creator workflows — backed by years of complex delivery.',
+    'Successiv builds AI products and connects them to the systems a business already runs — commerce, identity, people, and content operations.',
 
   parent: { name: '0atlas', url: 'https://0atlas.com' },
 
@@ -27,13 +27,25 @@ export const site = {
     { href: '/contact/', label: 'Contact' },
   ],
 
-  // Decorative only (aria-hidden). "Hong Kong" deliberately dropped.
-  marquee: ['OWN PRODUCTS', 'APPLIED AI', 'DEEP TECH', 'DELIVERY DEPTH'],
+  // Decorative only (aria-hidden). Says what a buyer gets, not what we use:
+  // "deep tech" and "applied AI" told the reader nothing they could act on.
+  marquee: ['AI PRODUCTS', 'BUSINESS INTEGRATION', 'SHIPPED, NOT PILOTED', 'FEWER MANUAL STEPS'],
 
+  // The founder's background is here as a risk signal for a buyer — "this will
+  // actually get delivered" — not as a CV. Former employers are described, not
+  // named, pending the founder's decision on which may be named.
   team: [
-    { name: 'Ryder Lee', role: 'Founder', email: 'ryderlee@successiv.com' },
-    { name: 'John Chau', role: 'Tech Lead', email: 'johnchau@successiv.com' },
+    {
+      name: 'Ryder Lee',
+      role: 'Founder',
+      email: 'ryderlee@successiv.com',
+      bio: 'Twenty years building and running software teams, including VP engineering roles at a global investment bank and a Fortune 100 insurer.',
+    },
+    { name: 'John Chau', role: 'Tech Lead', email: 'johnchau@successiv.com', bio: '' },
   ],
+
+  teamNote:
+    'Behind them is a small team of AI developers who build and ship everything on this site. You deal with the people writing the code.',
 
   // Carried over from the previous site at the founder's request.
   principles: [

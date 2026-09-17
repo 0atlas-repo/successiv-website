@@ -38,6 +38,8 @@ const forbidden = [
   /\b[redacted-client]\b/i, /\b[redacted-client]\b/i, /\b[redacted-client]\b/i, /\b[redacted-client]\b/i,
   /[redacted-slug]/i, /[redacted-slug]/i, /[redacted-slug]/i,
   /[redacted-slug]/i, /[redacted-slug]/i, /[redacted-slug]/i, /[redacted-slug]/i,
+  // Former employer the founder explicitly asked not to name.
+  /[redacted-employer]/i,
   /[redacted-slug]/i, /[redacted-slug]/i, /[redacted-slug]/i, /0atlas-repo/i,
 ];
 let leaks = 0;
