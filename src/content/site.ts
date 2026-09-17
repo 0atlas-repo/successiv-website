@@ -8,8 +8,9 @@ export const site = {
 
   // Product-led positioning, locked with the founder in docs/BRIEF.md.
   tagline: 'Products that run the work. Delivery depth behind them.',
-  // Carried over from the previous site at the founder's request.
-  legacyTagline: 'Intelligence, applied successively.',
+  // Carried over from the previous site, then widened by the founder to name
+  // the business half as well as the AI half.
+  legacyTagline: 'Business and intelligence, applied successively.',
 
   description:
     'Successiv builds AI products and connects them to the systems a business already runs — commerce, identity, people, and content operations.',
