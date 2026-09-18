@@ -7,13 +7,13 @@ export const site = {
   url: 'https://successiv.com',
 
   // Product-led positioning, locked with the founder in docs/BRIEF.md.
-  tagline: 'Products that run the work. Delivery depth behind them.',
+  tagline: 'Software that runs the work — and delivery when you need it built.',
   // Carried over from the previous site, then widened by the founder to name
   // the business half as well as the AI half.
   legacyTagline: 'Business and intelligence, applied successively.',
 
   description:
-    'Successiv builds AI products and connects them to the systems a business already runs — commerce, identity, people, and content operations.',
+    'Successiv builds AI software for commerce, identity, finance, and operations. We also connect that software to the systems you already use, because an assistant that cannot see stock or a check that never reaches the CRM does not help anyone.',
 
   parent: { name: '0atlas', url: 'https://0atlas.com' },
 
@@ -30,7 +30,7 @@ export const site = {
 
   // Decorative only (aria-hidden). Says what a buyer gets, not what we use:
   // "deep tech" and "applied AI" told the reader nothing they could act on.
-  marquee: ['AI PRODUCTS', 'BUSINESS INTEGRATION', 'SHIPPED, NOT PILOTED', 'FEWER MANUAL STEPS'],
+  marquee: ['PRODUCTS IN PRODUCTION', 'WIRED TO YOUR SYSTEMS', 'SHIP EARLY, ITERATE', 'PEOPLE ON THE HARD CALLS'],
 
   // The founder's background is here as a risk signal for a buyer — "this will
   // actually get delivered" — not as a CV. Former employers are described, not
@@ -46,24 +46,24 @@ export const site = {
   ],
 
   teamNote:
-    'Behind them is a small team of AI developers who build and ship everything on this site. You deal with the people writing the code.',
+    'A small team of AI developers builds and ships what you see on this site. You talk to the people writing the code.',
 
   // Carried over from the previous site at the founder's request.
   principles: [
     {
       num: '01',
-      title: 'Applied, not academic',
-      body: 'Every model, agent, and pipeline is built against a real workflow — measured by what it changes in production, not benchmark scores.',
+      title: 'Built against a real workflow',
+      body: 'Every model, agent, and pipeline is measured by what it changes after go-live — not by a benchmark score.',
     },
     {
       num: '02',
-      title: 'Built to compound',
-      body: 'We architect for the next iteration from day one, so each release makes the following one faster and cheaper, not harder.',
+      title: 'Each release should make the next one easier',
+      body: 'We design for the next iteration from day one, so later releases get faster and cheaper, not harder.',
     },
     {
       num: '03',
-      title: 'Small team, direct line',
-      body: 'You work with the people actually building the system — no account layers between you and the engineers who ship your code.',
+      title: 'You talk to the builders',
+      body: 'No account layer between you and the engineers who ship your code.',
     },
   ],
 } as const;

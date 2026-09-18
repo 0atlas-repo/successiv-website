@@ -20,10 +20,12 @@ import ChatMock from './mocks/ChatMock.astro';
     <div class="grid items-center gap-14 lg:grid-cols-[1.05fr_0.95fr]">
       <div>
         <p class="reveal mb-[22px] font-head text-[13px] font-semibold uppercase tracking-[0.14em] text-accent">
-          AI products · Business integration
+          AI software · Systems you already run
         </p>
-        <h1 class="reveal text-[clamp(38px,6vw,68px)] text-fg">
-          Products that run<br />
+        <!-- 60px cap, not 68: "Software that runs" needs the smaller size to hold
+             its own line above 1150px. Below the lg breakpoint it wraps anyway. -->
+        <h1 class="reveal text-[clamp(38px,6vw,60px)] text-fg">
+          Software that runs<br />
           <span class="grad-text">the work.</span>
         </h1>
         <p class="reveal mt-[22px] max-w-[540px] text-[clamp(17px,2vw,19px)] text-fg-muted">
