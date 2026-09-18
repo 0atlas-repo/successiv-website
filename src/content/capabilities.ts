@@ -20,8 +20,9 @@ export interface Capability {
 export const capabilitiesPage = {
   kicker: 'Capabilities',
   title: "What we're actually good at.",
-  // No number. An entry can be added or withdrawn without the lede lying.
-  lede: 'Each of these has shipped into production more than once. If your problem sits in one of them, we have likely met it before.',
+  // No number, and no "more than once": some of these trace to a single
+  // shipped system. An entry can be added or withdrawn without the lede lying.
+  lede: 'Each of these has shipped into production. If your problem sits in one of them, we have likely met it before.',
 } as const;
 
 export const capabilities: Capability[] = [
@@ -56,10 +57,12 @@ export const capabilities: Capability[] = [
     // Said "operations portals" until 2026-09-18. The ops work is an assistant
     // that answers from a procedure library; it is not a portal, and it
     // deliberately does not decide who owns an incident. Recognition portals
-    // are real and carry the states, owners, and audit trail claimed here.
+    // were tried here and dropped: they have phases and a visible panel, but
+    // no audit log. Tender carries all three — who scored what, when, against
+    // which criterion — and contract logs before and after values.
     num: '06',
     title: 'Processes that outlast staff changes',
-    body: 'Tender, contract, and recognition portals with real states, named owners, and an audit trail that survives turnover.',
+    body: 'Tender and contract portals with real states, named owners, and an audit trail that survives turnover.',
   },
   {
     // Claimed "an owner anyone can see" until 2026-09-18. The CMS has states and
