@@ -76,8 +76,14 @@ place, and static output is a cleaner fit for Pages.
 
 - Components read from `src/content/*.ts`. Copy, nav, email, and product data
   are data, not markup — change them there, not in a page.
-- Components use semantic colour tokens only (`bg-bg`, `text-fg`, `bg-action`).
-  Never a raw hex, or the light theme breaks.
+- Components use semantic colour tokens only (`bg-bg`, `text-fg`, `bg-action`,
+  and the status set `bg-ok-soft`/`text-ok`, `bg-warn-soft`/`text-warn`,
+  `bg-danger-soft`/`text-danger` for status pills on the mocked screens). Never
+  a raw hex, or the light theme breaks.
+- The mocked screens' title-bar dots use `bg-win-close`/`bg-win-min`/`bg-win-max`
+  instead — constants, not semantic tokens, because a real title bar shows the
+  same three colours on a light desktop and a dark one. Kept separate from the
+  status tokens on purpose, so a window button is never read as a status.
 - Two themes ship. Light is the default surface, per
   `docs/hiring/DESIGNER_BRIEF.md`; dark is the alternate, applied on explicit
   choice or when the OS asks for it. Check both before calling a change done.

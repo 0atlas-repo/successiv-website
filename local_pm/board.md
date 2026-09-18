@@ -6,7 +6,7 @@ One row per active plan. If it is not here, it does not exist.
 |---|---|---|
 | [Product-led site build](projects/product-led-site/plans/build.md) | built, awaiting sign-off | Founder review, then enable Pages + DNS |
 | [Capability depth](projects/capability-depth/specs/capability-depth.md) | shipped and live at cb92cd7 | Done. Two products hidden since, see loose tasks |
-| [Mock realism](projects/mock-realism/plans/rollout.md) | rolled out across all 32 screens | Merge to main, push, verify the deploy |
+| [Mock realism](projects/mock-realism/plans/rollout.md) | shipped and live at 36262da | Done. Three chrome flags open, see the log |
 
 ## Loose tasks
 
@@ -32,7 +32,10 @@ One row per active plan. If it is not here, it does not exist.
 - Fix docs/BRIEF.md: the product is "Creators Sphere", not "Creator Sphere".
 - Tell the Creators Sphere owner: creatorssphere.sg (double s) does not resolve, so the hello@ address in their footer is dead.
 - Decide whether the three principles get reframed toward buyer value.
-- DECIDE: hosting. Org is on the free plan so private Pages will not serve. See docs/DEPLOYMENT.md.
+- DECIDE: hosting. Org is on the free plan so private Pages will not serve.
+  NOTE 2026-09-18: `docs/DEPLOYMENT.md` does not exist. CLAUDE.md line 69 points at it
+  and so did this row. The hosting blocker is real; the document recording it was never
+  written. Write it or drop both references.
 - If the repo is ever made public, redact the client mapping table in docs/BRIEF.md first.
 - Replace `public/img/og-placeholder.png` with real Open Graph artwork.
 - Set GitHub Pages source to "GitHub Actions" and point successiv.com DNS at Pages.
