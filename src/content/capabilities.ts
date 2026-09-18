@@ -3,12 +3,26 @@
 // The title is what the customer gets. The body is what it actually is, for the
 // technical evaluator who reads further. Scanning the titles alone should tell
 // someone whether we solve their problem — no stack names in that layer.
+//
+// Every line here must trace to a shipped repository, same rule as products and
+// work. docs/BRIEF.md lists six capabilities; that list is superseded — it still
+// carries e-signature and retail, both of which were withdrawn in 2026-09.
+//
+// The page copy lives here too, so the count in the lede cannot drift from the
+// number of entries again. It said "six" while eight shipped.
 
 export interface Capability {
   num: string;
   title: string;
   body: string;
 }
+
+export const capabilitiesPage = {
+  kicker: 'Capabilities',
+  title: "What we're actually good at.",
+  // No number. An entry can be added or withdrawn without the lede lying.
+  lede: 'Each of these has shipped into production more than once. If your problem sits in one of them, we have likely met it before.',
+} as const;
 
 export const capabilities: Capability[] = [
   {
@@ -39,18 +53,26 @@ export const capabilities: Capability[] = [
     body: 'Line-of-business apps that live in Microsoft 365 and SharePoint, so the team does not need another login or another habit.',
   },
   {
+    // Said "operations portals" until 2026-09-18. The ops work is an assistant
+    // that answers from a procedure library; it is not a portal, and it
+    // deliberately does not decide who owns an incident. Recognition portals
+    // are real and carry the states, owners, and audit trail claimed here.
     num: '06',
     title: 'Processes that outlast staff changes',
-    body: 'Tender, contract, and operations portals with real states, named owners, and an audit trail that survives turnover.',
+    body: 'Tender, contract, and recognition portals with real states, named owners, and an audit trail that survives turnover.',
   },
   {
+    // Claimed "an owner anyone can see" until 2026-09-18. The CMS has states and
+    // a backup trail, but no per-section editor roles and no approval chain.
     num: '07',
-    title: 'Retail operations that scale',
-    body: 'Storefront and back-of-house tooling for teams running more than one location or channel.',
-  },
-  {
-    num: '08',
     title: 'Content work visible in one place',
-    body: 'Pipelines for teams producing on a schedule, where every piece has a state and an owner anyone can see.',
+    body: 'One record holds every language version of a piece, with a preview before it goes live and publishing that is a status change, not a developer ticket.',
   },
 ];
+
+// Withdrawn 2026-09-18: "Retail operations that scale — storefront and
+// back-of-house tooling for teams running more than one location or channel."
+// Nothing supports it. The retail work entry was dropped the day before for
+// having no repository, and the one commerce product we ship says the opposite
+// of this in its own copy: front-of-house only, never touching inventory,
+// payments, or fulfilment. Do not reinstate without a repository behind it.

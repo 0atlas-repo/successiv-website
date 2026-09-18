@@ -29,6 +29,12 @@
 > `hidden: true` flag in `src/content/products.ts`. Do not reinstate either from
 > this brief; see the `## Hidden products` section of `CLAUDE.md`. Four products
 > ship: Creators Sphere, Shopmgr, KYC, Accounting.
+>
+> **2026-09-18: the `## Capabilities` list below is superseded.** It is the source
+> of both withdrawn claims — "Document & signature workflows" and "E-commerce /
+> retail ops" — which reached `/capabilities` and stayed there after the work
+> entries behind them were corrected and removed. Seven capabilities ship, and
+> `src/content/capabilities.ts` is the list that counts.
 
 ---
 

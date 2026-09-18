@@ -2,16 +2,16 @@
 import Layout from '../layouts/Layout.astro';
 import PageHero from '../components/PageHero.astro';
 import CTA from '../components/CTA.astro';
-import { capabilities } from '../content/capabilities';
+import { capabilities, capabilitiesPage } from '../content/capabilities';
 ---
 <Layout
   title="Capabilities"
-  description="AI apps, Shopify, SharePoint and Microsoft 365, document workflows, identity, and operations portals."
+  description="AI apps, Shopify, SharePoint and Microsoft 365, document workflows, identity, and tender and contract portals."
 >
   <PageHero
-    kicker="Capabilities"
-    title="What we're actually good at."
-    lede="Six areas we've shipped into production more than once. If your problem sits in one of them, we've likely met it before."
+    kicker={capabilitiesPage.kicker}
+    title={capabilitiesPage.title}
+    lede={capabilitiesPage.lede}
   />
 
   <section class="py-[90px]">

@@ -16,6 +16,12 @@ One row per active plan. If it is not here, it does not exist.
     The placeholder is a DECISION, not a gap.
   - Leave: no product repo exists, only a one-shot importer, so its copy claimed
     nothing about screens or balances. Rewrite before unhiding.
+- WITHDRAWN 2026-09-18: capability 07 "Retail operations that scale". No repository
+  behind it, and Shopmgr's own copy says front-of-house only. Seven capabilities ship.
+  Source of the bad claim was the `## Capabilities` list in docs/BRIEF.md, now flagged
+  superseded there. Do not reinstate without a repository.
+- Decide the Capabilities page title: "What we're actually good at." or the reviewer's
+  "What we actually ship." Left as-is pending your call.
 - Run a cross-entry noun diff across the entries that trace to one client relationship.
   The tender/contract pair was softened by hand; the rest was not systematically checked.
 - Decide whether the second creator marketplace (unpublished) is an earlier incarnation
