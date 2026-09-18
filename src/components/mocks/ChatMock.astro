@@ -1,43 +1,82 @@
 ---
 import MockFrame from './MockFrame.astro';
+// Everything shown here is something Shopmgr's copy already stands behind:
+// a grounded catalogue lookup, and an escalation that raises a typed ticket
+// instead of guessing. No payment, no inventory edit, no fulfilment — the
+// product reads orders and never writes them.
 ---
 <MockFrame title="Shopmgr — Store A" meta="Live">
   <div class="space-y-2.5">
-    <div class="flex justify-end">
-      <p class="max-w-[78%] rounded-2xl rounded-br-sm bg-action px-3 py-2 text-[11px] leading-snug text-on-action">
+    <div class="flex items-center gap-2">
+      <span class="h-px flex-1 bg-line"></span>
+      <span class="font-head text-[9.5px] uppercase tracking-[0.1em] text-fg-subtle">Today</span>
+      <span class="h-px flex-1 bg-line"></span>
+    </div>
+
+    <div class="flex flex-col items-end gap-1">
+      <p class="max-w-[78%] rounded-2xl rounded-br-sm bg-action px-3 py-2 text-[12px] leading-snug text-on-action">
         Do you have the navy one in medium?
       </p>
+      <span class="flex items-center gap-1 pr-0.5 text-[9.5px] tabular-nums text-fg-subtle">
+        09:41
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="text-action">
+          <path d="m18 7-8 8-4-4" /><path d="m23 7-8 8-1.5-1.5" />
+        </svg>
+      </span>
     </div>
 
     <div class="flex justify-start">
       <div class="max-w-[85%] space-y-2">
-        <p class="rounded-2xl rounded-bl-sm border border-line bg-bg/50 px-3 py-2 text-[11px] leading-snug text-fg">
+        <p class="rounded-2xl rounded-bl-sm border border-line bg-surface px-3 py-2 text-[12px] leading-snug text-fg">
           Yes — 4 left in medium, navy.
         </p>
-        <div class="flex items-center gap-2.5 rounded-lg border border-line bg-bg/50 p-2">
-          <div class="h-9 w-9 shrink-0 rounded-md bg-fg-subtle/20"></div>
-          <div class="min-w-0 flex-1">
-            <div class="truncate font-head text-[11px] font-medium text-fg">Everyday Jacket — Navy</div>
-            <div class="text-[10px] text-fg-subtle">In stock · Ships today</div>
+        <div class="flex items-center gap-2.5 rounded-lg border border-line bg-surface p-2">
+          <div class="grid h-10 w-10 shrink-0 place-items-center rounded-md border border-line bg-surface-2 text-fg-subtle/60">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2.5" /><circle cx="9" cy="9" r="1.75" /><path d="m21 15-4.35-4.35a2 2 0 0 0-2.83 0L4 21" />
+            </svg>
           </div>
-          <span class="shrink-0 rounded-full bg-action px-2 py-1 font-head text-[9px] font-semibold text-on-action">Add</span>
+          <div class="min-w-0 flex-1">
+            <div class="truncate font-head text-[11.5px] font-medium text-fg">Everyday Jacket — Navy</div>
+            <div class="mt-0.5 flex min-w-0 items-center gap-1.5">
+              <span class="shrink-0 whitespace-nowrap rounded-full bg-ok-soft px-1.5 py-px font-head text-[9px] font-semibold uppercase tracking-[0.06em] text-ok">In stock</span>
+              <span class="truncate text-[10px] text-fg-subtle">Ships today</span>
+            </div>
+          </div>
+          <span class="shrink-0 rounded-full bg-action px-2.5 py-1 font-head text-[9.5px] font-semibold text-on-action">Add</span>
         </div>
       </div>
     </div>
 
-    <div class="flex justify-end">
-      <p class="max-w-[78%] rounded-2xl rounded-br-sm bg-action px-3 py-2 text-[11px] leading-snug text-on-action">
+    <div class="flex flex-col items-end gap-1">
+      <p class="max-w-[78%] rounded-2xl rounded-br-sm bg-action px-3 py-2 text-[12px] leading-snug text-on-action">
         Can I return it after 60 days?
+      </p>
+      <span class="pr-0.5 text-[9.5px] tabular-nums text-fg-subtle">09:43</span>
+    </div>
+
+    <div class="rounded-lg border border-line bg-warn-soft px-2.5 py-2">
+      <div class="flex items-center gap-1.5">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="shrink-0 text-warn" aria-hidden="true">
+          <path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" />
+        </svg>
+        <span class="font-head text-[9.5px] font-semibold uppercase tracking-[0.08em] text-warn">Escalated</span>
+        <span class="ml-auto font-head text-[9.5px] tabular-nums text-fg-subtle">Ticket 4821 · Return</span>
+      </div>
+      <p class="mt-1 text-[10.5px] leading-snug text-fg-muted">
+        Not covered by store policy — handed to a person rather than guessed.
       </p>
     </div>
 
-    <div class="flex items-start gap-2 rounded-lg border border-dashed border-line px-2.5 py-2">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="mt-0.5 shrink-0 text-fg-subtle" aria-hidden="true">
-        <path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" />
-      </svg>
-      <p class="text-[10px] leading-snug text-fg-subtle">
-        Not covered by store policy — handed to a person rather than guessed.
-      </p>
+    <div class="flex items-center gap-2 pt-0.5">
+      <span class="flex min-w-0 flex-1 items-center rounded-full border border-line bg-surface px-3 py-1.5 text-[10.5px] text-fg-subtle">
+        Write a reply
+      </span>
+      <span class="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-action text-on-action">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m22 2-7 20-4-9-9-4z" /><path d="M22 2 11 13" />
+        </svg>
+      </span>
     </div>
   </div>
 </MockFrame>

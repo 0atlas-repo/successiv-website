@@ -1,0 +1,51 @@
+{
+  "tasks": [
+    {
+      "id": 1,
+      "subject": "Status colour tokens in both themes",
+      "status": "completed",
+      "blockedBy": []
+    },
+    {
+      "id": 2,
+      "subject": "App shell in MockFrame.astro, backward-compatible props",
+      "status": "completed",
+      "blockedBy": [
+        1
+      ]
+    },
+    {
+      "id": 3,
+      "subject": "ChatMock contents at UI scale",
+      "status": "completed",
+      "blockedBy": [
+        2
+      ]
+    },
+    {
+      "id": 4,
+      "subject": "CreatorMock contents at card scale",
+      "status": "completed",
+      "blockedBy": [
+        2
+      ]
+    },
+    {
+      "id": 5,
+      "subject": "Build, check, hex sweep, hidden-product assert",
+      "status": "completed",
+      "blockedBy": [
+        3,
+        4
+      ]
+    },
+    {
+      "id": 6,
+      "subject": "Browser verify: both themes, card and detail width, 37 untouched screens",
+      "status": "completed",
+      "blockedBy": [
+        5
+      ]
+    }
+  ]
+}

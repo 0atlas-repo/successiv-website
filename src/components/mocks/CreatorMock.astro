@@ -3,37 +3,62 @@ import MockFrame from './MockFrame.astro';
 
 // A gig feed, matching what the product actually does: creators browse paid
 // brand campaigns, see the payout before applying, and get invited to some.
+// The balance strip splits available from pending because the product does —
+// the wait is shown rather than hidden. Settlement itself sits outside the
+// product, so nothing here says "paid out".
 // Brands are neutral placeholders — never a real brand name.
-type Gig = { niche: string; fee: string; brand: string; detail: string; invited?: boolean };
+type Gig = {
+  niche: string;
+  fee: string;
+  brand: string;
+  initial: string;
+  detail: string;
+  invited?: boolean;
+  selected?: boolean;
+};
 const gigs: Gig[] = [
-  { niche: 'Beauty', fee: '$180', brand: 'Brand A', detail: 'Summer campaign · 1 post' },
-  { niche: 'Food', fee: '$90', brand: 'Café B', detail: 'Reel · 1 post' },
-  { niche: 'Fashion', fee: '$240', brand: 'Brand C', detail: 'Invite only', invited: true },
+  { niche: 'Beauty', fee: '$180', brand: 'Brand A', initial: 'A', detail: 'Summer campaign · 1 post' },
+  { niche: 'Fashion', fee: '$240', brand: 'Brand C', initial: 'C', detail: 'Invite only · 2 posts', invited: true, selected: true },
+  { niche: 'Food', fee: '$90', brand: 'Café B', initial: 'B', detail: 'Reel · 1 post' },
+  { niche: 'Fitness', fee: '$150', brand: 'Studio E', initial: 'E', detail: 'Launch week · 1 post' },
 ];
 ---
 <MockFrame title="Creators Sphere — Gigs" meta="6 open">
-  <div class="space-y-2.5">
-    <div class="flex items-baseline justify-between rounded-lg border border-line bg-bg/40 px-2.5 py-2">
-      <span class="text-[10px] text-fg-subtle">Available to earn this week</span>
-      <span class="font-head text-[13px] font-bold text-fg">$510</span>
+  <div class="space-y-2">
+    <div class="flex items-center justify-between rounded-lg border border-line bg-surface px-3 py-2">
+      <div>
+        <div class="font-head text-[9px] font-semibold uppercase tracking-[0.1em] text-fg-subtle">Available</div>
+        <div class="font-head text-[15px] font-bold tabular-nums text-fg">$310</div>
+      </div>
+      <div class="text-right">
+        <div class="font-head text-[9px] font-semibold uppercase tracking-[0.1em] text-fg-subtle">Pending</div>
+        <div class="font-head text-[15px] font-bold tabular-nums text-fg-subtle">$200</div>
+      </div>
     </div>
 
     {gigs.map((g) => (
-      <div class="flex items-center gap-2.5 rounded-lg border border-line bg-bg/40 p-2.5">
-        <div class="h-8 w-8 shrink-0 rounded-md bg-fg-subtle/20"></div>
+      <div
+        class:list={[
+          'flex items-center gap-2.5 rounded-lg border p-2.5',
+          g.selected ? 'border-action/35 bg-surface-2' : 'border-line bg-surface',
+        ]}
+      >
+        <div class="grid h-9 w-9 shrink-0 place-items-center rounded-md border border-line bg-surface-2 font-head text-[12px] font-bold text-fg-subtle">
+          {g.initial}
+        </div>
         <div class="min-w-0 flex-1">
           <div class="flex items-baseline gap-1.5">
-            <span class="truncate font-head text-[11px] font-medium text-fg">{g.brand}</span>
-            <span class="shrink-0 rounded-full border border-line px-1.5 font-head text-[9px] text-fg-subtle">{g.niche}</span>
+            <span class="truncate font-head text-[12px] font-medium text-fg">{g.brand}</span>
+            <span class="shrink-0 rounded-full border border-line px-1.5 font-head text-[9.5px] text-fg-subtle">{g.niche}</span>
           </div>
-          <div class="mt-0.5 truncate text-[10px] text-fg-subtle">{g.detail}</div>
+          <div class="mt-0.5 truncate text-[10.5px] text-fg-subtle">{g.detail}</div>
         </div>
         <div class="shrink-0 text-right">
-          <div class="font-head text-[12px] font-bold text-fg">{g.fee}</div>
+          <div class="font-head text-[13px] font-bold tabular-nums text-fg">{g.fee}</div>
           <span
             class:list={[
-              'mt-0.5 inline-block rounded-full px-2 py-0.5 font-head text-[9px] font-semibold',
-              g.invited ? 'border border-line text-fg-muted' : 'bg-action text-on-action',
+              'mt-0.5 inline-block rounded-full px-2 py-0.5 font-head text-[9.5px] font-semibold',
+              g.invited ? 'border border-action/40 text-action' : 'bg-action text-on-action',
             ]}
           >
             {g.invited ? 'Invited' : 'Apply'}
@@ -42,11 +67,11 @@ const gigs: Gig[] = [
       </div>
     ))}
 
-    <div class="flex items-center gap-2 rounded-lg border border-dashed border-line px-2.5 py-2">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-action" aria-hidden="true">
+    <div class="flex items-center gap-2 rounded-lg bg-ok-soft px-2.5 py-2">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-ok" aria-hidden="true">
         <path d="m20 6-11 11-5-5" />
       </svg>
-      <span class="text-[10px] text-fg-subtle">Proof verified · payout confirmed</span>
+      <span class="text-[10.5px] text-fg-muted">Proof checked against the brief · reward moved to pending</span>
     </div>
   </div>
 </MockFrame>
