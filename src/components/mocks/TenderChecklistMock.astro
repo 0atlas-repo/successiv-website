@@ -1,27 +1,44 @@
 ---
 import MockFrame from './MockFrame.astro';
-const docs = [
+// Documents a bid must carry before the system will let it submit. The
+// declaration of interest, and the sub-contractor register the system later
+// extracts and indexes, both trace to the tender/RFP entry's own copy.
+type Doc = { label: string; state: 'done' | 'missing'; selected?: boolean };
+const docs: Doc[] = [
+  { label: 'Declaration of interest', state: 'done' },
   { label: 'Bid form', state: 'done' },
   { label: 'Performance bond', state: 'done' },
-  { label: 'Technical proposal', state: 'missing' },
+  { label: 'Financial proposal', state: 'done' },
+  { label: 'Technical proposal', state: 'missing', selected: true },
+  { label: 'Subcontractor register', state: 'done' },
 ];
 ---
 <MockFrame title="Tender — Submission checklist" meta="1 outstanding">
   <div class="space-y-2">
     <div class="space-y-1.5">
       {docs.map((d) => (
-        <div class="flex items-center gap-2 rounded-lg border border-line bg-surface px-2.5 py-1.5">
+        <div
+          class:list={[
+            'flex items-center gap-2 rounded-lg border px-2.5 py-1.5',
+            d.selected ? 'border-action/35 bg-surface-2' : 'border-line bg-surface',
+          ]}
+        >
           {d.state === 'done' ? (
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-action" aria-hidden="true">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-ok" aria-hidden="true">
               <path d="m20 6-11 11-5-5" />
             </svg>
           ) : (
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="shrink-0 text-fg-subtle" aria-hidden="true">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="shrink-0 text-danger" aria-hidden="true">
               <path d="M18 6 6 18M6 6l12 12" />
             </svg>
           )}
           <span class="flex-1 truncate text-[12px] text-fg">{d.label}</span>
-          <span class="shrink-0 font-head text-[9.5px] uppercase tracking-[0.08em] text-fg-subtle">
+          <span
+            class:list={[
+              'shrink-0 whitespace-nowrap rounded-full px-1.5 py-px font-head text-[9.5px] font-semibold uppercase tracking-[0.08em]',
+              d.state === 'done' ? 'bg-ok-soft text-ok' : 'bg-danger-soft text-danger',
+            ]}
+          >
             {d.state === 'done' ? 'Received' : 'Missing'}
           </span>
         </div>

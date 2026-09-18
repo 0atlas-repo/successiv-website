@@ -1,12 +1,18 @@
 ---
 import MockFrame from './MockFrame.astro';
-const rows = [
-  { v: 'Vendor A', s: [4, 5, 3], total: '82' },
+// Per-criterion scores as evaluators recorded them; the total is the
+// system's weighted figure, not a model verdict. Vendor A leads and is the
+// row the screen draws the eye to.
+type Row = { v: string; s: number[]; total: string; selected?: boolean };
+const rows: Row[] = [
+  { v: 'Vendor A', s: [4, 5, 3], total: '82', selected: true },
   { v: 'Vendor B', s: [5, 3, 4], total: '79' },
   { v: 'Vendor C', s: [3, 4, 4], total: '71' },
+  { v: 'Vendor D', s: [4, 4, 3], total: '76' },
+  { v: 'Vendor E', s: [3, 3, 3], total: '65' },
 ];
 ---
-<MockFrame title="Tender — Evaluation" meta="3 of 3 scored">
+<MockFrame title="Tender — Evaluation" meta="5 of 5 scored">
   <div class="space-y-2">
     <div class="grid grid-cols-[1fr_repeat(3,18px)_34px] items-center gap-2 border-b border-line pb-1.5">
       <span class="font-head text-[9.5px] font-semibold uppercase tracking-[0.1em] text-fg-subtle">Vendor</span>
@@ -15,20 +21,25 @@ const rows = [
       ))}
       <span class="text-right font-head text-[9.5px] font-semibold uppercase tracking-[0.1em] text-fg-subtle">Score</span>
     </div>
-    {rows.map((r, i) => (
-      <div class="grid grid-cols-[1fr_repeat(3,18px)_34px] items-center gap-2">
-        <span class:list={['truncate text-[12px]', i === 0 ? 'font-medium text-fg' : 'text-fg-muted']}>{r.v}</span>
+    {rows.map((r) => (
+      <div
+        class:list={[
+          'grid grid-cols-[1fr_repeat(3,18px)_34px] items-center gap-2 rounded-lg border px-2 py-1',
+          r.selected ? 'border-action/35 bg-surface-2' : 'border-line bg-surface',
+        ]}
+      >
+        <span class:list={['truncate text-[12px]', r.selected ? 'font-medium text-fg' : 'text-fg-muted']}>{r.v}</span>
         {r.s.map((n) => (
-          <span class="flex h-[18px] items-center justify-center rounded-[4px] border border-line bg-surface text-[9.5px] text-fg-muted">{n}</span>
+          <span class="flex h-[18px] items-center justify-center rounded-[4px] border border-line bg-surface text-[9.5px] tabular-nums text-fg-muted">{n}</span>
         ))}
-        <span class:list={['text-right font-head text-[12px] font-semibold', i === 0 ? 'text-action' : 'text-fg-muted']}>{r.total}</span>
+        <span class:list={['text-right font-head text-[12px] font-semibold tabular-nums', r.selected ? 'text-action' : 'text-fg-muted']}>{r.total}</span>
       </div>
     ))}
     <div class="flex items-center gap-2 border-t border-line pt-2.5">
       <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="shrink-0 text-fg-subtle" aria-hidden="true">
         <rect x="3" y="11" width="18" height="10" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
       </svg>
-      <span class="text-[10.5px] text-fg-subtle">Locked on award · 3 evaluators</span>
+      <span class="tabular-nums text-[10.5px] text-fg-subtle">Locked on award · 3 evaluators</span>
     </div>
   </div>
 </MockFrame>

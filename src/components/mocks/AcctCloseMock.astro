@@ -1,26 +1,37 @@
 ---
 import MockFrame from './MockFrame.astro';
-const periods = [
+type Period = { label: string; closed: boolean; current?: boolean; unmatched?: number };
+const periods: Period[] = [
+  { label: 'Oct 2025', closed: true },
+  { label: 'Nov 2025', closed: true },
+  { label: 'Dec 2025', closed: true },
   { label: 'Jan 2026', closed: true },
   { label: 'Feb 2026', closed: true },
-  { label: 'Mar 2026', closed: false },
+  { label: 'Mar 2026', closed: false, current: true, unmatched: 3 },
 ];
 ---
-<MockFrame title="Bookkeeping — Period close" meta="2 locked">
+<MockFrame title="Bookkeeping — Period close" meta="5 locked">
   <div class="space-y-2">
     <div class="space-y-1.5">
       {periods.map((p) => (
-        <div class="flex items-center gap-2.5 rounded-lg border border-line bg-surface px-2.5 py-2">
-          <span class:list={['flex-1 truncate text-[12px]', p.closed ? 'text-fg-muted' : 'font-medium text-fg']}>{p.label}</span>
-          {p.closed ? (
-            <span class="flex shrink-0 items-center gap-1">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-fg-subtle" aria-hidden="true">
-                <rect x="3" y="11" width="18" height="10" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
-              </svg>
-              <span class="font-head text-[9.5px] uppercase tracking-[0.08em] text-fg-subtle">Closed</span>
-            </span>
-          ) : (
-            <span class="shrink-0 rounded-full border border-line px-2 py-0.5 font-head text-[9.5px] uppercase tracking-[0.08em] text-action">Open</span>
+        <div
+          class:list={[
+            'space-y-1 rounded-lg border px-2.5 py-2',
+            p.current ? 'border-action/35 bg-surface-2' : 'border-line bg-surface',
+          ]}
+        >
+          <div class="flex items-center gap-2.5">
+            <span class:list={['flex-1 truncate text-[12px] tabular-nums', p.closed ? 'text-fg-muted' : 'font-medium text-fg']}>{p.label}</span>
+            {p.closed ? (
+              <span class="shrink-0 whitespace-nowrap rounded-full bg-ok-soft px-1.5 py-px font-head text-[9.5px] font-semibold uppercase tracking-[0.06em] text-ok">Closed</span>
+            ) : (
+              <span class="shrink-0 whitespace-nowrap rounded-full bg-warn-soft px-1.5 py-px font-head text-[9.5px] font-semibold uppercase tracking-[0.06em] text-warn">Open</span>
+            )}
+          </div>
+          {p.unmatched && (
+            <p class="text-[10.5px] text-warn">
+              <span class="tabular-nums">{p.unmatched}</span> bank lines unmatched
+            </p>
           )}
         </div>
       ))}

@@ -1,27 +1,33 @@
 ---
 import MockFrame from './MockFrame.astro';
+// Types are exactly the four the assistant raises tickets as: refund, return,
+// cancellation, general. No status pill: the product doesn't mark a ticket
+// resolved — that's back-office work the copy explicitly excludes.
+// Refs are "T-nnnn", not "#nnnn" — a digit-only string after "#" reads as a
+// hex colour to a naive checker (ChatMock's "Ticket 4821" avoids the same trap).
 const tickets = [
-  { subject: 'Refund on damaged item', type: 'Refund', status: 'Open' },
-  { subject: 'Wrong size sent', type: 'Return', status: 'Open' },
-  { subject: 'Delivery delay question', type: 'General', status: 'Closed' },
+  { ref: 'T-1042', subject: 'Refund on damaged item', type: 'Refund', selected: true },
+  { ref: 'T-1041', subject: 'Wrong size sent', type: 'Return' },
+  { ref: 'T-1039', subject: 'Cancel before dispatch', type: 'Cancellation' },
+  { ref: 'T-1037', subject: 'Order not arrived yet', type: 'General' },
+  { ref: 'T-1033', subject: 'Exchange for a larger size', type: 'Return' },
+  { ref: 'T-1028', subject: 'Delivery delay question', type: 'General' },
 ];
 ---
-<MockFrame title="Assistant — Tickets" meta="2 open">
+<MockFrame title="Assistant — Tickets" meta="6 tickets">
   <div class="space-y-2">
     <div class="space-y-1.5">
       {tickets.map((t) => (
-        <div class="flex items-center gap-2.5 rounded-lg border border-line bg-surface px-2.5 py-2">
+        <div
+          class:list={[
+            'flex items-center gap-2.5 rounded-lg border px-2.5 py-2',
+            t.selected ? 'border-action/35 bg-surface-2' : 'border-line bg-surface',
+          ]}
+        >
+          <span class="shrink-0 whitespace-nowrap font-head text-[9.5px] tabular-nums text-fg-subtle">{t.ref}</span>
           <span class="min-w-0 flex-1 truncate text-[12px] text-fg">{t.subject}</span>
-          <span class="shrink-0 rounded-full border border-line px-1.5 py-0.5 font-head text-[9.5px] uppercase tracking-[0.08em] text-fg-subtle">
+          <span class="shrink-0 whitespace-nowrap rounded-full border border-line px-1.5 py-0.5 font-head text-[9.5px] uppercase tracking-[0.08em] text-fg-subtle">
             {t.type}
-          </span>
-          <span
-            class:list={[
-              'shrink-0 rounded-full px-2 py-0.5 font-head text-[9.5px] uppercase tracking-[0.08em]',
-              t.status === 'Open' ? 'border border-line text-fg-muted' : 'text-fg-subtle',
-            ]}
-          >
-            {t.status}
           </span>
         </div>
       ))}
