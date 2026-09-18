@@ -19,39 +19,39 @@ export interface Capability {
 
 export const capabilitiesPage = {
   kicker: 'Capabilities',
-  title: "What we're actually good at.",
+  title: 'Where we have shipped before.',
   // No number, and no "more than once": some of these trace to a single
   // shipped system. An entry can be added or withdrawn without the lede lying.
-  lede: 'Each of these has shipped into production. If your problem sits in one of them, we have likely met it before.',
+  lede: 'These are areas we have put into production. If your problem looks like one of them, we already know the usual failure modes.',
 } as const;
 
 export const capabilities: Capability[] = [
   {
     num: '01',
     title: 'AI assistants that help close',
-    body: 'Chat that answers from your own catalogue and policies, and hands off to a person when it is not sure — on Shopify or in your own stack.',
+    body: 'Catalogue- and policy-aware chat for Shopify or your own stack. When the answer sits outside policy, a person takes over.',
   },
   {
     num: '02',
     title: 'Systems that talk to each other',
-    body: 'We connect new tools to the software you already run, so there is no rip-and-replace and no second set of records to keep in sync.',
+    body: 'New tools wired into what you already run. One set of records. No rip-and-replace for its own sake.',
   },
   {
     num: '03',
     title: 'Customers onboarded without the paper chase',
-    body: 'Identity documents held once and shared deliberately, as a guided flow or behind an API, with a named reviewer and a date behind every decision.',
+    body: 'Identity documents collected once and shared on purpose — guided flow or API — with a named reviewer and a timestamp on every decision.',
   },
   {
     // Was "Contracts signed where the work is" until 2026-09. We do not build
     // e-signature, and nothing on this site may imply that we do.
     num: '04',
     title: 'Documents assembled and released safely',
-    body: 'Merge a file from whatever formats it arrived in, black out what must not leave, and lock it — inside the system that already owns the process.',
+    body: 'Merge mixed formats, redact what must not leave, lock the PDF, and keep the job inside the system that owns the process.',
   },
   {
     num: '05',
     title: 'Tools inside software you own',
-    body: 'Line-of-business apps that live in Microsoft 365 and SharePoint, so the team does not need another login or another habit.',
+    body: 'Line-of-business apps in Microsoft 365 and SharePoint, so staff are not asked for another login.',
   },
   {
     // Said "operations portals" until 2026-09-18. The ops work is an assistant
@@ -62,14 +62,14 @@ export const capabilities: Capability[] = [
     // which criterion — and contract logs before and after values.
     num: '06',
     title: 'Processes that outlast staff changes',
-    body: 'Tender and contract portals with real states, named owners, and an audit trail that survives turnover.',
+    body: 'Tender and contract portals with states, owners, and an audit trail that survives turnover.',
   },
   {
     // Claimed "an owner anyone can see" until 2026-09-18. The CMS has states and
     // a backup trail, but no per-section editor roles and no approval chain.
     num: '07',
     title: 'Content work visible in one place',
-    body: 'One record holds every language version of a piece, with a preview before it goes live and publishing that is a status change, not a developer ticket.',
+    body: 'One record per piece across languages, preview before publish, and go-live as a status change — not a developer ticket.',
   },
 ];
 

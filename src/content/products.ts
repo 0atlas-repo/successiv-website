@@ -71,9 +71,9 @@ const allProducts: Product[] = [
     // (plural), not "Creator Sphere" as docs/BRIEF.md has it. The live product wins.
     slug: 'creators-sphere',
     name: 'Creators Sphere',
-    oneLiner: 'Paid brand campaigns for creators — find the work, post it, get paid.',
+    oneLiner: 'Paid brand campaigns for creators: find the work, publish it, get paid.',
     problem:
-      'Creator work runs on DMs and agency email threads. A creator rarely learns what a job pays until late in the conversation, and a brand has no dependable way to see who actually delivered.',
+      'Creator deals still run on DMs and agency threads. Pay shows up late in the conversation, and brands often cannot prove who actually delivered.',
     steps: [
       { title: 'Discover gigs', body: 'Browse live brand campaigns, filtered to the niches you actually create in.' },
       { title: 'Apply in seconds', body: 'Tap apply on an open campaign, or accept an invite-only one sent straight to you.' },
@@ -94,13 +94,13 @@ const allProducts: Product[] = [
   {
     slug: 'shopmgr',
     name: 'Shopmgr',
-    oneLiner: 'AI assistant for online stores that actually helps close.',
+    oneLiner: 'Store chat that answers from your catalogue and policies — and escalates when it should.',
     problem:
-      'Storefront chat answers the easy questions and stalls on the ones that decide a sale — stock, variants, delivery, returns. Shoppers leave; staff never see that the conversation happened.',
+      'Storefront chat handles the easy questions and stalls on the ones that decide a sale: stock, variants, delivery, returns. Shoppers leave; staff never see the thread.',
     steps: [
       { title: 'Connect the store', body: 'Install on your store and point the assistant at your catalogue and policies.' },
-      { title: 'Ground the answers', body: 'Replies come from your real products and rules, retrieved per question, not from the model’s guesswork.' },
-      { title: 'Act, don’t just answer', body: 'The assistant can look up an order, check a policy, or raise a ticket rather than apologising.' },
+      { title: 'Use your real catalogue', body: 'Replies come from your real products and rules, retrieved per question, not from the model’s guesswork.' },
+      { title: 'Do the next step', body: 'The assistant can look up an order, check a policy, or raise a ticket rather than apologising.' },
       { title: 'Watch it from the portal', body: 'Staff review conversations, rate answers, and fix what the assistant should have known.' },
     ],
     detail: [
@@ -116,9 +116,9 @@ const allProducts: Product[] = [
   {
     slug: 'kyc',
     name: 'KYC',
-    oneLiner: 'Identity documents held once, shared deliberately, verified by a person.',
+    oneLiner: 'Hold identity documents once, share them on purpose, verified by a person.',
     problem:
-      'The same identity documents get emailed to a dozen counterparties, each keeping a copy forever, and nobody can show who verified what or when.',
+      'The same passport and proof of address get emailed to a dozen counterparties. Everyone keeps a copy. Nobody can show who checked what, or when.',
     steps: [
       { title: 'Register documents once', body: 'A holder registers their documents — passport, ID card, proof of address, contact details — in one place.' },
       { title: 'Verify contact details directly', body: 'Phone and email are confirmed by one-time code, without anyone having to check them.' },
@@ -160,9 +160,9 @@ const allProducts: Product[] = [
   {
     slug: 'accounting',
     name: 'Accounting',
-    oneLiner: 'Bookkeeping where the machine reads the document and a person answers the hard question.',
+    oneLiner: 'The system reads the document; a person still answers the awkward question.',
     problem:
-      'Bookkeeping automation either posts confidently to the wrong account or hands everything back for review. Neither saves the bookkeeper any real work.',
+      'Bookkeeping tools either post to the wrong account with confidence, or dump everything back for review. Neither saves real time.',
     steps: [
       { title: 'Send the document', body: 'A bill, receipt, or statement arrives — uploaded by the bookkeeper or by the client on their phone.' },
       { title: 'Extraction and classification', body: 'Fields are read from the document, and the nature of the transaction is identified.' },

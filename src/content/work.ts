@@ -60,14 +60,14 @@ export const work: WorkItem[] = [
   {
     slug: 'tender-rfp-management',
     title: 'Tender / RFP management',
-    angle: 'Intake → evaluate → award',
+    angle: 'Intake, scoring, award',
     featured: true,
     problem:
-      'Submissions arrive by email and get scored in spreadsheets that each evaluator keeps privately. By award time nobody can reconstruct how the decision was reached.',
+      'Bids arrive by email. Each evaluator keeps a private spreadsheet. By award time, nobody can reconstruct how the decision was reached.',
     approach:
-      'One intake queue, a fixed scoring model every evaluator fills in against the same criteria, and a summary that freezes the record at award.',
+      'One intake queue, the same scoring model for every evaluator, and a summary that freezes the record at award.',
     outcome:
-      'Evaluation happens in one place and leaves a trail — who scored what, when, and against which criterion.',
+      'Scoring lives in one place, with a trail of who scored what, when, and against which criterion.',
     detail: [
       'Competitive procurement fails quietly. Each evaluator keeps their own spreadsheet, scores drift as the process runs, and a bidder who asks why they lost gets an answer assembled after the fact from memory and mailboxes. The buyer we built this for was running large, contested awards on exactly that footing. The risk was not that the wrong supplier would win — it was that nobody could show why the right one had.',
       'The system holds one process from first download to final ranking. A bidder reads the instructions, attests a declaration of interest before anything else is accepted, then works a submission checklist that will not let them submit while a mandatory document is missing. Evaluators raise written clarification questions against specific submissions, and the answers attach to the bid rather than living in a thread. Scoring runs against fixed criteria with per-criterion weightings applied by the system, not by whoever is holding the spreadsheet. Consortium bids are modelled properly, as one bidder with named members, because treating them as a single anonymous entity is where accountability goes missing.',
@@ -79,14 +79,14 @@ export const work: WorkItem[] = [
   {
     slug: 'contract-lifecycle',
     title: 'Capital / works contract management',
-    angle: 'Contract lifecycle after award',
+    angle: 'Lifecycle after award',
     featured: true,
     problem:
-      'Major contracts run for years across variations, claims, and certificates. The current state of one lives in whichever document someone opened last.',
+      'Major contracts run for years across variations, claims, and certificates. The live state sits in whichever file someone opened last.',
     approach:
-      'Model the contract as a register of typed, versioned submissions, so a variation or a claim attaches to the contract instead of floating in a folder.',
+      'Treat the contract as a register of typed, versioned submissions so a variation or claim attaches to the contract instead of floating in a folder.',
     outcome:
-      'The state of any contract is a page, not an archaeology exercise across shared drives.',
+      'The state of a contract is a page, not a hunt across shared drives.',
     detail: [
       'A contract signed today is administered for years by people who were not in the room when it was negotiated. The questions that come up are always the same shape — does this variation need approval, what does the contract say about this claim, which revision is current — and answering them traditionally means finding the right document, then finding the right clause inside it, then trusting that the copy you opened is the live one.',
       'We modelled the contract as a register rather than a folder. Every submission has a type — variation, claim, payment certificate, milestone — and each type drives its own form and its own validation, because a claim and a milestone do not need the same things. Re-uploading does not overwrite: it creates a new version, and the previous one stays readable, so revision history is a property of the system rather than a filename convention. Status changes are deliberate and manual, because a contract does not expire on a schedule and pretending it does produces wrong data.',
@@ -98,14 +98,14 @@ export const work: WorkItem[] = [
   {
     slug: 'document-bundling-redaction',
     title: 'Document bundling & redaction',
-    angle: 'File assembly, masking, and controlled release',
+    angle: 'Assemble, redact, release',
     featured: true,
     problem:
-      'Assembling a file for release means collecting documents in four formats, blacking out what must not leave, and doing it by hand every time.',
+      'A release pack means gathering four formats, blacking out what must not leave, and doing it by hand every time.',
     approach:
       'A service that merges mixed formats into one ordered PDF, fills template values, masks regions by coordinate, and locks the result.',
     outcome:
-      'File assembly is a repeatable operation with the same output every time, instead of a careful afternoon in a PDF editor.',
+      'Assembly is a repeatable job with the same output each time — not an afternoon in a PDF editor.',
     detail: [
       'Releasing a file to someone outside the organisation is a small, dangerous, repetitive job. The material is in whatever format it arrived in, some of it must be blacked out before it goes anywhere, and the person doing it is working by hand under time pressure. Hand redaction is where mistakes happen, and a redaction mistake is not recoverable once the file has been sent.',
       'We built this as a service rather than a screen, because it runs inside a larger case system rather than being somewhere a person visits. It accepts documents in mixed formats — word processor files, PDFs, several image types, plain text — converts each to PDF, and merges them in a caller-defined order into one file. Placeholder values in the source documents are substituted on the way through, so a bundle assembled for a specific matter comes out already populated. A watermark can be applied across the merged result.',
@@ -117,14 +117,14 @@ export const work: WorkItem[] = [
   {
     slug: 'ops-incident-support',
     title: 'Ops incident support',
-    angle: 'Assisted incident handling and post-incident review',
+    angle: 'During the incident, and after',
     featured: true,
     problem:
-      'During an incident the answer usually exists — in a handbook, a notice, a procedure — but nobody has time to find it, and the write-up afterwards is reconstructed from memory.',
+      'The answer usually exists in a handbook or procedure, but nobody has time to find it. The write-up afterwards is rebuilt from memory.',
     approach:
       'An assistant that reads the incident conversation, answers from the indexed procedure library with sources, and drafts the action list and the review.',
     outcome:
-      'The procedure is in the room during the incident, and the record afterwards is drafted from what actually happened.',
+      'The procedure is available while the incident is live, and the record afterwards is drafted from what actually happened.',
     detail: [
       'Operational incidents are handled by people under time pressure who already know their job. What they do not have, mid-incident, is the ability to stop and search a policy library. So procedures get applied from memory, and the write-up afterwards is assembled days later from a group conversation and recollection. We were brought in for part of a larger system, and this is the part we built.',
       'The assistant sits on the incident itself. Messages from the incident conversation are ingested and analysed as they arrive. An operator can ask a question in plain language and get an answer drawn from an indexed library of handbooks, notices, and standing procedures, with the source document behind it — confidentiality-classified, so restricted material does not surface to someone who should not see it. The assistant also proposes follow-up questions, which sounds cosmetic and is not: the useful thing during an incident is often knowing what you have not asked yet.',
@@ -136,14 +136,14 @@ export const work: WorkItem[] = [
   {
     slug: 'content-cms-platforms',
     title: 'Content / CMS platforms',
-    angle: 'Multilingual publishing with a static front end',
+    angle: 'Multilingual publishing, static front end',
     featured: false,
     problem:
-      'A corporate site in three languages turns every content change into a developer ticket, and the editor cannot see what they are about to publish.',
+      'A site in three languages turns every content change into a developer ticket, and the editor cannot see what is about to go live.',
     approach:
-      'An editor where one record holds all three language versions, with a preview step, and publishing that regenerates static pages.',
+      'One editor record holds all language versions, with a preview step, and publishing that regenerates static pages.',
     outcome:
-      'Editors publish in three languages without a deploy, and the public site stays static and fast.',
+      'Editors publish in three languages without a deploy. The public site stays static and fast.',
     detail: [
       'A site that must exist in three languages has a structural problem: the three versions drift. Someone updates one, the other two lag, and because each language is a separate set of pages, nobody notices until a customer does. Add a marketing team that cannot publish without a developer and the site slowly stops reflecting the business.',
       'We built the editor around the record rather than the page. One content item holds all three language versions together — every section, in each language, edited side by side — so publishing incomplete translations is a visible choice rather than an accident. Editors work on short news items and longer feature stories, upload their own media, and preview the result before anything goes live. Publishing is a status change, not a deployment.',
@@ -155,14 +155,14 @@ export const work: WorkItem[] = [
   {
     slug: 'sharepoint-extensions',
     title: 'Enterprise SharePoint extensions',
-    angle: 'Governance, audit, and retrieval inside Microsoft 365',
+    angle: 'Governance and audit inside Microsoft 365',
     featured: false,
     problem:
-      'A large tenant accumulates documents faster than anyone can govern them. Who can see what, what is stale, and what broke last week are all unanswerable.',
+      'A large tenant accumulates documents faster than anyone can govern them. Who can see what, what is stale, and what broke last week are hard to answer.',
     approach:
-      'Reporting and governance tooling built into the tenant itself — permission audits, usage and growth reports, time-limited access, link monitoring.',
+      'Reporting and governance tooling in the tenant itself — permission audits, usage and growth reports, time-limited access, link monitoring.',
     outcome:
-      'Questions about a tenant get answered from a report instead of an administrator guessing.',
+      'Tenant questions get answered from a report instead of an administrator guessing.',
     detail: [
       'Microsoft 365 is excellent at letting people store and share things, and poor at telling you what happened afterwards. In a tenant of any size the practical questions are unanswerable from the interface: who actually has access to this library, which documents have not been touched in three years, what is our version bloat costing, who has left files checked out, and which links broke when somebody reorganised a folder. Administrators end up guessing, or writing one-off scripts nobody maintains.',
       'We delivered this over several phases as tooling inside the tenant rather than another portal to log into. The reporting side walks the item hierarchy and produces permission audits down to individual items, growth and version-impact reports, usage and access reports, and stale-content reports — driven by a job queue, so a large scan runs unattended and emails the requester a spreadsheet when it finishes. Activity data is pulled nightly into a database, because the platform keeps only a short window and the questions people ask are historical.',
@@ -174,14 +174,14 @@ export const work: WorkItem[] = [
   {
     slug: 'awards-portals',
     title: 'Awards / recognition portals',
-    angle: 'Nomination, shortlisting, and voting on a deadline',
+    angle: 'Nominate, shortlist, vote on a deadline',
     featured: false,
     problem:
-      'An annual recognition programme runs on forms, a spreadsheet, and a deadline, and the result has to feel fair to everyone who entered.',
+      'An annual recognition programme runs on forms, a spreadsheet, and a deadline — and the result has to feel fair to everyone who entered.',
     approach:
       'A campaign site with a nomination window, a curated shortlist, per-category voting with enforced rules, and a results reveal.',
     outcome:
-      'The programme runs itself on the dates it was given, and the voting rules are enforced rather than trusted.',
+      'The programme runs on the dates it was given. Voting rules are enforced, not hoped for.',
     detail: [
       'An internal recognition programme is a small system with a hard constraint: it runs once a year, on fixed dates, in front of the whole organisation, and if it feels arbitrary it does more damage than not running it at all. The work is not complicated — collect nominations, shortlist them, let people vote, announce winners — but every part of it is deadline-bound and publicly visible.',
       'The portal moves through phases rather than being a single site. During the nomination window it presents the categories and takes submissions through a forms product, with a confirmation step that prompts the nominator to consider another category while they are still engaged. Administrators then assess and shortlist, and publishing the shortlist flips the same site into its next phase: a gallery indexed by category, with a profile page for each shortlisted individual or team. When voting closes and winners are marked, it flips again to the announcement.',
@@ -196,11 +196,11 @@ export const work: WorkItem[] = [
     angle: 'Two-sided booking with payment and delivery',
     featured: false,
     problem:
-      'Booking software usually assumes one calendar and one kind of appointment. Real providers have services of different lengths, turnaround between them, and money attached.',
+      'Most booking tools assume one calendar and one kind of appointment. Real providers have different service lengths, turnaround between them, and money attached.',
     approach:
       'A two-sided marketplace where providers model their own availability and services, and a booking carries payment and delivery through to completion.',
     outcome:
-      'A booking is the whole transaction — reserved, paid, delivered, settled — rather than a slot in a calendar.',
+      'A booking is the full transaction — reserved, paid, delivered, settled — not just a slot on a calendar.',
     detail: [
       'Most scheduling tools model a calendar with slots in it. That breaks as soon as a provider offers services of genuinely different shapes: a thirty-minute consultation and a two-hour session are not interchangeable, and the gap a provider needs after each one differs too. Bolt payment onto that and it breaks again, because the money and the appointment end up in separate systems that disagree.',
       'Providers here model their own world. They define services with both a duration and a cooldown, bundle services into packages, and configure locations with working hours per day of the week, a timezone, and a country whose public holidays block the calendar automatically. The conflict check spans the service plus its cooldown rather than just the appointment, which is what prevents the back-to-back bookings that look fine in a calendar and are impossible in practice. Auto-confirmation is a per-service setting, because some appointments need a person to accept them and some do not.',

@@ -6,12 +6,12 @@ import { site } from '../content/site';
 ---
 <Layout
   title="Contact"
-  description={`Tell us what you're building. Email ${site.email}.`}
+  description={`Email ${site.email} with what you are building.`}
 >
   <PageHero
     kicker="Contact"
-    title="Tell us what you're building."
-    lede="We'll say if one of our products fits, or if it's a build — and we'll say so honestly if it's neither."
+    title="Email us what you are building."
+    lede="We will say if a product fits, if it needs custom work, or if we should step aside."
   />
 
   <section class="py-[90px]">
@@ -20,7 +20,7 @@ import { site } from '../content/site';
         <div class="reveal">
           <h2 class="font-head text-[22px] font-semibold text-fg">Email us</h2>
           <p class="mt-2 max-w-[440px] text-[16px] text-fg-muted">
-            There's no form here on purpose — mail reaches a person directly.
+            No form on purpose. Mail goes to a person.
           </p>
           <div class="mt-6">
             <Btn href={`mailto:${site.email}`} size="lg">{site.email}</Btn>
@@ -28,7 +28,7 @@ import { site } from '../content/site';
         </div>
 
         <div class="reveal">
-          <h2 class="font-head text-[22px] font-semibold text-fg">Who you'll hear from</h2>
+          <h2 class="font-head text-[22px] font-semibold text-fg">Who you will hear from</h2>
           <ul class="mt-4 space-y-3">
             {site.team.map((m) => (
               <li class="flex flex-wrap items-baseline gap-x-3 gap-y-1 border-b border-line pb-3">
