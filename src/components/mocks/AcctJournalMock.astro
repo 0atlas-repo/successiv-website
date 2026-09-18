@@ -9,30 +9,30 @@ const lines = [
 <MockFrame title="Bookkeeping — Entry" meta="Balanced">
   <div class="space-y-2">
     <div class="grid grid-cols-[30px_1fr_46px_46px] items-center gap-2 border-b border-line pb-1.5">
-      <span class="font-head text-[9px] font-semibold uppercase tracking-[0.1em] text-fg-subtle">Code</span>
-      <span class="font-head text-[9px] font-semibold uppercase tracking-[0.1em] text-fg-subtle">Account</span>
-      <span class="text-right font-head text-[9px] font-semibold uppercase tracking-[0.1em] text-fg-subtle">Dr</span>
-      <span class="text-right font-head text-[9px] font-semibold uppercase tracking-[0.1em] text-fg-subtle">Cr</span>
+      <span class="font-head text-[9.5px] font-semibold uppercase tracking-[0.1em] text-fg-subtle">Code</span>
+      <span class="font-head text-[9.5px] font-semibold uppercase tracking-[0.1em] text-fg-subtle">Account</span>
+      <span class="text-right font-head text-[9.5px] font-semibold uppercase tracking-[0.1em] text-fg-subtle">Dr</span>
+      <span class="text-right font-head text-[9.5px] font-semibold uppercase tracking-[0.1em] text-fg-subtle">Cr</span>
     </div>
     {lines.map((l) => (
       <div class="grid grid-cols-[30px_1fr_46px_46px] items-center gap-2">
-        <span class="text-[10px] text-fg-subtle">{l.code}</span>
-        <span class="truncate text-[10.5px] text-fg">{l.name}</span>
-        <span class="text-right text-[10.5px] text-fg">{l.dr || '–'}</span>
-        <span class="text-right text-[10.5px] text-fg">{l.cr || '–'}</span>
+        <span class="text-[10.5px] text-fg-subtle">{l.code}</span>
+        <span class="truncate text-[12px] text-fg">{l.name}</span>
+        <span class="text-right text-[12px] text-fg">{l.dr || '–'}</span>
+        <span class="text-right text-[12px] text-fg">{l.cr || '–'}</span>
       </div>
     ))}
     <div class="grid grid-cols-[30px_1fr_46px_46px] items-center gap-2 border-t border-line pt-1.5">
       <span class="col-span-2 font-head text-[9.5px] font-semibold uppercase tracking-[0.08em] text-fg">Total</span>
-      <span class="text-right font-head text-[10.5px] font-semibold text-action">84.00</span>
-      <span class="text-right font-head text-[10.5px] font-semibold text-action">84.00</span>
+      <span class="text-right font-head text-[12px] font-semibold text-action">84.00</span>
+      <span class="text-right font-head text-[12px] font-semibold text-action">84.00</span>
     </div>
 
     <div class="flex items-center gap-1.5 border-t border-line pt-2">
       <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-fg-subtle" aria-hidden="true">
         <path d="M7 3v14M3 7l4-4 4 4" /><path d="M17 21V7m-4 10 4 4 4-4" />
       </svg>
-      <p class="text-[10px] text-fg-subtle">
+      <p class="text-[10.5px] text-fg-subtle">
         Document <span class="font-medium text-fg">SGD 84.00</span> · Booked <span class="font-medium text-fg">USD 62.00</span>
       </p>
     </div>

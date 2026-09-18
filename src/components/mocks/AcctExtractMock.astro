@@ -9,7 +9,7 @@ const fields = [
 <MockFrame title="Bookkeeping — Review" meta="1 question">
   <div class="space-y-2.5">
     <div class="flex gap-2.5">
-      <div class="h-12 w-9 shrink-0 space-y-1 rounded-[4px] border border-line bg-bg/40 p-1.5">
+      <div class="h-12 w-9 shrink-0 space-y-1 rounded-[4px] border border-line bg-surface p-1.5">
         <div class="h-[3px] w-full rounded-full bg-fg-subtle/20"></div>
         <div class="h-[3px] w-4/5 rounded-full bg-fg-subtle/20"></div>
         <div class="h-[3px] w-full rounded-full bg-fg-subtle/20"></div>
@@ -18,8 +18,8 @@ const fields = [
       <div class="flex-1 space-y-1.5">
         {fields.map((f) => (
           <div class="flex items-center gap-1.5">
-            <span class="w-16 shrink-0 font-head text-[9px] uppercase tracking-[0.08em] text-fg-subtle">{f.label}</span>
-            <span class="flex-1 truncate text-[10.5px] text-fg">{f.value}</span>
+            <span class="w-16 shrink-0 font-head text-[9.5px] uppercase tracking-[0.08em] text-fg-subtle">{f.label}</span>
+            <span class="flex-1 truncate text-[12px] text-fg">{f.value}</span>
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-fg-subtle" aria-hidden="true">
               <path d="m20 6-11 11-5-5" />
             </svg>
@@ -33,9 +33,9 @@ const fields = [
         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-action" aria-hidden="true">
           <circle cx="12" cy="12" r="9" /><path d="M12 8v4" /><path d="M12 16h.01" />
         </svg>
-        <span class="font-head text-[9px] uppercase tracking-[0.1em] text-action">Open question</span>
+        <span class="font-head text-[9.5px] uppercase tracking-[0.1em] text-action">Open question</span>
       </div>
-      <p class="text-[10.5px] text-fg">Which account does this belong to?</p>
+      <p class="text-[12px] text-fg">Which account does this belong to?</p>
       <div class="flex gap-1.5">
         <span class="rounded-full border border-line bg-bg px-2 py-1 text-[9.5px] text-fg-muted">6100 · Office supplies</span>
         <span class="rounded-full border border-line bg-bg px-2 py-1 text-[9.5px] text-fg-muted">6410 · Travel</span>

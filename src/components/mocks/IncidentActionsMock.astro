@@ -10,7 +10,7 @@ const actions = [
 <MockFrame title="Incident — Actions" meta="2 of 4">
   <div class="space-y-2">
     {actions.map((a) => (
-      <div class="flex items-center gap-2.5 rounded-lg border border-line bg-bg/40 px-2.5 py-2">
+      <div class="flex items-center gap-2.5 rounded-lg border border-line bg-surface px-2.5 py-2">
         <span
           class:list={[
             'flex h-4 w-4 shrink-0 items-center justify-center rounded-[4px] border',
@@ -23,15 +23,15 @@ const actions = [
             </svg>
           )}
         </span>
-        <span class:list={['min-w-0 flex-1 truncate text-[10.5px]', a.done ? 'text-fg-muted' : 'text-fg']}>
+        <span class:list={['min-w-0 flex-1 truncate text-[12px]', a.done ? 'text-fg-muted' : 'text-fg']}>
           {a.label}
         </span>
         {a.suggested && (
-          <span class="shrink-0 rounded-full border border-line px-1.5 py-0.5 font-head text-[9px] uppercase tracking-[0.06em] text-fg-subtle">
+          <span class="shrink-0 rounded-full border border-line px-1.5 py-0.5 font-head text-[9.5px] uppercase tracking-[0.06em] text-fg-subtle">
             Suggested
           </span>
         )}
-        {a.done && <span class="shrink-0 font-head text-[9px] text-fg-subtle">{a.time}</span>}
+        {a.done && <span class="shrink-0 font-head text-[9.5px] text-fg-subtle">{a.time}</span>}
       </div>
     ))}
   </div>

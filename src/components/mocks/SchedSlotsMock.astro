@@ -17,7 +17,7 @@ const slots = [
       {days.map((d, i) => (
         <span
           class:list={[
-            'flex-1 rounded-full py-1 text-center font-head text-[9px] font-semibold uppercase tracking-[0.06em]',
+            'flex-1 rounded-full py-1 text-center font-head text-[9.5px] font-semibold uppercase tracking-[0.06em]',
             i === activeDay ? 'bg-action text-on-action' : 'border border-line text-fg-muted',
           ]}
         >
@@ -30,12 +30,12 @@ const slots = [
       {slots.map((s) => (
         <span
           class:list={[
-            'rounded-md border py-1.5 text-center text-[10px]',
+            'rounded-md border py-1.5 text-center text-[10.5px]',
             s.state === 'selected'
               ? 'border-transparent bg-action font-semibold text-on-action'
               : s.state === 'unavailable'
                 ? 'border-line bg-fg-subtle/10 text-fg-subtle'
-                : 'border-line bg-bg/40 text-fg',
+                : 'border-line bg-surface text-fg',
           ]}
         >
           {s.time}
@@ -47,7 +47,7 @@ const slots = [
       <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="shrink-0 text-fg-subtle" aria-hidden="true">
         <rect x="3" y="11" width="18" height="10" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
       </svg>
-      <span class="text-[10px] text-fg-subtle">Gap after each service is reserved automatically</span>
+      <span class="text-[10.5px] text-fg-subtle">Gap after each service is reserved automatically</span>
     </div>
   </div>
 </MockFrame>

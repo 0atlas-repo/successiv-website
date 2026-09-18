@@ -10,7 +10,7 @@ const docs = [
   <div class="space-y-2">
     <div class="space-y-1.5">
       {docs.map((d) => (
-        <div class="flex items-center gap-2 rounded-lg border border-line bg-bg/40 px-2.5 py-1.5">
+        <div class="flex items-center gap-2 rounded-lg border border-line bg-surface px-2.5 py-1.5">
           {d.state === 'done' ? (
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-action" aria-hidden="true">
               <path d="m20 6-11 11-5-5" />
@@ -20,18 +20,18 @@ const docs = [
               <path d="M18 6 6 18M6 6l12 12" />
             </svg>
           )}
-          <span class="flex-1 truncate text-[10.5px] text-fg">{d.label}</span>
-          <span class="shrink-0 font-head text-[9px] uppercase tracking-[0.08em] text-fg-subtle">
+          <span class="flex-1 truncate text-[12px] text-fg">{d.label}</span>
+          <span class="shrink-0 font-head text-[9.5px] uppercase tracking-[0.08em] text-fg-subtle">
             {d.state === 'done' ? 'Received' : 'Missing'}
           </span>
         </div>
       ))}
     </div>
     <div class="border-t border-line pt-2.5">
-      <span class="block w-full rounded-full bg-fg-subtle/20 py-1.5 text-center font-head text-[10px] font-semibold text-fg-subtle">
+      <span class="block w-full rounded-full bg-fg-subtle/20 py-1.5 text-center font-head text-[10.5px] font-semibold text-fg-subtle">
         Submit
       </span>
-      <p class="mt-1.5 text-[10px] text-fg-subtle">Blocked while a document is outstanding.</p>
+      <p class="mt-1.5 text-[10.5px] text-fg-subtle">Blocked while a document is outstanding.</p>
     </div>
   </div>
 </MockFrame>

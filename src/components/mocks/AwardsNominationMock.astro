@@ -6,12 +6,12 @@ const selected = 1;
 <MockFrame title="Awards — Nomination" meta="Open">
   <div class="space-y-2.5">
     <div class="space-y-1">
-      <span class="font-head text-[9px] font-semibold uppercase tracking-[0.1em] text-fg-subtle">Category</span>
+      <span class="font-head text-[9.5px] font-semibold uppercase tracking-[0.1em] text-fg-subtle">Category</span>
       <div class="flex flex-wrap gap-1.5">
         {categories.map((c, i) => (
           <span
             class:list={[
-              'rounded-full px-2.5 py-1 font-head text-[9px] font-semibold',
+              'rounded-full px-2.5 py-1 font-head text-[9.5px] font-semibold',
               i === selected ? 'bg-action text-on-action' : 'border border-line text-fg-muted',
             ]}
           >
@@ -21,25 +21,25 @@ const selected = 1;
       </div>
     </div>
     <div class="space-y-1">
-      <span class="font-head text-[9px] font-semibold uppercase tracking-[0.1em] text-fg-subtle">Nominee</span>
-      <div class="rounded-md border border-line bg-bg/40 px-2.5 py-1.5 text-[10.5px] text-fg">Team B</div>
+      <span class="font-head text-[9.5px] font-semibold uppercase tracking-[0.1em] text-fg-subtle">Nominee</span>
+      <div class="rounded-md border border-line bg-surface px-2.5 py-1.5 text-[12px] text-fg">Team B</div>
     </div>
     <div class="space-y-1">
-      <span class="font-head text-[9px] font-semibold uppercase tracking-[0.1em] text-fg-subtle">Why</span>
-      <div class="space-y-1.5 rounded-lg border border-line bg-bg/40 p-2.5">
+      <span class="font-head text-[9.5px] font-semibold uppercase tracking-[0.1em] text-fg-subtle">Why</span>
+      <div class="space-y-1.5 rounded-lg border border-line bg-surface p-2.5">
         <div class="h-1.5 w-full rounded-full bg-fg-subtle/20"></div>
         <div class="h-1.5 w-11/12 rounded-full bg-fg-subtle/20"></div>
         <div class="h-1.5 w-4/5 rounded-full bg-fg-subtle/20"></div>
       </div>
     </div>
     <div class="flex gap-2 border-t border-line pt-2.5">
-      <span class="flex-1 rounded-full bg-action py-1.5 text-center font-head text-[10px] font-semibold text-on-action">Submit nomination</span>
+      <span class="flex-1 rounded-full bg-action py-1.5 text-center font-head text-[10.5px] font-semibold text-on-action">Submit nomination</span>
     </div>
     <div class="flex items-center gap-2">
       <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="shrink-0 text-fg-subtle" aria-hidden="true">
         <circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 3" />
       </svg>
-      <span class="text-[10px] text-fg-subtle">Nominations close in 6 days</span>
+      <span class="text-[10.5px] text-fg-subtle">Nominations close in 6 days</span>
     </div>
   </div>
 </MockFrame>

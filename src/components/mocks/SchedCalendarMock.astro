@@ -13,7 +13,7 @@ const turnaround = { top: 42, height: 14 };
   <div class="flex gap-2">
     <div class="flex flex-col">
       {hours.map((h) => (
-        <div class="h-7 shrink-0 text-right text-[9px] text-fg-subtle">{h}</div>
+        <div class="h-7 shrink-0 text-right text-[9.5px] text-fg-subtle">{h}</div>
       ))}
     </div>
     <div class="relative flex-1 border-l border-line" style={`height:${hours.length * rowHeight}px`}>
@@ -32,7 +32,7 @@ const turnaround = { top: 42, height: 14 };
             class="absolute left-1 right-1 overflow-hidden rounded-md border border-line bg-action/10"
             style={`top:${b.top}px; height:${b.height}px`}
           >
-            <span class="block truncate px-1.5 py-1 text-[9px] font-medium leading-tight text-fg">{b.label}</span>
+            <span class="block truncate px-1.5 py-1 text-[9.5px] font-medium leading-tight text-fg">{b.label}</span>
           </div>
         ))}
       </div>

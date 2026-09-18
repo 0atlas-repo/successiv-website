@@ -12,7 +12,7 @@ const languages = [
       {languages.map((l) => (
         <span
           class:list={[
-            'rounded-full px-2.5 py-1 font-head text-[9px] font-semibold uppercase tracking-[0.08em]',
+            'rounded-full px-2.5 py-1 font-head text-[9.5px] font-semibold uppercase tracking-[0.08em]',
             l.active ? 'bg-action text-on-action' : 'border border-line text-fg-subtle',
           ]}
         >
@@ -21,9 +21,9 @@ const languages = [
       ))}
     </div>
 
-    <div class="space-y-1.5 rounded-lg border border-line bg-bg/40 p-2.5">
-      <div class="font-head text-[9px] uppercase tracking-[0.08em] text-fg-subtle">Title</div>
-      <div class="text-[10.5px] font-medium text-fg">Quarterly update</div>
+    <div class="space-y-1.5 rounded-lg border border-line bg-surface p-2.5">
+      <div class="font-head text-[9.5px] uppercase tracking-[0.08em] text-fg-subtle">Title</div>
+      <div class="text-[12px] font-medium text-fg">Quarterly update</div>
       <div class="space-y-1.5 pt-1">
         <div class="h-1.5 w-full rounded-full bg-fg-subtle/20"></div>
         <div class="h-1.5 w-4/5 rounded-full bg-fg-subtle/20"></div>
@@ -32,7 +32,7 @@ const languages = [
 
     <div class="flex items-center gap-3 border-t border-line pt-2">
       {languages.map((l) => (
-        <span class="flex items-center gap-1 font-head text-[9px] uppercase tracking-[0.06em] text-fg-subtle">
+        <span class="flex items-center gap-1 font-head text-[9.5px] uppercase tracking-[0.06em] text-fg-subtle">
           {l.complete ? (
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-action" aria-hidden="true">
               <path d="m20 6-11 11-5-5" />

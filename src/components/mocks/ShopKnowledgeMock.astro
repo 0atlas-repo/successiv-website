@@ -10,7 +10,7 @@ const entries = [
 <MockFrame title="Assistant — Knowledge" meta="4 sources">
   <div class="space-y-1.5">
     {entries.map((e) => (
-      <div class="flex items-center gap-2.5 rounded-lg border border-line bg-bg/40 px-2.5 py-1.5">
+      <div class="flex items-center gap-2.5 rounded-lg border border-line bg-surface px-2.5 py-1.5">
         {e.type === 'File' ? (
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-fg-subtle" aria-hidden="true">
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><path d="M14 2v6h6" />
@@ -24,13 +24,13 @@ const entries = [
             <path d="M4 6h16M4 12h16M4 18h10" />
           </svg>
         )}
-        <span class="min-w-0 flex-1 truncate text-[10.5px] text-fg">{e.name}</span>
-        <span class="shrink-0 rounded-full border border-line px-1.5 py-0.5 font-head text-[9px] uppercase tracking-[0.08em] text-fg-subtle">
+        <span class="min-w-0 flex-1 truncate text-[12px] text-fg">{e.name}</span>
+        <span class="shrink-0 rounded-full border border-line px-1.5 py-0.5 font-head text-[9.5px] uppercase tracking-[0.08em] text-fg-subtle">
           {e.type}
         </span>
         <span
           class:list={[
-            'shrink-0 rounded-full px-2 py-0.5 font-head text-[9px] uppercase tracking-[0.08em]',
+            'shrink-0 rounded-full px-2 py-0.5 font-head text-[9.5px] uppercase tracking-[0.08em]',
             e.status === 'Active' ? 'border border-line text-fg-muted' : 'text-fg-subtle',
           ]}
         >

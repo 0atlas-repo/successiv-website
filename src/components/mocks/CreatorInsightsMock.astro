@@ -10,20 +10,20 @@ const posts = [
 <MockFrame title="Campaign — Delivery" meta="4 posts">
   <div class="space-y-2">
     {posts.map((p) => (
-      <div class="flex items-center gap-2.5 rounded-lg border border-line bg-bg/40 p-2.5">
+      <div class="flex items-center gap-2.5 rounded-lg border border-line bg-surface p-2.5">
         <div class="h-8 w-8 shrink-0 rounded-md bg-fg-subtle/20"></div>
         <div class="min-w-0 flex-1">
-          <div class="truncate font-head text-[11px] font-medium text-fg">{p.creator}</div>
-          <div class="mt-0.5 text-[10px] text-fg-subtle">Linked account</div>
+          <div class="truncate font-head text-[12px] font-medium text-fg">{p.creator}</div>
+          <div class="mt-0.5 text-[10.5px] text-fg-subtle">Linked account</div>
         </div>
         <div class="flex shrink-0 items-center gap-2.5">
-          <span class="flex items-center gap-1 text-[10px] text-fg-subtle">
+          <span class="flex items-center gap-1 text-[10.5px] text-fg-subtle">
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.6z" />
             </svg>
             {p.likes}
           </span>
-          <span class="flex items-center gap-1 text-[10px] text-fg-subtle">
+          <span class="flex items-center gap-1 text-[10.5px] text-fg-subtle">
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M21 11.5a8.5 8.5 0 1 1-3.8-7.1L21 3l-1 4.9c.6 1.1 1 2.3 1 3.6z" />
             </svg>
@@ -37,7 +37,7 @@ const posts = [
       <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-fg-subtle" aria-hidden="true">
         <path d="M3 12a9 9 0 0 1 15-6.7L21 8" /><path d="M21 3v5h-5" /><path d="M21 12a9 9 0 0 1-15 6.7L3 16" /><path d="M3 21v-5h5" />
       </svg>
-      <span class="text-[10px] text-fg-subtle">Figures refresh on a schedule from the linked account</span>
+      <span class="text-[10.5px] text-fg-subtle">Figures refresh on a schedule from the linked account</span>
     </div>
   </div>
 </MockFrame>

@@ -11,14 +11,14 @@ const checks = [
     <div class="flex items-center gap-2.5">
       <div class="h-12 w-12 shrink-0 rounded-md bg-fg-subtle/20"></div>
       <div class="min-w-0 flex-1">
-        <div class="font-head text-[11px] font-medium text-fg">Submitted post</div>
-        <p class="mt-0.5 truncate text-[10px] text-fg-subtle">"Loved trying this — perfect for my morning routine."</p>
+        <div class="font-head text-[12px] font-medium text-fg">Submitted post</div>
+        <p class="mt-0.5 truncate text-[10.5px] text-fg-subtle">"Loved trying this — perfect for my morning routine."</p>
       </div>
     </div>
 
     <div class="space-y-1.5">
       {checks.map((c) => (
-        <div class="flex items-center gap-2 rounded-lg border border-line bg-bg/40 px-2.5 py-1.5">
+        <div class="flex items-center gap-2 rounded-lg border border-line bg-surface px-2.5 py-1.5">
           {c.state === 'pass' ? (
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-action" aria-hidden="true">
               <path d="m20 6-11 11-5-5" />
@@ -28,8 +28,8 @@ const checks = [
               <circle cx="12" cy="12" r="9" /><path d="M12 8v4" /><path d="M12 16h.01" />
             </svg>
           )}
-          <span class="flex-1 truncate text-[10.5px] text-fg">{c.label}</span>
-          <span class="shrink-0 font-head text-[9px] uppercase tracking-[0.08em] text-fg-subtle">
+          <span class="flex-1 truncate text-[12px] text-fg">{c.label}</span>
+          <span class="shrink-0 font-head text-[9.5px] uppercase tracking-[0.08em] text-fg-subtle">
             {c.state === 'pass' ? 'Found' : 'Missing'}
           </span>
         </div>
@@ -40,7 +40,7 @@ const checks = [
       <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="shrink-0 text-fg-subtle" aria-hidden="true">
         <circle cx="11" cy="11" r="7" /><path d="m21 21-4.3-4.3" />
       </svg>
-      <span class="text-[10px] text-fg-subtle">Hashtags and mentions detected automatically</span>
+      <span class="text-[10.5px] text-fg-subtle">Hashtags and mentions detected automatically</span>
     </div>
   </div>
 </MockFrame>
