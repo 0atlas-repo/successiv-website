@@ -10,7 +10,7 @@ const actions = [
 ];
 const doneCount = actions.filter((a) => a.done).length;
 ---
-<MockFrame title="Incident — Actions" meta={`${doneCount} of ${actions.length}`}>
+<MockFrame chrome="tabs" title="Incident — Actions" meta={`${doneCount} of ${actions.length}`}>
   <div class="space-y-2">
     {actions.map((a) => (
       <div

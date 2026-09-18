@@ -14,7 +14,7 @@ const { product } = Astro.props;
   <div class="relative flex h-[268px] items-start overflow-hidden px-6 pt-6">
     <div class="mock-wash pointer-events-none absolute inset-0" aria-hidden="true"></div>
     <div class="relative w-full translate-y-1 transition-transform duration-500 group-hover:translate-y-0">
-      <ProductMock mock={product.screens[0]} />
+      <ProductMock mock={product.cardScreen ?? product.screens[0]} />
     </div>
   </div>
 

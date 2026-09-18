@@ -84,6 +84,15 @@ place, and static output is a cleaner fit for Pages.
   and the status set `bg-ok-soft`/`text-ok`, `bg-warn-soft`/`text-warn`,
   `bg-danger-soft`/`text-danger` for status pills on the mocked screens). Never
   a raw hex, or the light theme breaks.
+- `MockFrame` takes a `chrome` prop: `window` (the default, and the only one
+  with the title-bar dots), `sidebar`, `tabs`, `panel` and `phone`. A screen
+  opts in with one attribute; the shell is never edited per screen. **`phone` is
+  a claim** — a device frame says the product ships to a phone, so it is only
+  used where the product's own copy says so. Today that is `creator` alone.
+  Chrome words stay generic app furniture (Overview, Records, Search, Filter);
+  never name a capability in chrome, and never `Sign`.
+- The home grid shows `cardScreen` when a product sets it, otherwise
+  `screens[0]`. Shopmgr sets it, because the home hero already draws its chat.
 - The mocked screens' title-bar dots use `bg-win-close`/`bg-win-min`/`bg-win-max`
   instead — constants, not semantic tokens, because a real title bar shows the
   same three colours on a light desktop and a dark one. Kept separate from the

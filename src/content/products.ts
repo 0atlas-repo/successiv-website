@@ -50,6 +50,12 @@ export interface Product {
   detail: string[];
   /** 5. which mocked screens to render (never a real screenshot) */
   screens: ProductMock[];
+  /**
+   * Which screen the home grid card shows, when screens[0] is already on that
+   * page. Only Shopmgr needs it: its lead screen is the chat thread, which the
+   * home hero also draws, so the card would repeat it one scroll down.
+   */
+  cardScreen?: ProductMock;
   /** 6. call to action */
   cta: string;
   /** 7. where it sits, for the index page */
@@ -110,6 +116,8 @@ const allProducts: Product[] = [
       'Operators get a portal rather than a black box: conversations are reviewable, every answer can be rated, and the knowledge base is editable, so a gap found on Monday is closed by Tuesday without a release. Model selection follows the plan tier, which keeps the economics sane for smaller stores. Scope is deliberately bounded — it reads orders but never modifies them, and it does not touch inventory, payments, or fulfilment. It is a front-of-house assistant, not a back-office system.',
     ],
     screens: ['chat', 'shop-knowledge', 'shop-tickets'],
+    // The home hero already draws the chat thread. See cardScreen above.
+    cardScreen: 'shop-tickets',
     cta: 'Book a demo',
     category: 'Commerce',
   },

@@ -21,7 +21,7 @@ const statusMeta: Record<Status, { label: string; pill: string }> = {
 };
 const isImage = (fmt: string) => fmt === 'JPG' || fmt === 'PNG';
 ---
-<MockFrame title="Bundle — Assembly" meta={`${sources.length} sources`}>
+<MockFrame chrome="panel" title="Bundle — Assembly" meta={`${sources.length} sources`}>
   <div class="space-y-2">
     {sources.map((s) => (
       <div

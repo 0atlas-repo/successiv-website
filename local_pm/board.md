@@ -7,6 +7,7 @@ One row per active plan. If it is not here, it does not exist.
 | [Product-led site build](projects/product-led-site/plans/build.md) | built, awaiting sign-off | Founder review, then enable Pages + DNS |
 | [Capability depth](projects/capability-depth/specs/capability-depth.md) | shipped and live at cb92cd7 | Done. Two products hidden since, see loose tasks |
 | [Mock realism](projects/mock-realism/plans/rollout.md) | shipped and live at 36262da | Done. Three chrome flags open, see the log |
+| [Mock chrome variants](projects/mock-chrome-variants/plans/rollout.md) | built, awaiting sign-off | Founder review of the five shells, then merge |
 
 ## Loose tasks
 

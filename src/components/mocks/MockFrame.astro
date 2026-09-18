@@ -5,103 +5,307 @@
 // forbids using proprietary UI. Labels inside are deliberately neutral
 // ("Store A", "Vendor", "Applicant").
 //
-// The frame carries a rail and a toolbar because a title bar alone reads as a
-// diagram of a list rather than software. Both are generic affordances — a nav
-// rail, a search field, a filter — not named capabilities, so nothing here
+// The frame carries navigation and a toolbar because a title bar alone reads as
+// a diagram of a list rather than software. Both are generic affordances — a
+// nav rail, a search field, a filter — not named capabilities, so nothing here
 // claims anything a product does not do. Anything that WOULD be a capability
 // claim belongs in the screen's own slot, where it can be checked against the
 // repository that backs it.
 //
-// No per-screen props: all 39 screens get the same shell from one file.
+// `chrome` picks the shell. It used to be one shell for all 39 screens, which
+// is why the home page read as four copies of one thing: the crop in
+// ProductCard shows ~70px of frame before any content. A screen opts into a
+// different shell with one attribute; no screen body knows or cares.
+//
+// `window` is the default and must stay byte-identical to what shipped, so a
+// screen that says nothing renders exactly as before.
+//
+// `phone` is the one variant that makes a claim — a device frame says the
+// product ships to a phone. Only use it where the product's own copy says so.
+export type MockChrome = 'window' | 'sidebar' | 'tabs' | 'panel' | 'phone';
+
 interface Props {
   title: string;
   /** Small right-aligned label in the title bar, e.g. a count or status. */
   meta?: string;
+  /** Which shell to draw around the screen. See the note above on `phone`. */
+  chrome?: MockChrome;
   class?: string;
 }
-const { title, meta, class: className = '' } = Astro.props;
+const { title, meta, chrome = 'window', class: className = '' } = Astro.props;
 
 const railIcon = 'h-[13px] w-[13px]';
+
+// Inner path data only. Every consumer supplies its own <svg> so the stroke
+// weight can follow the shell it sits in.
+const glyph = {
+  grid: '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
+  list: '<path d="M4 6h16M4 12h16M4 18h11"/>',
+  people:
+    '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/>',
+  cog: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6h.09A1.65 1.65 0 0 0 10 3.09V3a2 2 0 1 1 4 0v.09A1.65 1.65 0 0 0 15 4.6a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9v.09a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>',
+  search: '<circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>',
+  filter: '<path d="M4 6h16M7 12h10M10 18h4"/>',
+  user: '<path d="M20 21a8 8 0 1 0-16 0"/><circle cx="12" cy="7" r="4"/>',
+  more: '<circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/>',
+  chevron: '<path d="m9 18 6-6-6-6"/>',
+  rows: '<path d="M3 6h18M3 12h18M3 18h18"/>',
+  squares: '<rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/>',
+  bell: '<path d="M6 8a6 6 0 1 1 12 0c0 7 3 7 3 7H3s3 0 3-7"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',
+};
+
+// Generic app furniture. None of these words names a capability: they are the
+// words an empty CRUD shell ships with, which is the point.
+const navItems = [
+  { label: 'Overview', icon: glyph.grid },
+  { label: 'Records', icon: glyph.list },
+  { label: 'People', icon: glyph.people },
+  { label: 'Settings', icon: glyph.cog },
+];
+const tabItems = ['Overview', 'Activity', 'Settings'];
+
+const isPhone = chrome === 'phone';
+
+const shellClass = isPhone
+  ? 'mock-frame mx-auto w-[272px] max-w-full rounded-[30px] border border-line bg-surface-2 p-[5px] shadow-sm'
+  : 'mock-frame surface-card overflow-hidden rounded-[14px] border border-line';
 ---
 
 <div
-  class:list={[
-    'mock-frame surface-card overflow-hidden rounded-[14px] border border-line',
-    className,
-  ]}
+  class:list={[shellClass, className]}
   role="img"
   aria-label={`Illustrative mockup: ${title}`}
 >
-  {/* Title bar */}
-  <div class="flex items-center gap-2 border-b border-line px-4 py-2.5">
-    <span aria-hidden="true" class="flex gap-1.5">
-      <span class="block h-2 w-2 rounded-full bg-win-close"></span>
-      <span class="block h-2 w-2 rounded-full bg-win-min"></span>
-      <span class="block h-2 w-2 rounded-full bg-win-max"></span>
-    </span>
-    <span class="ml-1 truncate font-head text-[11px] font-medium tracking-[0.04em] text-fg-subtle">
-      {title}
-    </span>
-    <span class="ml-auto flex shrink-0 items-center gap-2.5">
-      {meta && (
-        <span class="font-head text-[10px] uppercase tracking-[0.1em] text-fg-subtle">
-          {meta}
+  {chrome === 'window' && (
+    <>
+      {/* Title bar */}
+      <div class="flex items-center gap-2 border-b border-line px-4 py-2.5">
+        <span aria-hidden="true" class="flex gap-1.5">
+          <span class="block h-2 w-2 rounded-full bg-win-close"></span>
+          <span class="block h-2 w-2 rounded-full bg-win-min"></span>
+          <span class="block h-2 w-2 rounded-full bg-win-max"></span>
         </span>
-      )}
-      {/* The placeholder a real app shows for the current user before a photo. */}
-      <span
+        <span class="ml-1 truncate font-head text-[11px] font-medium tracking-[0.04em] text-fg-subtle">
+          {title}
+        </span>
+        <span class="ml-auto flex shrink-0 items-center gap-2.5">
+          {meta && (
+            <span class="font-head text-[10px] uppercase tracking-[0.1em] text-fg-subtle">
+              {meta}
+            </span>
+          )}
+          {/* The placeholder a real app shows for the current user before a photo. */}
+          <span
+            aria-hidden="true"
+            class="grid h-[18px] w-[18px] place-items-center rounded-full bg-fg-subtle/15 text-fg-subtle ring-1 ring-line"
+          >
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21a8 8 0 1 0-16 0" /><circle cx="12" cy="7" r="4" />
+            </svg>
+          </span>
+        </span>
+      </div>
+
+      <div class="flex">
+        {/* Nav rail */}
+        <div
+          aria-hidden="true"
+          class="flex w-[38px] shrink-0 flex-col items-center gap-1 border-r border-line py-2.5 max-[380px]:hidden"
+        >
+          <span class="grid h-[22px] w-[22px] place-items-center rounded-[7px] bg-action/12 text-action">
+            <svg class={railIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="7" rx="1.5" /><rect x="14" y="3" width="7" height="7" rx="1.5" />
+              <rect x="3" y="14" width="7" height="7" rx="1.5" /><rect x="14" y="14" width="7" height="7" rx="1.5" />
+            </svg>
+          </span>
+          <span class="grid h-[22px] w-[22px] place-items-center rounded-[7px] text-fg-subtle/60">
+            <svg class={railIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 6h16M4 12h16M4 18h11" />
+            </svg>
+          </span>
+          <span class="grid h-[22px] w-[22px] place-items-center rounded-[7px] text-fg-subtle/60">
+            <svg class={railIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+            </svg>
+          </span>
+          <span class="mt-auto grid h-[22px] w-[22px] place-items-center rounded-[7px] text-fg-subtle/60">
+            <svg class={railIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3" />
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6h.09A1.65 1.65 0 0 0 10 3.09V3a2 2 0 1 1 4 0v.09A1.65 1.65 0 0 0 15 4.6a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9v.09a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+            </svg>
+          </span>
+        </div>
+
+        {/* Content pane: its own ground, so the frame has an inner edge too */}
+        <div class="min-w-0 flex-1 bg-bg">
+          <div aria-hidden="true" class="flex items-center gap-2 border-b border-line px-3 py-2">
+            <span class="flex min-w-0 flex-1 items-center gap-1.5 rounded-md border border-line bg-surface px-2 py-[5px] text-fg-subtle">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="shrink-0">
+                <circle cx="11" cy="11" r="7" /><path d="m21 21-4.3-4.3" />
+              </svg>
+              <span class="truncate text-[10px]">Search</span>
+            </span>
+            <span class="flex shrink-0 items-center gap-1.5 rounded-md border border-line px-2 py-[5px] text-fg-subtle">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="shrink-0">
+                <path d="M4 6h16M7 12h10M10 18h4" />
+              </svg>
+              <span class="font-head text-[10px]">Filter</span>
+            </span>
+          </div>
+          <div class="p-4" aria-hidden="true">
+            <slot />
+          </div>
+        </div>
+      </div>
+    </>
+  )}
+
+  {chrome === 'sidebar' && (
+    <div class="flex">
+      {/* Labelled nav: the web-app answer to the icon rail. No window dots —
+          this shell is a page inside a browser, not an OS window. */}
+      <div
         aria-hidden="true"
-        class="grid h-[18px] w-[18px] place-items-center rounded-full bg-fg-subtle/15 text-fg-subtle ring-1 ring-line"
+        class="flex w-[92px] shrink-0 flex-col gap-0.5 border-r border-line bg-surface px-2 py-2.5 max-[420px]:w-[38px] max-[420px]:items-center"
       >
-        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M20 21a8 8 0 1 0-16 0" /><circle cx="12" cy="7" r="4" />
-        </svg>
-      </span>
-    </span>
-  </div>
+        <span class="mb-1.5 ml-0.5 grid h-[18px] w-[18px] shrink-0 place-items-center rounded-[6px] bg-action text-on-action max-[420px]:ml-0">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <Fragment set:html={glyph.squares} />
+          </svg>
+        </span>
+        {navItems.map((n, i) => (
+          <span
+            class:list={[
+              'flex items-center gap-1.5 rounded-[6px] px-1.5 py-[5px] max-[420px]:px-0',
+              i === 0 ? 'bg-action/12 text-action' : 'text-fg-subtle/70',
+            ]}
+          >
+            <svg class="h-[11px] w-[11px] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+              <Fragment set:html={n.icon} />
+            </svg>
+            <span class="truncate font-head text-[9.5px] font-medium max-[420px]:hidden">{n.label}</span>
+          </span>
+        ))}
+      </div>
 
-  <div class="flex">
-    {/* Nav rail */}
-    <div
-      aria-hidden="true"
-      class="flex w-[38px] shrink-0 flex-col items-center gap-1 border-r border-line py-2.5 max-[380px]:hidden"
-    >
-      <span class="grid h-[22px] w-[22px] place-items-center rounded-[7px] bg-action/12 text-action">
-        <svg class={railIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="3" width="7" height="7" rx="1.5" /><rect x="14" y="3" width="7" height="7" rx="1.5" />
-          <rect x="3" y="14" width="7" height="7" rx="1.5" /><rect x="14" y="14" width="7" height="7" rx="1.5" />
-        </svg>
-      </span>
-      <span class="grid h-[22px] w-[22px] place-items-center rounded-[7px] text-fg-subtle/60">
-        <svg class={railIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M4 6h16M4 12h16M4 18h11" />
-        </svg>
-      </span>
-      <span class="grid h-[22px] w-[22px] place-items-center rounded-[7px] text-fg-subtle/60">
-        <svg class={railIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-        </svg>
-      </span>
-      <span class="mt-auto grid h-[22px] w-[22px] place-items-center rounded-[7px] text-fg-subtle/60">
-        <svg class={railIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="3" />
-          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6h.09A1.65 1.65 0 0 0 10 3.09V3a2 2 0 1 1 4 0v.09A1.65 1.65 0 0 0 15 4.6a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9v.09a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
-        </svg>
-      </span>
+      <div class="min-w-0 flex-1 bg-bg">
+        <div aria-hidden="true" class="flex items-center gap-2 border-b border-line px-3 py-2">
+          {/* Breadcrumb stands in for the title bar this shell does not have. */}
+          <span class="flex min-w-0 items-center gap-1 text-fg-subtle">
+            <span class="font-head text-[10px]">Workspace</span>
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 opacity-60">
+              <Fragment set:html={glyph.chevron} />
+            </svg>
+            <span class="truncate font-head text-[11px] font-medium tracking-[0.04em] text-fg">{title}</span>
+          </span>
+          <span class="ml-auto flex shrink-0 items-center gap-2">
+            {meta && (
+              <span class="font-head text-[10px] uppercase tracking-[0.1em] text-fg-subtle">{meta}</span>
+            )}
+            <span class="flex items-center gap-1.5 rounded-md border border-line bg-surface px-2 py-[5px] text-fg-subtle max-[440px]:hidden">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="shrink-0">
+                <Fragment set:html={glyph.search} />
+              </svg>
+              <span class="text-[10px]">Search</span>
+            </span>
+            <span class="grid h-[18px] w-[18px] place-items-center rounded-full bg-fg-subtle/15 text-fg-subtle ring-1 ring-line">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <Fragment set:html={glyph.user} />
+              </svg>
+            </span>
+          </span>
+        </div>
+        <div class="p-4" aria-hidden="true">
+          <slot />
+        </div>
+      </div>
     </div>
+  )}
 
-    {/* Content pane: its own ground, so the frame has an inner edge too */}
-    <div class="min-w-0 flex-1 bg-bg">
+  {chrome === 'tabs' && (
+    <div class="bg-bg">
       <div aria-hidden="true" class="flex items-center gap-2 border-b border-line px-3 py-2">
+        <span class="grid h-[18px] w-[18px] shrink-0 place-items-center rounded-[6px] bg-action text-on-action">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <Fragment set:html={glyph.squares} />
+          </svg>
+        </span>
+        <span class="truncate font-head text-[11px] font-medium tracking-[0.04em] text-fg">{title}</span>
+        <span class="ml-auto flex shrink-0 items-center gap-2.5">
+          {meta && (
+            <span class="font-head text-[10px] uppercase tracking-[0.1em] text-fg-subtle">{meta}</span>
+          )}
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" class="text-fg-subtle/70">
+            <Fragment set:html={glyph.bell} />
+          </svg>
+          <span class="grid h-[18px] w-[18px] place-items-center rounded-full bg-fg-subtle/15 text-fg-subtle ring-1 ring-line">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <Fragment set:html={glyph.user} />
+            </svg>
+          </span>
+        </span>
+      </div>
+
+      {/* Tab strip carries the navigation this shell drops from the side. */}
+      <div aria-hidden="true" class="flex items-end gap-3 border-b border-line px-3">
+        {tabItems.map((t, i) => (
+          <span
+            class:list={[
+              'border-b-2 pb-1.5 pt-2 font-head text-[10px] font-medium',
+              i === 0 ? 'border-action text-fg' : 'border-transparent text-fg-subtle/70',
+            ]}
+          >
+            {t}
+          </span>
+        ))}
+        <span class="ml-auto mb-1.5 flex shrink-0 items-center gap-0.5 rounded-md border border-line p-0.5">
+          <span class="grid h-[15px] w-[15px] place-items-center rounded-[4px] bg-surface-2 text-fg">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+              <Fragment set:html={glyph.rows} />
+            </svg>
+          </span>
+          <span class="grid h-[15px] w-[15px] place-items-center rounded-[4px] text-fg-subtle/60">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+              <Fragment set:html={glyph.squares} />
+            </svg>
+          </span>
+        </span>
+      </div>
+
+      <div class="p-4" aria-hidden="true">
+        <slot />
+      </div>
+    </div>
+  )}
+
+  {chrome === 'panel' && (
+    <div class="bg-bg">
+      {/* No title bar at all: this shell is a section of a larger page, so the
+          heading does the work the title bar does elsewhere. The toolbar stays
+          — without it the frame reads as a list, not software. */}
+      <div aria-hidden="true" class="flex items-center gap-2 px-4 pt-3.5">
+        <span class="truncate font-head text-[13px] font-semibold tracking-[-0.01em] text-fg">{title}</span>
+        {meta && (
+          <span class="shrink-0 whitespace-nowrap rounded-full border border-line px-2 py-0.5 font-head text-[9px] uppercase tracking-[0.08em] text-fg-subtle">
+            {meta}
+          </span>
+        )}
+        <span class="ml-auto grid h-[18px] w-[18px] shrink-0 place-items-center rounded-md border border-line text-fg-subtle">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <Fragment set:html={glyph.more} />
+          </svg>
+        </span>
+      </div>
+      <div aria-hidden="true" class="mt-2.5 flex items-center gap-2 border-y border-line px-4 py-2">
         <span class="flex min-w-0 flex-1 items-center gap-1.5 rounded-md border border-line bg-surface px-2 py-[5px] text-fg-subtle">
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="shrink-0">
-            <circle cx="11" cy="11" r="7" /><path d="m21 21-4.3-4.3" />
+            <Fragment set:html={glyph.search} />
           </svg>
           <span class="truncate text-[10px]">Search</span>
         </span>
         <span class="flex shrink-0 items-center gap-1.5 rounded-md border border-line px-2 py-[5px] text-fg-subtle">
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="shrink-0">
-            <path d="M4 6h16M7 12h10M10 18h4" />
+            <Fragment set:html={glyph.filter} />
           </svg>
           <span class="font-head text-[10px]">Filter</span>
         </span>
@@ -110,5 +314,47 @@ const railIcon = 'h-[13px] w-[13px]';
         <slot />
       </div>
     </div>
-  </div>
+  )}
+
+  {isPhone && (
+    <div class="overflow-hidden rounded-[25px] bg-bg">
+      {/* Status bar, then a compact header, then a bottom tab bar: the three
+          things that make a screen read as a phone rather than a small window. */}
+      <div aria-hidden="true" class="flex items-center px-4 pb-1 pt-2 text-fg-subtle">
+        <span class="font-head text-[9px] font-semibold tabular-nums">9:41</span>
+        <span class="ml-auto flex items-center gap-1">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <path d="M3 18v-3M9 18v-7M15 18v-11M21 18V4" />
+          </svg>
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 8.5a16 16 0 0 1 20 0M5 12a11 11 0 0 1 14 0M8.5 15.5a6 6 0 0 1 7 0" /><circle cx="12" cy="19" r="0.6" fill="currentColor" />
+          </svg>
+          <svg width="14" height="10" viewBox="0 0 28 14" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="1" y="2" width="20" height="10" rx="3" /><rect x="3" y="4" width="13" height="6" rx="1.5" fill="currentColor" stroke="none" />
+            <path d="M23.5 5.5v3" stroke-linecap="round" />
+          </svg>
+        </span>
+      </div>
+      <div aria-hidden="true" class="flex items-center gap-2 border-b border-line px-4 pb-2">
+        <span class="truncate font-head text-[12px] font-semibold tracking-[-0.01em] text-fg">{title}</span>
+        {meta && (
+          <span class="ml-auto shrink-0 whitespace-nowrap font-head text-[9px] uppercase tracking-[0.1em] text-fg-subtle">
+            {meta}
+          </span>
+        )}
+      </div>
+      <div class="p-3" aria-hidden="true">
+        <slot />
+      </div>
+      <div aria-hidden="true" class="flex items-center justify-around border-t border-line bg-surface px-2 py-2">
+        {[glyph.grid, glyph.list, glyph.bell, glyph.user].map((g, i) => (
+          <span class:list={['grid place-items-center', i === 0 ? 'text-action' : 'text-fg-subtle/60']}>
+            <svg class="h-[13px] w-[13px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+              <Fragment set:html={g} />
+            </svg>
+          </span>
+        ))}
+      </div>
+    </div>
+  )}
 </div>

@@ -1,0 +1,56 @@
+[
+  {
+    "id": 1,
+    "subject": "chrome prop on MockFrame, window variant byte-identical to today",
+    "status": "completed",
+    "blockedBy": []
+  },
+  {
+    "id": 2,
+    "subject": "sidebar, tabs, panel, phone variants in MockFrame",
+    "status": "completed",
+    "blockedBy": [
+      1
+    ]
+  },
+  {
+    "id": 3,
+    "subject": "assign chrome to the 10 product screens that differ",
+    "status": "completed",
+    "blockedBy": [
+      2
+    ]
+  },
+  {
+    "id": 4,
+    "subject": "assign chrome per engagement across the 22 work screens",
+    "status": "completed",
+    "blockedBy": [
+      2
+    ]
+  },
+  {
+    "id": 5,
+    "subject": "cardScreen on Product, ProductCard uses it, Shopmgr shows shop-tickets",
+    "status": "completed",
+    "blockedBy": []
+  },
+  {
+    "id": 6,
+    "subject": "build + verify.mjs, both themes, card crop and hero size",
+    "status": "completed",
+    "blockedBy": [
+      3,
+      4,
+      5
+    ]
+  },
+  {
+    "id": 7,
+    "subject": "record the chrome prop in CLAUDE.md conventions",
+    "status": "in_progress",
+    "blockedBy": [
+      6
+    ]
+  }
+]
