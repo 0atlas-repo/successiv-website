@@ -28,6 +28,15 @@
   --color-navy-lift: #4a90e2;
   --color-ink: #231f20;
 
+  /* Window controls on the mocked screens. Constants, not semantic tokens:
+     a real title bar shows the same three colours on a light desktop and a
+     dark one, so these do not flip per theme. Kept separate from
+     --color-ok/-warn/-danger on purpose — these are window buttons, and a
+     reader should not take them for a status. */
+  --color-win-close: #ff5f57;
+  --color-win-min: #febc2e;
+  --color-win-max: #28c840;
+
   /* Semantic tokens — these flip per theme. Components use only these.
      Light is the base: docs/hiring/DESIGNER_BRIEF.md asks for a "light, sharp
      SaaS UI with one craft moment, not a full dark enterprise clone".
