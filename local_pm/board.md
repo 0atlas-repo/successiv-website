@@ -6,7 +6,7 @@ One row per active plan. If it is not here, it does not exist.
 |---|---|---|
 | [Product-led site build](projects/product-led-site/plans/build.md) | built, awaiting sign-off | Founder review, then enable Pages + DNS |
 | [Capability depth](projects/capability-depth/specs/capability-depth.md) | shipped and live at cb92cd7 | Done. Two products hidden since, see loose tasks |
-| [Mock realism](projects/mock-realism/plans/pilot.md) | pilot built, awaiting sign-off | Founder reviews 2 screens, then batch the other 37 |
+| [Mock realism](projects/mock-realism/plans/rollout.md) | rolled out across all 32 screens | Merge to main, push, verify the deploy |
 
 ## Loose tasks
 

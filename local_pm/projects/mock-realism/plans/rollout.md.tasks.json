@@ -1,20 +1,119 @@
 {
   "tasks": [
-    { "id": 1, "subject": "Group 1 Creators Sphere: creator-proof, creator-insights", "status": "pending", "blockedBy": [] },
-    { "id": 2, "subject": "Group 2 Shopmgr: shop-knowledge, shop-tickets", "status": "pending", "blockedBy": [] },
-    { "id": 3, "subject": "Group 3 KYC: identity, kyc-share, kyc-review", "status": "pending", "blockedBy": [] },
-    { "id": 4, "subject": "Group 4 Accounting: acct-extract, acct-journal, acct-close", "status": "pending", "blockedBy": [] },
-    { "id": 5, "subject": "Group 5 Tender: tender-checklist, scoring, tender-ranking", "status": "pending", "blockedBy": [] },
-    { "id": 6, "subject": "Group 6 Contracts: contract-registry, timeline, contract-clause", "status": "pending", "blockedBy": [] },
-    { "id": 7, "subject": "Group 7 Bundling: bundle-builder, bundle-redaction", "status": "pending", "blockedBy": [] },
-    { "id": 8, "subject": "Group 8 Incidents: incident-cases, incident-chat, incident-actions", "status": "pending", "blockedBy": [] },
-    { "id": 9, "subject": "Group 9 CMS: cms-editor, cms-publish, cms-news", "status": "pending", "blockedBy": [] },
-    { "id": 10, "subject": "Group 10 SharePoint: sp-permissions, sp-access, sp-links", "status": "pending", "blockedBy": [] },
-    { "id": 11, "subject": "Group 11 Awards: awards-nomination, awards-shortlist", "status": "pending", "blockedBy": [] },
-    { "id": 12, "subject": "Group 12 Scheduling: sched-marketplace, sched-slots, sched-calendar", "status": "pending", "blockedBy": [] },
-    { "id": 13, "subject": "Build, check, hex sweep, forbidden-claim grep on dist", "status": "pending", "blockedBy": [1,2,3,4,5,6,7,8,9,10,11,12] },
-    { "id": 14, "subject": "Browser sweep: every product and work page, both themes", "status": "pending", "blockedBy": [13] },
-    { "id": 15, "subject": "Merge to main, push, verify the Pages deploy", "status": "pending", "blockedBy": [14] },
-    { "id": 16, "subject": "ecc:doc-updater, then delete the worktree", "status": "pending", "blockedBy": [15] }
+    {
+      "id": 1,
+      "subject": "Group 1 Creators Sphere: creator-proof, creator-insights",
+      "status": "completed",
+      "blockedBy": []
+    },
+    {
+      "id": 2,
+      "subject": "Group 2 Shopmgr: shop-knowledge, shop-tickets",
+      "status": "completed",
+      "blockedBy": []
+    },
+    {
+      "id": 3,
+      "subject": "Group 3 KYC: identity, kyc-share, kyc-review",
+      "status": "completed",
+      "blockedBy": []
+    },
+    {
+      "id": 4,
+      "subject": "Group 4 Accounting: acct-extract, acct-journal, acct-close",
+      "status": "completed",
+      "blockedBy": []
+    },
+    {
+      "id": 5,
+      "subject": "Group 5 Tender: tender-checklist, scoring, tender-ranking",
+      "status": "completed",
+      "blockedBy": []
+    },
+    {
+      "id": 6,
+      "subject": "Group 6 Contracts: contract-registry, timeline, contract-clause",
+      "status": "completed",
+      "blockedBy": []
+    },
+    {
+      "id": 7,
+      "subject": "Group 7 Bundling: bundle-builder, bundle-redaction",
+      "status": "completed",
+      "blockedBy": []
+    },
+    {
+      "id": 8,
+      "subject": "Group 8 Incidents: incident-cases, incident-chat, incident-actions",
+      "status": "completed",
+      "blockedBy": []
+    },
+    {
+      "id": 9,
+      "subject": "Group 9 CMS: cms-editor, cms-publish, cms-news",
+      "status": "completed",
+      "blockedBy": []
+    },
+    {
+      "id": 10,
+      "subject": "Group 10 SharePoint: sp-permissions, sp-access, sp-links",
+      "status": "completed",
+      "blockedBy": []
+    },
+    {
+      "id": 11,
+      "subject": "Group 11 Awards: awards-nomination, awards-shortlist",
+      "status": "completed",
+      "blockedBy": []
+    },
+    {
+      "id": 12,
+      "subject": "Group 12 Scheduling: sched-marketplace, sched-slots, sched-calendar",
+      "status": "completed",
+      "blockedBy": []
+    },
+    {
+      "id": 13,
+      "subject": "Build, check, hex sweep, forbidden-claim grep on dist",
+      "status": "completed",
+      "blockedBy": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ]
+    },
+    {
+      "id": 14,
+      "subject": "Browser sweep: every product and work page, both themes",
+      "status": "completed",
+      "blockedBy": [
+        13
+      ]
+    },
+    {
+      "id": 15,
+      "subject": "Merge to main, push, verify the Pages deploy",
+      "status": "in_progress",
+      "blockedBy": [
+        14
+      ]
+    },
+    {
+      "id": 16,
+      "subject": "ecc:doc-updater, then delete the worktree",
+      "status": "in_progress",
+      "blockedBy": [
+        15
+      ]
+    }
   ]
 }
