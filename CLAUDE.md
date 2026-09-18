@@ -64,9 +64,13 @@ client names and internal repo slugs. It fails the build on a hit.
 
 ## Stack
 
-Astro + Tailwind v4 + TypeScript, static output, deployed to GitHub Pages on the
-custom domain `successiv.com`. Deployment, and the open hosting blocker, are in
-`docs/DEPLOYMENT.md`.
+Astro + Tailwind v4 + TypeScript, static output, deployed to GitHub Pages.
+
+Live today at `https://0atlas-repo.github.io/successiv-website/`, the project
+page. **Not** `successiv.com` — that is the intent, not the state, and
+`scripts/verify.mjs` fails the build if a `CNAME` reaches `dist/`, because a
+CNAME would override the project-page URL. Deployment, the two env shapes, the
+rollback procedure and the open hosting blocker are in `docs/DEPLOYMENT.md`.
 
 `docs/BUILD.md` suggests Next.js; Astro was chosen instead because the existing
 work at `successiv.com/rebuild/` was already Astro with the brand tokens in

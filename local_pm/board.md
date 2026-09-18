@@ -33,9 +33,7 @@ One row per active plan. If it is not here, it does not exist.
 - Tell the Creators Sphere owner: creatorssphere.sg (double s) does not resolve, so the hello@ address in their footer is dead.
 - Decide whether the three principles get reframed toward buyer value.
 - DECIDE: hosting. Org is on the free plan so private Pages will not serve.
-  NOTE 2026-09-18: `docs/DEPLOYMENT.md` does not exist. CLAUDE.md line 69 points at it
-  and so did this row. The hosting blocker is real; the document recording it was never
-  written. Write it or drop both references.
+  Written up now in `docs/DEPLOYMENT.md`, generated from the workflow and verify script.
 - If the repo is ever made public, redact the client mapping table in docs/BRIEF.md first.
 - Replace `public/img/og-placeholder.png` with real Open Graph artwork.
 - Set GitHub Pages source to "GitHub Actions" and point successiv.com DNS at Pages.
