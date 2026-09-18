@@ -3,8 +3,25 @@ import { withBase } from '../base';
 import ProductMock from './mocks/ProductMock.astro';
 import type { Product } from '../content/products';
 
-interface Props { product: Product }
-const { product } = Astro.props;
+interface Props {
+  product: Product;
+  /** Position in the grid. Only used to vary the crop — see `crops` below. */
+  index?: number;
+}
+const { product, index = 0 } = Astro.props;
+
+// The cards sit in a two-column grid and every frame is anchored to the same
+// top edge, so without this the shells line up on one ruled line across the
+// row. A small offset and tilt per card breaks that up. The values are
+// deliberately tiny: the point is that the screens stop looking stacked, not
+// that anyone notices a rotation. Hover straightens the screen out.
+const crops = [
+  'translate-y-1 rotate-[-0.45deg]',
+  'translate-y-3 rotate-[0.5deg]',
+  'translate-y-2 rotate-[0.35deg]',
+  'translate-y-0 rotate-[-0.3deg]',
+];
+const crop = crops[index % crops.length];
 ---
 <article class="reveal group relative flex flex-col overflow-hidden rounded-[18px] border border-line surface-card transition-all duration-300 hover:-translate-y-1 hover:border-action/40">
   <a href={withBase(`/products/${product.slug}/`)} class="absolute inset-0 z-10" aria-label={`${product.name} — ${product.oneLiner}`}></a>
@@ -13,7 +30,12 @@ const { product } = Astro.props;
        window keeps its title bar and toolbar, and clipped at the bottom. -->
   <div class="relative flex h-[268px] items-start overflow-hidden px-6 pt-6">
     <div class="mock-wash pointer-events-none absolute inset-0" aria-hidden="true"></div>
-    <div class="relative w-full translate-y-1 transition-transform duration-500 group-hover:translate-y-0">
+    <div
+      class:list={[
+        'relative w-full transition-transform duration-500 group-hover:translate-y-0 group-hover:rotate-0',
+        crop,
+      ]}
+    >
       <ProductMock mock={product.cardScreen ?? product.screens[0]} />
     </div>
   </div>

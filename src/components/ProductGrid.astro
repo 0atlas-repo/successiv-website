@@ -16,7 +16,7 @@ const {
     <!-- Two columns all the way up: with four products, a third column leaves one
          card stranded on its own row. Restore xl:grid-cols-3 if a fifth ships. -->
     <div class="grid gap-6 md:grid-cols-2">
-      {products.map((p) => <ProductCard product={p} />)}
+      {products.map((p, i) => <ProductCard product={p} index={i} />)}
     </div>
   </div>
 </section>

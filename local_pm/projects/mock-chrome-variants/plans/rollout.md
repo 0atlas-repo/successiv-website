@@ -65,6 +65,12 @@ phone:
 `product.cardScreen ?? product.screens[0]`. Shopmgr sets `shop-tickets`, so the
 hero keeps its chat thread and the card stops repeating it.
 
+## Step 4 — crop variation
+
+`ProductGrid` passes each card's index; `ProductCard` maps it to one of four
+`translate-y`/`rotate` pairs so the four frames stop sharing a top edge. Hover
+resets both. Tiny values on purpose.
+
 ## Verification
 
 1. `npm run build` — Astro build plus `scripts/verify.mjs`, 18 pages, no
