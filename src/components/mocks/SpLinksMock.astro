@@ -1,29 +1,42 @@
 ---
 import MockFrame from './MockFrame.astro';
+// Neutral document names only — link monitoring flags a broken reference,
+// it never names a person. The one broken row is highlighted to match the
+// frame's "1 broken" count; a status pill replaces the old icon-only tell.
 const docs = [
-  { name: 'Policy handbook.docx', broken: false },
-  { name: 'Vendor terms.pdf', broken: true },
-  { name: 'Onboarding checklist.xlsx', broken: false },
+  { name: 'Policy handbook.docx', checked: '2h ago', broken: false },
+  { name: 'Vendor terms.pdf', checked: '2h ago', broken: true },
+  { name: 'Onboarding checklist.xlsx', checked: '5h ago', broken: false },
+  { name: 'Reference architecture.pptx', checked: '1d ago', broken: false },
+  { name: 'Renewal terms Q1.pdf', checked: '1d ago', broken: false },
+  { name: 'Facilities floor plan.pdf', checked: '3d ago', broken: false },
 ];
 ---
 <MockFrame title="Governance — Link monitor" meta="1 broken">
   <div class="space-y-2">
     <div class="space-y-1.5">
       {docs.map((d) => (
-        <div class="flex items-center gap-2.5 rounded-lg border border-line bg-surface px-2.5 py-2">
+        <div
+          class:list={[
+            'flex items-center gap-2.5 rounded-lg border px-2.5 py-2',
+            d.broken ? 'border-action/35 bg-surface-2' : 'border-line bg-surface',
+          ]}
+        >
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-fg-subtle" aria-hidden="true">
             <path d="M14 3v4a1 1 0 0 0 1 1h4" /><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z" />
           </svg>
-          <span class="min-w-0 flex-1 truncate text-[12px] text-fg">{d.name}</span>
-          {d.broken ? (
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-action" aria-hidden="true">
-              <path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" />
-            </svg>
-          ) : (
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-fg-subtle" aria-hidden="true">
-              <path d="m20 6-11 11-5-5" />
-            </svg>
-          )}
+          <div class="min-w-0 flex-1">
+            <div class="truncate text-[12px] text-fg">{d.name}</div>
+            <div class="mt-0.5 text-[9.5px] tabular-nums text-fg-subtle">Checked {d.checked}</div>
+          </div>
+          <span
+            class:list={[
+              'shrink-0 whitespace-nowrap rounded-full px-1.5 py-px font-head text-[9.5px] font-semibold uppercase tracking-[0.06em]',
+              d.broken ? 'bg-danger-soft text-danger' : 'bg-ok-soft text-ok',
+            ]}
+          >
+            {d.broken ? 'Broken' : 'Linked'}
+          </span>
         </div>
       ))}
     </div>

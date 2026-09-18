@@ -35,3 +35,35 @@ awards entry. They have phases and a visible judging panel, and no audit log.
 
 **Rule.** A noun added to a claim is a new claim. Read its source before the
 commit, not after — the rule applies to the fix as much as to what it fixes.
+
+## 2026-09-18 — I sent twelve agents to do a find-and-replace
+
+**Mistake.** The mock pass had two halves: a mechanical one (`bg-bg/40` →
+`bg-surface`, three type sizes stepped up) and a judgement one (which row is
+selected, whether a state is warn or danger, whether a control has anything
+behind it). I handed both to twelve subagents. The founder asked "why don't you
+use a global replacement?!" and was right. A script did the mechanical half in
+one command: 176 substitutions, exact counts, reviewable as a table in the
+commit message. Twelve models doing the same sweep by hand would have been
+slower, more expensive, and would have missed some.
+
+**Rule.** Split a task by *kind of work* before choosing who does it. Anything a
+substitution can express, a substitution does — and the count it reports is the
+proof it was complete. Give the model only what needs a decision.
+
+## 2026-09-18 — A reviewer running `git status` in a shared worktree
+
+**Mistake.** Twelve agents edited disjoint files in one worktree. I gave the
+review stage an `edited_out_of_scope` field and told it to run
+`git status --short`. Every reviewer saw the other eleven groups' files, listed
+20–29 of them as scope violations, and set `ok: false`. My fix stage then told
+its agent "files edited out of scope, revert these" — and they did. Nineteen
+files of finished work were reverted by sibling agents. Nothing committed was
+lost, but the run had to be redone.
+
+**Rule.** A check is only valid if its input is scoped to the agent that runs
+it. `git status` is global, so in a shared worktree it reports other people's
+work as your own violation. Either give the checker an explicit file list and
+nothing wider, or drop the check. And never put a destructive verb —
+revert, checkout, restore, reset, clean — in a prompt that runs concurrently
+with other writers.

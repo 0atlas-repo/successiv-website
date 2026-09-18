@@ -1,34 +1,53 @@
 ---
 import MockFrame from './MockFrame.astro';
+// The reviewer's side of one holder's document set. Phone and email verify
+// themselves by one-time code, so they carry no reviewer and no stamp — only
+// the two paper documents below need a person to open them.
+const reviewer = 'M';
 const docs = [
-  { type: 'Passport', state: 'Verified', stamp: 'M. · 12 Sep' },
-  { type: 'Proof of address', state: 'Pending' },
-  { type: 'Phone', state: 'Unverified' },
+  { type: 'Passport', state: 'pass', stamp: '12 Sep' },
+  { type: 'ID card', state: 'review', selected: true },
+  { type: 'Proof of address', state: 'review' },
+  { type: 'Phone', state: 'pass' },
+  { type: 'Email', state: 'pass' },
 ];
 ---
-<MockFrame title="Identity — Review" meta="1 pending">
+<MockFrame title="Identity — Review" meta="2 pending">
   <div class="space-y-1.5">
     {docs.map((d) => (
-      <div class="rounded-lg border border-line bg-surface px-2.5 py-1.5">
+      <div
+        class:list={[
+          'rounded-lg border px-2.5 py-1.5',
+          d.selected ? 'border-action/35 bg-surface-2' : 'border-line bg-surface',
+        ]}
+      >
         <div class="flex items-center gap-2.5">
-          {d.state === 'Verified' ? (
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-action" aria-hidden="true">
-              <path d="m20 6-11 11-5-5" />
-            </svg>
-          ) : d.state === 'Pending' ? (
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="shrink-0 text-fg-subtle" aria-hidden="true">
-              <circle cx="12" cy="12" r="9" /><path d="M12 8v4" /><path d="M12 16h.01" />
-            </svg>
-          ) : (
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="shrink-0 text-fg-subtle" aria-hidden="true">
-              <circle cx="12" cy="12" r="9" /><path d="M9 9l6 6M15 9l-6 6" />
-            </svg>
-          )}
           <span class="min-w-0 flex-1 truncate text-[12px] text-fg">{d.type}</span>
-          <span class="shrink-0 font-head text-[9.5px] uppercase tracking-[0.08em] text-fg-subtle">{d.state}</span>
+          {d.stamp && (
+            <span class="grid h-[18px] w-[18px] shrink-0 place-items-center rounded-full bg-fg-subtle/15 text-fg-subtle" aria-hidden="true">
+              <span class="font-head text-[8px] font-semibold">{reviewer}</span>
+            </span>
+          )}
+          <span
+            class:list={[
+              'shrink-0 whitespace-nowrap rounded-full px-1.5 py-px font-head text-[9.5px] font-semibold uppercase tracking-[0.06em]',
+              d.state === 'pass' ? 'bg-ok-soft text-ok' : 'bg-warn-soft text-warn',
+            ]}
+          >
+            {d.state === 'pass' ? 'Verified' : 'Pending'}
+          </span>
         </div>
         {d.stamp && (
-          <div class="mt-1 pl-[21px] text-[9.5px] text-fg-subtle">Reviewed · {d.stamp}</div>
+          <div class="mt-1 text-[9.5px] tabular-nums text-fg-subtle">Reviewed by {reviewer} · {d.stamp}</div>
+        )}
+        {d.selected && (
+          <div class="mt-1.5 flex items-center gap-2 border-t border-line pt-1.5">
+            <span class="grid h-[18px] w-[18px] shrink-0 place-items-center rounded-full bg-fg-subtle/15 text-fg-subtle" aria-hidden="true">
+              <span class="font-head text-[8px] font-semibold">{reviewer}</span>
+            </span>
+            <span class="min-w-0 flex-1 truncate text-[9.5px] text-fg-subtle">Waiting on a person to check it</span>
+            <span class="shrink-0 whitespace-nowrap rounded-full bg-action px-2 py-1 font-head text-[9.5px] font-semibold text-on-action">Verify</span>
+          </div>
         )}
       </div>
     ))}

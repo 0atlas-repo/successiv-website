@@ -5,24 +5,29 @@ import MockFrame from './MockFrame.astro';
   <div class="space-y-2.5">
     <div class="space-y-1.5 rounded-lg border border-line bg-surface p-2.5">
       <div class="flex items-center gap-1.5 border-b border-line pb-1.5">
-        <span class="block h-1.5 w-1.5 rounded-full bg-fg-subtle/40"></span>
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-fg-subtle" aria-hidden="true">
+          <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" /><circle cx="12" cy="12" r="3" />
+        </svg>
         <span class="font-head text-[9.5px] text-fg-subtle">Preview — New office opens</span>
       </div>
-      <div class="h-1.5 w-4/5 rounded-full bg-fg-subtle/20"></div>
-      <div class="h-1.5 w-full rounded-full bg-fg-subtle/20"></div>
-      <div class="h-1.5 w-3/5 rounded-full bg-fg-subtle/20"></div>
+      <p class="text-[10.5px] leading-snug text-fg-muted">
+        The downtown office opens next month, with space for the full team and a dedicated meeting floor.
+      </p>
+      <p class="text-[10.5px] leading-snug text-fg-muted">
+        Details go out to staff ahead of the public announcement.
+      </p>
     </div>
 
     <div class="flex items-center gap-2">
       <span class="shrink-0 whitespace-nowrap rounded-full bg-warn-soft px-2 py-1 font-head text-[9.5px] font-semibold uppercase tracking-[0.08em] text-warn">Draft</span>
-      <span class="text-[10.5px] text-fg-subtle">Not visible to visitors yet</span>
+      <span class="text-[10.5px] text-fg-subtle">Not on the public site yet</span>
     </div>
 
     <div class="flex items-center gap-2 border-t border-line pt-2.5">
       <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-fg-subtle" aria-hidden="true">
         <rect x="4" y="3" width="16" height="18" rx="2" /><path d="M9 8h6M9 12h6" />
       </svg>
-      <span class="text-[10.5px] text-fg-subtle">Timestamped backup saved before publish</span>
+      <span class="text-[10.5px] text-fg-subtle">Backup saved at <span class="tabular-nums">14:02</span>, before publish</span>
     </div>
 
     <div class="rounded-full bg-action py-1.5 text-center font-head text-[10.5px] font-semibold text-on-action">Publish</div>

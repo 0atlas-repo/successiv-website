@@ -1,5 +1,11 @@
 ---
 import MockFrame from './MockFrame.astro';
+// A fuller day than a 45-minute cadence usually shows on a wireframe: slots
+// keep the copy's fixed rhythm (each service reserves its own cooldown
+// automatically, so the grid — not a manual check — is what keeps two
+// bookings from sitting back-to-back). Free reads as the inviting state here
+// (bg-ok-soft) since this is the customer picking a time; taken is a plain,
+// de-emphasised surface rather than a grey warning fill.
 const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
 const activeDay = 3;
 const slots = [
@@ -9,6 +15,12 @@ const slots = [
   { time: '11:15', state: 'available' },
   { time: '12:00', state: 'unavailable' },
   { time: '12:45', state: 'available' },
+  { time: '13:30', state: 'available' },
+  { time: '14:15', state: 'unavailable' },
+  { time: '15:00', state: 'available' },
+  { time: '15:45', state: 'available' },
+  { time: '16:30', state: 'unavailable' },
+  { time: '17:15', state: 'available' },
 ];
 ---
 <MockFrame title="Booking — Availability" meta="Thu">
@@ -30,12 +42,12 @@ const slots = [
       {slots.map((s) => (
         <span
           class:list={[
-            'rounded-md border py-1.5 text-center text-[10.5px]',
+            'rounded-md border py-1.5 text-center text-[10.5px] tabular-nums',
             s.state === 'selected'
               ? 'border-transparent bg-action font-semibold text-on-action'
               : s.state === 'unavailable'
-                ? 'border-line bg-fg-subtle/10 text-fg-subtle'
-                : 'border-line bg-surface text-fg',
+                ? 'border-line bg-surface text-fg-subtle'
+                : 'border-transparent bg-ok-soft font-medium text-ok',
           ]}
         >
           {s.time}

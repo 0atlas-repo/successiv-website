@@ -11,22 +11,29 @@ const cases = [
   { ref: 'C-1041', desc: 'Equipment alarm, unattended', state: 'Resolved' },
   { ref: 'C-1038', desc: 'Reported spillage', state: 'Concluded' },
   { ref: 'C-1035', desc: 'Delivery access blocked', state: 'Closed' },
+  { ref: 'C-1031', desc: 'Alarm test, no incident', state: 'Closed' },
+  { ref: 'C-1029', desc: 'Contractor sign-in delay', state: 'Closed' },
 ];
 ---
 <MockFrame title="Cases — Today" meta="1 open">
   <div class="space-y-1.5">
     {cases.map((c) => (
-      <div class="flex items-center gap-2.5 rounded-lg border border-line bg-surface px-2.5 py-2">
+      <div
+        class:list={[
+          'flex items-center gap-2.5 rounded-lg border px-2.5 py-2',
+          c.state === 'Open' ? 'border-action/35 bg-surface-2' : 'border-line bg-surface',
+        ]}
+      >
         <div class="min-w-0 flex-1">
           <div class="flex items-baseline gap-1.5">
-            <span class="shrink-0 font-head text-[9.5px] tracking-[0.06em] text-fg-subtle">{c.ref}</span>
+            <span class="shrink-0 font-head text-[9.5px] tabular-nums tracking-[0.06em] text-fg-subtle">{c.ref}</span>
             <span class="truncate text-[12px] text-fg">{c.desc}</span>
           </div>
         </div>
         <span
           class:list={[
-            'shrink-0 rounded-full px-2 py-0.5 font-head text-[9.5px] uppercase tracking-[0.08em]',
-            c.state === 'Open' ? 'border border-line text-action' : 'text-fg-subtle',
+            'shrink-0 whitespace-nowrap rounded-full px-1.5 py-px font-head text-[9.5px] font-semibold uppercase tracking-[0.06em]',
+            c.state === 'Open' ? 'bg-warn-soft text-warn' : 'bg-ok-soft text-ok',
           ]}
         >
           {c.state}

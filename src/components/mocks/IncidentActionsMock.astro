@@ -3,14 +3,22 @@ import MockFrame from './MockFrame.astro';
 const actions = [
   { label: 'Notify duty lead', done: true, time: '09:14', suggested: true },
   { label: 'Log incident summary', done: true, time: '09:16', suggested: false },
-  { label: 'Confirm Site B status', done: false, suggested: true },
+  { label: 'Notify facilities vendor', done: true, time: '09:20', suggested: false },
+  { label: 'Confirm Site B status', done: false, suggested: true, current: true },
+  { label: 'Verify access log entry', done: false, suggested: true },
   { label: 'Close out report', done: false, suggested: false },
 ];
+const doneCount = actions.filter((a) => a.done).length;
 ---
-<MockFrame title="Incident — Actions" meta="2 of 4">
+<MockFrame title="Incident — Actions" meta={`${doneCount} of ${actions.length}`}>
   <div class="space-y-2">
     {actions.map((a) => (
-      <div class="flex items-center gap-2.5 rounded-lg border border-line bg-surface px-2.5 py-2">
+      <div
+        class:list={[
+          'flex items-center gap-2.5 rounded-lg border px-2.5 py-2',
+          a.current ? 'border-action/35 bg-surface-2' : 'border-line bg-surface',
+        ]}
+      >
         <span
           class:list={[
             'flex h-4 w-4 shrink-0 items-center justify-center rounded-[4px] border',
@@ -27,11 +35,17 @@ const actions = [
           {a.label}
         </span>
         {a.suggested && (
-          <span class="shrink-0 rounded-full border border-line px-1.5 py-0.5 font-head text-[9.5px] uppercase tracking-[0.06em] text-fg-subtle">
+          <span class="shrink-0 whitespace-nowrap rounded-full border border-line px-1.5 py-0.5 font-head text-[9.5px] uppercase tracking-[0.06em] text-fg-subtle">
             Suggested
           </span>
         )}
-        {a.done && <span class="shrink-0 font-head text-[9.5px] text-fg-subtle">{a.time}</span>}
+        {a.done ? (
+          <span class="shrink-0 font-head text-[9.5px] tabular-nums text-fg-subtle">{a.time}</span>
+        ) : (
+          <span class="shrink-0 whitespace-nowrap rounded-full bg-warn-soft px-1.5 py-px font-head text-[9.5px] font-semibold uppercase tracking-[0.06em] text-warn">
+            Awaiting confirmation
+          </span>
+        )}
       </div>
     ))}
   </div>

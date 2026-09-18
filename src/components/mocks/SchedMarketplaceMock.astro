@@ -1,24 +1,55 @@
 ---
 import MockFrame from './MockFrame.astro';
+// Every control here is backed by the work-history copy for Scheduling
+// systems: providers model their own services with a duration (this list
+// shows six of genuinely different shapes), and auto-confirmation is a
+// per-service setting — some services confirm instantly, some need the
+// provider to accept. Checkout happens after a slot is picked, not on this
+// list, so no transaction state is drawn here.
 const providers = [
-  { name: 'Provider A', service: 'Haircut & style', duration: '45 min', price: '$60' },
-  { name: 'Provider B', service: 'Deep tissue massage', duration: '60 min', price: '$95' },
-  { name: 'Provider C', service: 'Manicure', duration: '30 min', price: '$40' },
+  { initials: 'PA', name: 'Provider A', service: 'Haircut & style', duration: '45 min', price: '$60', confirm: 'auto' as const },
+  { initials: 'PB', name: 'Provider B', service: 'Deep tissue massage', duration: '60 min', price: '$95', confirm: 'manual' as const },
+  { initials: 'PC', name: 'Provider C', service: 'Manicure', duration: '30 min', price: '$40', confirm: 'auto' as const },
+  { initials: 'PD', name: 'Provider D', service: 'Consultation', duration: '30 min', price: '$35', confirm: 'manual' as const },
+  { initials: 'PE', name: 'Provider E', service: 'Massage + facial package', duration: '120 min', price: '$180', confirm: 'auto' as const, selected: true },
+  { initials: 'PF', name: 'Provider F', service: 'Gel polish', duration: '45 min', price: '$55', confirm: 'auto' as const },
 ];
 ---
-<MockFrame title="Booking — Services" meta="3 providers">
+<MockFrame title="Booking — Services" meta="6 providers">
   <div class="space-y-2">
     {providers.map((p) => (
-      <div class="flex items-center gap-2.5 rounded-lg border border-line bg-surface p-2.5">
-        <div class="h-8 w-8 shrink-0 rounded-full bg-fg-subtle/20"></div>
+      <div
+        class:list={[
+          'flex items-center gap-2.5 rounded-lg border p-2.5',
+          p.selected ? 'border-action/35 bg-surface-2' : 'border-line bg-surface',
+        ]}
+      >
+        <div
+          class:list={[
+            'grid h-8 w-8 shrink-0 place-items-center rounded-full font-head text-[9.5px] font-semibold ring-1 ring-line',
+            p.selected ? 'bg-action/12 text-action' : 'bg-fg-subtle/15 text-fg-subtle',
+          ]}
+        >
+          {p.initials}
+        </div>
         <div class="min-w-0 flex-1">
           <div class="truncate font-head text-[12px] font-medium text-fg">{p.name}</div>
-          <div class="mt-0.5 flex items-baseline gap-1.5">
+          <div class="mt-0.5 flex min-w-0 items-center gap-1.5">
             <span class="truncate text-[10.5px] text-fg-subtle">{p.service}</span>
-            <span class="shrink-0 text-[9.5px] text-fg-subtle">· {p.duration}</span>
+            <span class="shrink-0 whitespace-nowrap tabular-nums text-[9.5px] text-fg-subtle">· {p.duration}</span>
           </div>
         </div>
-        <span class="shrink-0 font-head text-[12px] font-bold text-fg">{p.price}</span>
+        <div class="flex shrink-0 flex-col items-end gap-1">
+          <span class="font-head text-[12px] font-bold tabular-nums text-fg">{p.price}</span>
+          <span
+            class:list={[
+              'shrink-0 whitespace-nowrap rounded-full px-1.5 py-px font-head text-[9.5px] font-semibold uppercase tracking-[0.06em]',
+              p.confirm === 'auto' ? 'bg-ok-soft text-ok' : 'bg-warn-soft text-warn',
+            ]}
+          >
+            {p.confirm === 'auto' ? 'Instant confirm' : 'Needs approval'}
+          </span>
+        </div>
       </div>
     ))}
   </div>
