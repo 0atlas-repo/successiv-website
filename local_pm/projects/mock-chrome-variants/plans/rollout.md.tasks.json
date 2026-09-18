@@ -48,7 +48,7 @@
   {
     "id": 7,
     "subject": "record the chrome prop in CLAUDE.md conventions",
-    "status": "in_progress",
+    "status": "completed",
     "blockedBy": [
       6
     ]

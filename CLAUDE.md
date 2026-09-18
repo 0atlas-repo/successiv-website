@@ -91,8 +91,10 @@ place, and static output is a cleaner fit for Pages.
   used where the product's own copy says so. Today that is `creator` alone.
   Chrome words stay generic app furniture (Overview, Records, Search, Filter);
   never name a capability in chrome, and never `Sign`.
-- The home grid shows `cardScreen` when a product sets it, otherwise
-  `screens[0]`. Shopmgr sets it, because the home hero already draws its chat.
+- Product grid cards — on the home page and on `/products/` — show `cardScreen`
+  when a product sets it, otherwise `screens[0]`. Shopmgr sets it, because the
+  home hero already draws its chat. The product's own page still leads with
+  `screens[0]`.
 - The mocked screens' title-bar dots use `bg-win-close`/`bg-win-min`/`bg-win-max`
   instead — constants, not semantic tokens, because a real title bar shows the
   same three colours on a light desktop and a dark one. Kept separate from the

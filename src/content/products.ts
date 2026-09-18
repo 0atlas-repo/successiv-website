@@ -51,9 +51,10 @@ export interface Product {
   /** 5. which mocked screens to render (never a real screenshot) */
   screens: ProductMock[];
   /**
-   * Which screen the home grid card shows, when screens[0] is already on that
-   * page. Only Shopmgr needs it: its lead screen is the chat thread, which the
-   * home hero also draws, so the card would repeat it one scroll down.
+   * Which screen the product grid card shows — the home page and /products/
+   * both render that grid — when screens[0] is better kept for the product's
+   * own page. Only Shopmgr needs it: its lead screen is the chat thread, which
+   * the home hero also draws, so the card would repeat it one scroll down.
    */
   cardScreen?: ProductMock;
   /** 6. call to action */
