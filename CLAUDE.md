@@ -53,6 +53,32 @@ claims on the site turned out to have nothing behind them and were corrected:
 
 If you add a claim, you must be able to point at the code that does it.
 
+## Animated mock screens (2026-09-24)
+
+Mocked screens can arrive in steps as their `.reveal` wrapper scrolls into
+view. The mechanics (`--step`, `.mock-before`, the timing vars, reduced
+motion) are documented where they live: `src/styles/global.css:213` onward —
+read that comment before adding a step.
+
+What isn't in that comment:
+
+- `scripts/verify.mjs` pins the exact step count per screen per product, in
+  page order (hero, then steps 1–5) — `expectedSteps` in section 9, and a
+  `frameCount` check in section 10. Add, remove or reorder a step and you
+  must update those literals or the build fails.
+- Every label a mock shows must trace to the shipped app's code, not to
+  marketing copy — cite the research doc in a comment at the top of the mock
+  file, the way the five `Acct*Mock.astro` files do. Section 10 of
+  `scripts/verify.mjs` also greps the built Accounting page for a list of
+  retired claims that must never come back.
+- A product step can carry a screen: `steps[].screen?: ProductMock` in
+  `src/content/products.ts`. When every step of a product has one,
+  `src/pages/products/[slug].astro` renders "Our solution" (`Product.solution`,
+  1–2 sentences, ≤45 words, never alongside the old long form) with a screen
+  beside each step, and drops the separate Screens gallery.
+
+Full spec: `local_pm/projects/mock-animation/specs/mock-animation.md`.
+
 ## Do not
 
 - Mention [redacted-client], [redacted-client], [redacted-client], or any other real client
@@ -88,7 +114,9 @@ place, and static output is a cleaner fit for Pages.
   with the title-bar dots), `sidebar`, `tabs`, `panel` and `phone`. A screen
   opts in with one attribute; the shell is never edited per screen. **`phone` is
   a claim** — a device frame says the product ships to a phone, so it is only
-  used where the product's own copy says so. Today that is `creator` alone.
+  used where the product's own copy says so. Today that is `creator`, and
+  Accounting's upload step (`acct-upload`), whose own copy says "from the web
+  or the phone app".
   Chrome words stay generic app furniture (Overview, Records, Search, Filter);
   never name a capability in chrome, and never `Sign`.
 - Product grid cards — on the home page and on `/products/` — show `cardScreen`

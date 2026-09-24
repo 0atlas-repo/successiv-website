@@ -85,7 +85,7 @@ curl -s -o /dev/null -w '%{http_code}\n' https://0atlas-repo.github.io/successiv
 ## What the build checks before it will ship
 
 `scripts/verify.mjs` runs on every `npm run build` and exits non-zero on any
-failure. Eight groups:
+failure. Ten groups:
 
 | # | Group | Why it exists |
 |---|---|---|
@@ -97,10 +97,16 @@ failure. Eight groups:
 | 6 | Deploy | `.nojekyll` present, no `CNAME`, and every root-relative reference carries the base path |
 | 7 | SEO | Every page has its own title and meta description, all unique |
 | 8 | Accessibility | Skip link, `lang`, labelled theme toggle, viewport meta |
+| 9 | Mock animation | Every `.mock-step`/`.mock-before` rule is gated by `.is-visible`, `.mock-before` starts hidden, reduced motion turns both off, and each screen's steps are numbered 0..n with no gaps or repeats; any `--swap: N` must name a step that exists |
+| 10 | Accounting claims | Greps the built Accounting page for retired claims (e.g. "reversal", "Unreviewed rule", "bank lines unmatched") and checks every step carries its own screen with the old Screens gallery gone |
 
 Group 3 also asserts the two hidden products stay hidden: `/products/leave/` and
 `/products/1line-ai/` must not be built. Unhiding one by accident fails the
 build.
+
+Group 10 is per-product — today only Accounting has retired claims and a
+screen-per-step page to check. See `CLAUDE.md`'s "Animated mock screens"
+section for how to add a step.
 
 ## Rolling back
 
