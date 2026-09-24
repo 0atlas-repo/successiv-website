@@ -1,6 +1,6 @@
 # Spec — animate the mocked screens as they scroll into view
 
-**Status:** approved by founder 2026-09-24 (cards included), pilot built
+**Status:** revision 1 approved and built; **revision 2 (below) drafted, awaiting founder approval**
 **Branch:** `mock-animation`
 **Date:** 2026-09-24
 **Pilot:** Accounting (`acct-extract`, `acct-journal`, `acct-close`)
@@ -153,3 +153,113 @@ play off-screen, which is harmless.
 | No layout shift | Lighthouse CLS on `/products/accounting/` and `/` | CLS unchanged from `main` |
 | Other screens untouched | `git diff main --stat` | only the three Acct files, `global.css`, `local_pm/` |
 | Cards | `/` product grid, Accounting card | animates within the crop; the frame never jumps |
+
+---
+
+# Revision 2 — 2026-09-24: the page tells problem → solution → steps, each with a real screen
+
+## Why
+
+The founder watched the pilot, then asked for three things:
+
+1. *"instead of 'what it actually does', we should say what problem we are
+   solving and 'here is our solution'. also it has to be shorter."*
+2. *"mock screenshots should be part of the step1-5."*
+3. *"do use a subagent to really understand how it works, in terms of UI and
+   functions. don't guess."*
+
+Point 3 was done first: `local_pm/research/2026-09-24-accounting-ui-walkthrough.md`.
+It found that the live Accounting copy, and all three of its screens, describe
+things the shipped app does not do. The founder then chose to describe **the
+shipped app only** (2026-09-24). The founder also decided: Accounting first,
+remove the Screens gallery, and keep a screen in the hero.
+
+Revision 1's Invariant 4 traced every frame to `products.ts`. That was not enough,
+because the copy was itself wrong. **In revision 2 every frame traces to the
+research record, which traces to the app's code.**
+
+## Page layout (Accounting only; the other products are unchanged)
+
+| Section | Today | Revision 2 |
+|---|---|---|
+| Hero | name, one-liner, beta note, screen | unchanged; the screen is step 3's |
+| The problem | `problem` | unchanged slot, new copy |
+| What it actually does | 4 paragraphs of `detail` | **"Our solution"**: one to two sentences, from a new `solution` field |
+| Screens gallery | `screens[1..]` | **removed** when the steps carry screens |
+| How it works | 5 text rows | 5 rows, **each with its own animated screen**: text on one side, screen on the other, alternating sides on wide screens and stacked on phones |
+
+Data: `steps[]` gains an optional `screen: ProductMock`, and `Product` gains an
+optional `solution: string`. A product with `solution` renders "Our solution"
+instead of "What it actually does". A product whose steps all carry a screen
+drops the gallery. The other products carry neither field, so their pages do not
+change. That is checked by diffing their built HTML against `main`.
+
+## Draft copy — the shipped app only (for approval)
+
+- **One-liner** (kept): *The system reads the document; a person still answers
+  the awkward question.*
+- **Problem:** *Keying bills into the books by hand is slow. Automation that
+  posts without a check only moves the work to fixing mistakes.*
+- **Our solution:** *It reads each bill, drafts the double entry, and stops to
+  ask when a figure is unclear. Nothing is confirmed until a person approves it.*
+
+| # | Title | Body | Traces to (research record) |
+|---|---|---|---|
+| 1 | Upload the bills | Files, photos or scans, from the web or the phone app. Related pages are grouped so that they post as one transaction. | Step 1: "Upload Bills", grouping, "Each group processes as one transaction." |
+| 2 | It reads them | The fields on each document are read, and the currency is detected from what is printed on it. | Step 2: the "Extracted" card and the currency-detection stage |
+| 3 | It asks when it can't tell | An unreadable figure, or a payment missing from a series, gets a specific question. Processing waits for the answer. | Step 3: the real triggers and the OCR A/B/Other example |
+| 4 | A person approves the entry | A balanced double entry is drafted in the document's currency and your books' currency. It is confirmed only when someone approves it. | Step 4: final approval, draft → confirmed, dual currency, the debit-XOR-credit validator |
+| 5 | Match the bank, close the period | Bank statement lines are checked against the books, and a person confirms each one. Ending a period makes everything up to that date read-only. | Step 5: bank-line review, "End Period" |
+
+Removed as untrue for the shipped app: the client on a phone, classification
+by document type, "which account", the booking straight after an answer, the
+rule marker, reversals, and the list of periods.
+
+## The five screens
+
+| Step | Screen (the new component replaces the old) | Chrome | What animates, in order |
+|---|---|---|---|
+| 1 | `AcctUploadMock`, from the phone "Upload Bills" | `phone` (the copy now says "phone app") | files appear → grouped as "Group 1" with a note → the upload button → the queued state |
+| 2 | `AcctExtractMock` (redrawn): progress strip plus the "Extracted" card | `panel` | Upload ✓ → Processing → fields fill in → "N field(s) identified" |
+| 3 | `AcctQuestionMock` (new): the question card | `panel` | the card appears → options → one is picked → Continue |
+| 4 | `AcctApproveMock` (replaces Journal): the final-approval modal | `panel` | entries land → Total → confidence badge → Draft → Confirmed |
+| 5 | `AcctBankMock` (replaces Close): the bank-line review | `panel` | lines classified (MATCH / MISSING / …) → a suggested action per line → "N matched / N need action" |
+
+The exact labels, example values and layouts come from a second research pass
+(pending), and nothing on a screen is written from memory. The old
+`AcctJournalMock` and `AcctCloseMock` are deleted, not kept, because they draw
+things that do not exist.
+
+## Animation — the change from revision 1
+
+Revision 1 only faded content in. Revision 2 also needs **a state that changes**:
+a radio gets picked, Draft becomes Confirmed, the upload button becomes
+"Queued". It is still CSS only:
+
+- `.mock-step` works as before (arrives in order).
+- **New `.mock-before`**: an earlier state, stacked in the same box as the final
+  state. It is `opacity: 0` by default, so without the trigger only the final
+  state shows (Invariant 2 holds). Under `.is-visible` it shows first and fades
+  out at its `--step`, while the final state fades in at the same step.
+- Invariant 1 becomes: **the settled frame is the component's static markup
+  with every `.mock-before` hidden.** Reduced motion sets both animations to
+  `none`, so it shows that frame.
+
+## Build checks (`scripts/verify.mjs`)
+
+- 3b "depth": Accounting now uses `solution`. The check becomes: a product with
+  `solution` needs 1–2 sentences, at most 45 words; the others keep the
+  three-paragraph rule. **This reverses the 2026-09-17 depth rule for Accounting,
+  at the founder's request.**
+- Section 9: the expected step counts are updated to the five new screens. A new
+  check confirms that every `.mock-before` is hidden when the trigger is absent.
+- New: every Accounting step renders a screen, and there is no Screens gallery on
+  the Accounting page.
+
+## Verification (added to revision 1's table)
+
+| What | How | Expected |
+|---|---|---|
+| Other products untouched | diff the built HTML of `/products/<other>/` against `main` | identical |
+| No retired claim ships | grep the built `/products/accounting/` for: reversal, Unreviewed rule, which account, Terms, bank lines unmatched, client on their phone | 0 hits |
+| Screens match the research | each screen's labels checked against the research record, by a reviewer who did not draw them | every label traced |
