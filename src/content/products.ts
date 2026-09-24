@@ -187,7 +187,7 @@ const allProducts: Product[] = [
       { title: 'Upload the bills', body: 'Files, photos or scans, from the web or the phone app. Related pages are grouped so that they post as one transaction.', screen: 'acct-upload' },
       { title: 'The AI reads them', body: 'The fields on each document are read, and the currency is detected.', screen: 'acct-reading' },
       { title: 'The AI drafts and checks the entry', body: "A balanced double entry against your chart of accounts, in the document's currency and your books' currency. A second check reviews it, and a draft that fails is redone automatically.", screen: 'acct-draft' },
-      { title: 'Only the exceptions reach you', body: 'An unreadable figure, or a missing payment in a series, becomes one specific question. Then a single tap approves the entry.', screen: 'acct-question' },
+      { title: 'Human in the loop', body: 'An unreadable figure, or a missing payment in a series, becomes one specific question. Then a single tap approves the entry.', screen: 'acct-question' },
       { title: 'The AI checks the bank, and you close the period', body: 'Every statement line is checked against the books with a suggested action. You confirm, and ending a period makes everything up to that date read-only.', screen: 'acct-bank' },
     ],
     detail: [],
