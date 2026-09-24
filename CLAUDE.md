@@ -62,24 +62,39 @@ motion) are documented where they live: the `/* Mock steps … */` comment in
 
 What isn't in that comment:
 
-- `scripts/verify.mjs` pins the exact step count per screen per product, in
-  page order (hero, then steps 1–5) — `expectedSteps` in section 9, and a
-  `frameCount` check in section 10. Add, remove or reorder a step and you
-  must update those literals or the build fails.
+- `scripts/verify.mjs` pins the exact step count per screen, in page order
+  (hero, then one step per stage) — `expectedSteps` in section 9, keyed by
+  page path (`products/<slug>`, `work/<slug>`), and a `frameCount` check in
+  section 10. Add, remove or reorder a step on any product or work page and
+  you must update that page's entry or the build fails. Section 9 also checks
+  that every screen's steps arrive in that order and that each `--swap` fires
+  on the step it names — a longer `--mock-lead-in` on a middle step would
+  otherwise let a later step land first. Convention for a slow, background
+  result: put the same `--mock-lead-in` on the `--swap` and the `--step` it
+  swaps to, and on every later step in that screen.
 - Every label a mock shows must trace to the shipped app's code, not to
   marketing copy — cite the research doc in a comment at the top of the mock
-  file, the way the five `Acct*Mock.astro` files do. Section 10 of
-  `scripts/verify.mjs` also greps the built Accounting page for a list of
-  retired claims that must never come back.
-- Two independent switches on `src/content/products.ts` control the product
-  page, in `src/pages/products/[slug].astro`: setting `Product.solution`
-  (1–2 sentences, ≤45 words) swaps the long-form "What it actually does" for
-  "Our solution", never both. Separately, giving every entry in `steps[]` a
-  `screen?: ProductMock` renders each step with that screen beside it and
-  drops the separate Screens gallery — a step with just some screens still
-  shows them, but the gallery only disappears once all of them do.
+  file. A product cites `local_pm/research/2026-09-24-<product>-ui-walkthrough.md`,
+  which ships in this repo; a work entry's walkthrough is kept out of this
+  public repo, so its mock files cite it by name only. Section 10 of
+  `scripts/verify.mjs` greps every product and work page that has a
+  `solution` for a list of retired claims that must never come back —
+  `retiredClaims` in section 10, one entry per page path.
+- The same two switches work on both halves of the site: `src/content/products.ts`
+  (rendered by `src/pages/products/[slug].astro`) and `src/content/work.ts`
+  (rendered by `src/pages/work/[slug].astro`). Setting `solution` (1–2
+  sentences, ≤45 words) swaps the long-form section for "Our solution", never
+  both — on a work entry this also drops the Problem/Approach/Outcome row.
+  Separately, giving every entry in `steps[]` a `screen` renders each step
+  with that screen beside it and drops the separate Screens gallery — on a
+  product, a step with just some screens still shows the rest in the gallery;
+  a work entry's `steps[].screen` is required once `steps` is set at all, so
+  a work page with steps never shows the gallery.
 
-Full spec: `local_pm/projects/mock-animation/specs/mock-animation.md`.
+Full spec: `local_pm/projects/mock-animation/specs/mock-animation.md` (the
+Accounting pilot) and `local_pm/projects/mock-rollout/specs/mock-rollout.md`
+(2026-09-24: the same pattern on Creators Sphere, Shopmgr, KYC and the eight
+work pages).
 
 ## Do not
 
@@ -88,7 +103,9 @@ Full spec: `local_pm/projects/mock-animation/specs/mock-animation.md`.
 - Invent fake revenue/user metrics
 
 `npm run build` runs `scripts/verify.mjs`, which greps the built `dist/` for
-client names and internal repo slugs. It fails the build on a hit.
+client names and internal repo slugs. It fails the build on a hit. It does
+not type-check — run `npm run check` (`astro check`) as well before trusting
+a change.
 
 ## Stack
 
@@ -116,11 +133,14 @@ place, and static output is a cleaner fit for Pages.
   with the title-bar dots), `sidebar`, `tabs`, `panel` and `phone`. A screen
   opts in with one attribute; the shell is never edited per screen. **`phone` is
   a claim** — a device frame says the product ships to a phone, so it is only
-  used where the product's own copy says so. Today that is `creator`, and
-  Accounting's upload step (`acct-upload`), whose own copy says "from the web
-  or the phone app".
+  used where the product's own copy says so. As of 2026-09-24 that covers
+  every Creators Sphere step, three of KYC's screens, and Accounting's upload
+  step (`acct-upload`) — each backed by copy that names a phone app.
   Chrome words stay generic app furniture (Overview, Records, Search, Filter);
   never name a capability in chrome, and never `Sign`.
+- Page grids that hold a mock stay `grid-cols-1` below their breakpoint, and
+  the mock's auto-margined wrapper stays `w-full` — so a wide mock can't push
+  its step text off a narrow phone screen (2026-09-24).
 - Product grid cards — on the home page and on `/products/` — show `cardScreen`
   when a product sets it, otherwise `screens[0]`. Shopmgr sets it, because the
   home hero already draws its chat. The product's own page still leads with

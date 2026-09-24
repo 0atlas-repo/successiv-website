@@ -23,7 +23,7 @@ the open blocker at the bottom.
 | Command | What it does |
 |---|---|
 | `npm run dev` | `astro dev` — dev server with hot reload |
-| `npm run build` | `astro build`, then `node scripts/verify.mjs`. Verify is part of the build, so a rule breach fails the build instead of shipping |
+| `npm run build` | `astro build`, then `node scripts/verify.mjs`. Verify is part of the build, so a rule breach fails the build instead of shipping. Neither step type-checks — run `npm run check` for that |
 | `npm run preview` | `astro preview` — serves the built `dist/` |
 | `npm run verify` | `scripts/verify.mjs` alone, against whatever is already in `dist/` |
 | `npm run check` | `astro check` — TypeScript and template diagnostics |
@@ -97,16 +97,16 @@ failure. Ten groups:
 | 6 | Deploy | `.nojekyll` present, no `CNAME`, and every root-relative reference carries the base path |
 | 7 | SEO | Every page has its own title and meta description, all unique |
 | 8 | Accessibility | Skip link, `lang`, labelled theme toggle, viewport meta |
-| 9 | Mock animation | Every `.mock-step`/`.mock-before` rule is gated by `.is-visible`, `.mock-before` starts hidden, reduced motion turns both off, and each screen's steps are numbered 0..n with no gaps or repeats; any `--swap: N` must name a step that exists |
-| 10 | Accounting claims | Greps the built Accounting page for retired claims (e.g. "reversal", "Unreviewed rule", "bank lines unmatched") and checks every step carries its own screen with the old Screens gallery gone |
+| 9 | Mock animation | Every `.mock-step`/`.mock-before` rule is gated by `.is-visible`, `.mock-before` starts hidden, reduced motion turns both off, each screen's steps are numbered 0..n with no gaps or repeats against a per-page step count (`expectedSteps`, keyed by page path), any `--swap: N` must name a step that exists, and every screen's steps must start in the order they're numbered, with each `--swap` timed to land on its own step |
+| 10 | Retired claims | Per page path (`retiredClaims`, every product and work page that has a "solution"): greps the built page for claims that don't match the shipped app (e.g. Accounting's "reversal", "bank lines unmatched") and checks the step count matches `expectedSteps` with the old Screens gallery gone |
 
 Group 3 also asserts the two hidden products stay hidden: `/products/leave/` and
 `/products/1line-ai/` must not be built. Unhiding one by accident fails the
 build.
 
-Group 10 is per-product — today only Accounting has retired claims and a
-screen-per-step page to check. See `CLAUDE.md`'s "Animated mock screens"
-section for how to add a step.
+Group 10 runs per page — today that's all 4 products and all 8 work pages,
+each with its own retired-claims list and its own expected step count. See
+`CLAUDE.md`'s "Animated mock screens" section for how to add a step.
 
 ## Rolling back
 
