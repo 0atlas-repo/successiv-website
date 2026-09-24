@@ -67,3 +67,18 @@ work as your own violation. Either give the checker an explicit file list and
 nothing wider, or drop the check. And never put a destructive verb —
 revert, checkout, restore, reset, clean — in a prompt that runs concurrently
 with other writers.
+
+## 2026-09-24 — I traced the animation to the copy, and the copy was wrong
+
+**Mistake.** Revision 1 of the mock animation spec had an invariant, "every frame
+is a claim", and traced each step to a line of `products.ts`. That felt rigorous.
+But the Accounting copy had been written against the wrong codebase: an unshipped
+R&D engine, not the shipped app. So I animated a question the app never asks, a
+rule marker it does not have, and a period list that does not exist. The
+founder's "use a subagent to really understand how it works... don't guess"
+caught it.
+
+**Rule.** A claim traces to **code**, never to other copy. Before drawing or
+animating a screen, get the real UI's labels, states and order from the app's
+source, and record them in `local_pm/research/`. When more than one codebase
+could be "the product", ask which one ships before tracing to any of them.
