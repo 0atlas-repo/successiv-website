@@ -1,13 +1,72 @@
 {
   "tasks": [
-    { "id": 1, "subject": "verify.mjs section 9: gate, reduced motion, step order", "status": "completed", "blockedBy": [] },
-    { "id": 2, "subject": "Shared mock-step rule in global.css", "status": "completed", "blockedBy": [1] },
-    { "id": 3, "subject": "Rev 1 Acct screens (superseded by rev 2, deleted)", "status": "completed", "blockedBy": [2] },
-    { "id": 4, "subject": "Research the shipped app's UI (3 passes)", "status": "completed", "blockedBy": [] },
-    { "id": 5, "subject": "Rev 2 copy approved; products.ts solution + step screens", "status": "completed", "blockedBy": [4] },
-    { "id": 6, "subject": "Rev 2 checks: solution length, swaps, retired claims, 6 screens", "status": "completed", "blockedBy": [5] },
-    { "id": 7, "subject": "Five screens + swap primitive + page template", "status": "completed", "blockedBy": [6] },
-    { "id": 8, "subject": "Independent label review against research", "status": "in_progress", "blockedBy": [7] },
-    { "id": 9, "subject": "Founder review of the live preview", "status": "pending", "blockedBy": [8] }
+    {
+      "id": 1,
+      "subject": "verify.mjs section 9: gate, reduced motion, step order",
+      "status": "completed",
+      "blockedBy": []
+    },
+    {
+      "id": 2,
+      "subject": "Shared mock-step rule in global.css",
+      "status": "completed",
+      "blockedBy": [
+        1
+      ]
+    },
+    {
+      "id": 3,
+      "subject": "Rev 1 Acct screens (superseded by rev 2, deleted)",
+      "status": "completed",
+      "blockedBy": [
+        2
+      ]
+    },
+    {
+      "id": 4,
+      "subject": "Research the shipped app's UI (3 passes)",
+      "status": "completed",
+      "blockedBy": []
+    },
+    {
+      "id": 5,
+      "subject": "Rev 2 copy approved; products.ts solution + step screens",
+      "status": "completed",
+      "blockedBy": [
+        4
+      ]
+    },
+    {
+      "id": 6,
+      "subject": "Rev 2 checks: solution length, swaps, retired claims, 6 screens",
+      "status": "completed",
+      "blockedBy": [
+        5
+      ]
+    },
+    {
+      "id": 7,
+      "subject": "Five screens + swap primitive + page template",
+      "status": "completed",
+      "blockedBy": [
+        6
+      ]
+    },
+    {
+      "id": 8,
+      "subject": "Independent label review against research",
+      "status": "completed",
+      "blockedBy": [
+        7
+      ]
+    },
+    {
+      "id": 9,
+      "subject": "Founder review of the live preview",
+      "status": "in_progress",
+      "blockedBy": [
+        8
+      ]
+    }
   ]
 }

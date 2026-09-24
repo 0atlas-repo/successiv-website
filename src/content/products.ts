@@ -191,8 +191,9 @@ const allProducts: Product[] = [
       { title: 'The AI checks the bank, and you close the period', body: 'Every statement line is checked against the books with a suggested action. You confirm, and ending a period makes everything up to that date read-only.', screen: 'acct-bank' },
     ],
     detail: [],
-    // The hero and the product card lead with the question: the one moment the
-    // product hands to a person, which is the whole pitch.
+    // The hero and the product card lead with the question: the exception the
+    // product hands to a person. Every draft still needs a person's approval too
+    // (research, pass 3); the copy says so in `solution` and step 4.
     screens: ['acct-question'],
     cta: 'Talk to us',
     category: 'Finance',

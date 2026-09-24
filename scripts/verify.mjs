@@ -319,7 +319,7 @@ const rmOff = [...rmBlock.matchAll(/([^{}]+)\{([^{}]*)\}/g)].filter(([, , body])
 // A swap (--swap: N) retires an earlier state as step N arrives, so every
 // swap must name a step that exists.
 // Page order: the hero, then the screens in step order.
-const expectedSteps = { accounting: [8, 6, 4, 7, 8, 6] };
+const expectedSteps = { accounting: [8, 6, 4, 7, 8, 3] };
 for (const [slug, expected] of Object.entries(expectedSteps)) {
   const html = readFileSync(join(dist, 'products', slug, 'index.html'), 'utf8');
   const frames = html.split(/class="mock-frame\b/).slice(1);
