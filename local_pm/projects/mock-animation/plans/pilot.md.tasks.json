@@ -1,0 +1,52 @@
+{
+  "tasks": [
+    {
+      "id": 1,
+      "subject": "verify.mjs section 9: gate, reduced motion, step order",
+      "status": "completed",
+      "blockedBy": []
+    },
+    {
+      "id": 2,
+      "subject": "Shared mock-step rule in global.css",
+      "status": "completed",
+      "blockedBy": [
+        1
+      ]
+    },
+    {
+      "id": 3,
+      "subject": "AcctExtractMock steps 0-6",
+      "status": "completed",
+      "blockedBy": [
+        2
+      ]
+    },
+    {
+      "id": 4,
+      "subject": "AcctJournalMock steps 0-8",
+      "status": "completed",
+      "blockedBy": [
+        2
+      ]
+    },
+    {
+      "id": 5,
+      "subject": "AcctCloseMock steps 0-6",
+      "status": "completed",
+      "blockedBy": [
+        2
+      ]
+    },
+    {
+      "id": 6,
+      "subject": "Verify in browser, both themes, reduced motion; founder review",
+      "status": "in_progress",
+      "blockedBy": [
+        3,
+        4,
+        5
+      ]
+    }
+  ]
+}

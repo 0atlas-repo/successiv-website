@@ -210,6 +210,24 @@ h1, h2, h3 {
   transform: translateY(0);
 }
 
+/* Mock steps — a mocked screen's content arrives in order once its .reveal
+   wrapper is visible, so the screen shows what the product does, not only what
+   it looks like. Opt in with class="mock-step" style="--step: N". The rule is
+   gated on .is-visible: without the trigger nothing is hidden, and the settled
+   frame is the static markup. Only opacity and transform move, so no layout shift. */
+.mock-step {
+  --mock-lead-in: 500ms;   /* lets the frame's own 700ms reveal land first */
+  --mock-interval: 180ms;
+  --mock-duration: 400ms;
+}
+@keyframes mock-step-in {
+  from { opacity: 0; transform: translateY(8px); }
+}
+.reveal.is-visible .mock-step {
+  animation: mock-step-in var(--mock-duration) var(--ease-brand) both;
+  animation-delay: calc(var(--mock-lead-in) + var(--step, 0) * var(--mock-interval));
+}
+
 /* Gradient text. On light it runs navy→indigo, both clearing 7:1 on white.
    On dark it runs cyan→lifted navy so the far end stays above 3:1. */
 .grad-text {
@@ -246,6 +264,9 @@ h1, h2, h3 {
   html { scroll-behavior: auto; }
   .reveal { opacity: 1; transform: none; transition: none; }
   .marquee-track { animation: none; }
+  /* The rule below shortens durations but keeps delays, so a staggered step
+     would sit hidden for its delay and then pop. Show the settled frame. */
+  .reveal.is-visible .mock-step { animation: none; }
   *, *::before, *::after {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;

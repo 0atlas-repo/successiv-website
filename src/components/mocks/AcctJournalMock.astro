@@ -14,16 +14,17 @@ const lines: Line[] = [
 ---
 <MockFrame chrome="panel" title="Bookkeeping — Entry" meta="Balanced">
   <div class="space-y-2">
-    <div class="grid grid-cols-[30px_1fr_46px_46px] items-center gap-2 border-b border-line px-1.5 pb-1.5">
+    <div class="mock-step grid grid-cols-[30px_1fr_46px_46px] items-center gap-2 border-b border-line px-1.5 pb-1.5" style="--step: 0">
       <span class="font-head text-[9.5px] font-semibold uppercase tracking-[0.1em] text-fg-subtle">Code</span>
       <span class="font-head text-[9.5px] font-semibold uppercase tracking-[0.1em] text-fg-subtle">Account</span>
       <span class="text-right font-head text-[9.5px] font-semibold uppercase tracking-[0.1em] text-fg-subtle">Dr</span>
       <span class="text-right font-head text-[9.5px] font-semibold uppercase tracking-[0.1em] text-fg-subtle">Cr</span>
     </div>
-    {lines.map((l) => (
+    {lines.map((l, i) => (
       <div
+        style={`--step: ${i + 1}`}
         class:list={[
-          'rounded-md border px-1.5 py-1',
+          'mock-step rounded-md border px-1.5 py-1',
           l.selected ? 'border-action/35 bg-surface-2' : 'border-line bg-surface',
         ]}
       >
@@ -34,19 +35,19 @@ const lines: Line[] = [
           <span class="text-right text-[12px] tabular-nums text-fg">{l.cr || '–'}</span>
         </div>
         {l.unreviewed && (
-          <div class="mt-1 flex justify-end">
+          <div class="mock-step mt-1 flex justify-end" style={`--step: ${lines.length + 1}`}>
             <span class="shrink-0 whitespace-nowrap rounded-full bg-warn-soft px-1.5 py-px font-head text-[9.5px] font-semibold uppercase tracking-[0.06em] text-warn">Unreviewed rule</span>
           </div>
         )}
       </div>
     ))}
-    <div class="grid grid-cols-[30px_1fr_46px_46px] items-center gap-2 border-t border-line px-1.5 pt-1.5">
+    <div class="mock-step grid grid-cols-[30px_1fr_46px_46px] items-center gap-2 border-t border-line px-1.5 pt-1.5" style={`--step: ${lines.length + 2}`}>
       <span class="col-span-2 font-head text-[9.5px] font-semibold uppercase tracking-[0.08em] text-fg">Total</span>
       <span class="text-right font-head text-[12px] font-semibold tabular-nums text-action">104.00</span>
       <span class="text-right font-head text-[12px] font-semibold tabular-nums text-action">104.00</span>
     </div>
 
-    <div class="flex items-center gap-1.5 border-t border-line pt-2">
+    <div class="mock-step flex items-center gap-1.5 border-t border-line pt-2" style={`--step: ${lines.length + 3}`}>
       <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-fg-subtle" aria-hidden="true">
         <path d="M7 3v14M3 7l4-4 4 4" /><path d="M17 21V7m-4 10 4 4 4-4" />
       </svg>

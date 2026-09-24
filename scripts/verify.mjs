@@ -258,6 +258,47 @@ for (const [label, ok] of Object.entries(a11y)) {
 }
 
 // ---------------------------------------------------------------------------
+console.log('\n9. Mock animation — the settled frame is the claim, motion is extra');
+// A .mock-step starts hidden (fill-mode: both). If its animation ran without the
+// scroll trigger, a screen with no JavaScript, or outside a .reveal, would stay
+// blank. So every rule that animates a step must be gated by .is-visible.
+const cssRules = [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)];
+const ungated = cssRules.filter(
+  ([, sel, body]) =>
+    sel.includes('.mock-step') &&
+    /animation(-name)?:/.test(body) &&
+    !/animation:\s*none/.test(body) &&
+    !sel.includes('.is-visible')
+);
+const stepRules = cssRules.filter(([, sel]) => sel.includes('.mock-step'));
+stepRules.length > 0 && ungated.length === 0
+  ? pass(`${stepRules.length} .mock-step rule(s), every animation gated by .is-visible`)
+  : fail(stepRules.length === 0 ? 'no .mock-step rule in the CSS' : `ungated step animation: ${ungated[0][1].trim()}`);
+
+// The global reduced-motion rule shortens durations but keeps delays, so a
+// staggered step would sit hidden for its delay and then pop. It must be off.
+/prefers-reduced-motion:\s*reduce\)\s*\{[^@]*\.mock-step\s*\{[^}]*animation:\s*none/.test(css)
+  ? pass('reduced motion turns step animation off')
+  : fail('reduced motion does not set animation: none on .mock-step');
+
+// Each sequence must be numbered 0..n, each number once, and its length must
+// match the spec's table — a missing step means a claimed stage vanished.
+// Page order: screens[0] in the hero, then the rest in the Screens grid.
+const expectedSteps = { accounting: [6, 8, 6] };
+for (const [slug, expected] of Object.entries(expectedSteps)) {
+  const html = readFileSync(join(dist, 'products', slug, 'index.html'), 'utf8');
+  const frames = html.split(/class="mock-frame\b/).slice(1);
+  const seqs = frames
+    .map((f) => [...f.matchAll(/--step:\s*(\d+)/g)].map((m) => Number(m[1])))
+    .filter((s) => s.length > 0);
+  const maxes = seqs.map((s) => Math.max(...s));
+  const exact = seqs.every((s) => new Set(s).size === s.length && s.length === Math.max(...s) + 1);
+  exact && JSON.stringify(maxes) === JSON.stringify(expected)
+    ? pass(`${slug}: ${seqs.length} sequences, steps 0–${maxes.join(', 0–')}, none missing or repeated`)
+    : fail(`${slug}: expected step maxima ${JSON.stringify(expected)}, found ${JSON.stringify(maxes)}${exact ? '' : ' (gaps or repeats)'}`);
+}
+
+// ---------------------------------------------------------------------------
 console.log(
   failures === 0
     ? `\nAll checks passed (${htmlFiles.length} pages).\n`
