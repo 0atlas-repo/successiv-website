@@ -1,0 +1,38 @@
+---
+import MockFrame from './MockFrame.astro';
+// The one moment the shipped app hands to a person: a clarification. Labels are
+// the web task page's own ("Review Request", "Additional comments or explanation
+// (optional)", "Remember my choice…", "Continue →"). The question imitates the
+// OCR-discrepancy example the extraction prompt teaches: A / B / Other.
+// A person picks; nothing is auto-answered, so the pick is its own step.
+// Source: local_pm/research/2026-09-24-accounting-ui-walkthrough.md, pass 2 §4.
+const options = ["A: '2026-09-18'", "B: '2026-09-16'", 'Other'];
+---
+<MockFrame chrome="panel" title="Review Request">
+  <div class="space-y-2.5">
+    <p class="mock-step text-[10.5px] text-fg-subtle" style="--step: 0">Answer / approve agent request here</p>
+    <p class="mock-step text-[12px] leading-snug text-fg" style="--step: 1">
+      This receipt has a hard-to-read field. Please confirm the correct value: Receipt date?
+    </p>
+    <div class="space-y-1.5">
+      {options.map((o, i) => (
+        <div class="mock-step flex items-center gap-2 rounded-lg border border-line bg-surface px-2.5 py-1.5" style={`--step: ${i + 2}`}>
+          <span class="grid h-3 w-3 shrink-0 place-items-center rounded-full border border-fg-subtle/60">
+            {i === 0 && <span class="mock-step block h-1.5 w-1.5 rounded-full bg-action" style={`--step: ${options.length + 2}`}></span>}
+          </span>
+          <span class="text-[12px] tabular-nums text-fg">{o}</span>
+        </div>
+      ))}
+    </div>
+    <div class="mock-step rounded-lg border border-line bg-surface px-2.5 py-2 text-[10.5px] text-fg-subtle" style={`--step: ${options.length + 3}`}>
+      Additional comments or explanation (optional)
+    </div>
+    <div class="mock-step flex items-center gap-2" style={`--step: ${options.length + 4}`}>
+      <span class="h-3 w-3 shrink-0 rounded-[3px] border border-fg-subtle/60"></span>
+      <span class="text-[10.5px] text-fg-muted">Remember my choice and do not ask similar questions again</span>
+    </div>
+    <div class="mock-step flex justify-end" style={`--step: ${options.length + 5}`}>
+      <span class="rounded-full bg-action px-3 py-1 font-head text-[11px] font-semibold text-bg">Continue →</span>
+    </div>
+  </div>
+</MockFrame>

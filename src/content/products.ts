@@ -19,7 +19,9 @@
 //
 //   Accounting is pre-release. It is described as what it is, with `preRelease`
 //   set so the page says so plainly. No launch date is claimed, because none
-//   has been given.
+//   has been given. Since 2026-09-24 it describes the shipped app only, traced in
+//   local_pm/research/2026-09-24-accounting-ui-walkthrough.md: a short `solution`
+//   replaces `detail`, and each step carries its own animated screen.
 
 export type ProductMock =
   | 'creator'
@@ -32,9 +34,11 @@ export type ProductMock =
   | 'kyc-share'
   | 'kyc-review'
   | 'calendar'
-  | 'acct-extract'
-  | 'acct-journal'
-  | 'acct-close'
+  | 'acct-upload'
+  | 'acct-reading'
+  | 'acct-draft'
+  | 'acct-question'
+  | 'acct-bank'
   | 'generic';
 
 export interface Product {
@@ -44,10 +48,15 @@ export interface Product {
   oneLiner: string;
   /** 2. the problem it exists to solve */
   problem: string;
-  /** 3. how it works, 3–5 steps */
-  steps: { title: string; body: string }[];
-  /** 4. the long form. Three paragraphs minimum unless needsCopy is set. */
+  /** 3. how it works, 3–5 steps. A step with `screen` draws it beside its text. */
+  steps: { title: string; body: string; screen?: ProductMock }[];
+  /**
+   * 4. the long form. Three paragraphs minimum unless needsCopy or `solution` is
+   * set. A product with `solution` leaves this empty.
+   */
   detail: string[];
+  /** The short answer to `problem`: one to two sentences, rendered as "Our solution". */
+  solution?: string;
   /** 5. which mocked screens to render (never a real screenshot) */
   screens: ProductMock[];
   /**
@@ -171,21 +180,21 @@ const allProducts: Product[] = [
     name: 'Accounting',
     oneLiner: 'The system reads the document; a person still answers the awkward question.',
     problem:
-      'Bookkeeping tools either post to the wrong account with confidence, or dump everything back for review. Neither saves real time.',
+      'Keying bills into the books by hand is slow. Automation that posts without a check only moves the work to fixing mistakes.',
+    solution:
+      'The AI reads each bill, drafts the double entry, checks its own work, and redoes it when the check fails. You answer the odd unclear figure and approve the result.',
     steps: [
-      { title: 'Send the document', body: 'A bill, receipt, or statement arrives — uploaded by the bookkeeper or by the client on their phone.' },
-      { title: 'Extraction and classification', body: 'Fields are read from the document, and the nature of the transaction is identified.' },
-      { title: 'It asks what it cannot know', body: 'Where the answer is a judgement, it asks a specific question instead of guessing.' },
-      { title: 'Posted double-entry', body: 'Once answered, the entry is booked against the chart of accounts, balanced and in the right currency.' },
-      { title: 'Reconcile and close', body: 'Bank lines are matched to entries, and a closed period locks.' },
+      { title: 'Upload the bills', body: 'Files, photos or scans, from the web or the phone app. Related pages are grouped so that they post as one transaction.', screen: 'acct-upload' },
+      { title: 'The AI reads them', body: 'The fields on each document are read, and the currency is detected.', screen: 'acct-reading' },
+      { title: 'The AI drafts and checks the entry', body: "A balanced double entry against your chart of accounts, in the document's currency and your books' currency. A second check reviews it, and a draft that fails is redone automatically.", screen: 'acct-draft' },
+      { title: 'Human in the loop', body: 'An unreadable figure, or a missing payment in a series, becomes one specific question. Then a single tap approves the entry.', screen: 'acct-question' },
+      { title: 'The AI checks the bank, and you close the period', body: 'Every statement line is checked against the books with a suggested action. You confirm, and ending a period makes everything up to that date read-only.', screen: 'acct-bank' },
     ],
-    detail: [
-      'Automated bookkeeping tends to fail in one of two ways. Either it posts with confidence to the wrong account, which costs more to unpick than manual entry would have cost in the first place, or it flags everything for review, which is manual entry with extra steps. The difference between the two is not model quality. It is whether the system knows which decisions it is not entitled to make.',
-      'This one is built around that line. A document arrives and its fields are extracted; its nature is classified — an invoice, an expense receipt, a payment — and the underlying event identified. Where posting requires a judgement the document cannot settle, the system asks a specific question and waits: which account this belongs to, which currency was actually transacted, what the terms are. The answers come from the bookkeeper, or from the client through a companion phone app that shows them a short queue of questions rather than an accounting interface they never wanted to learn.',
-      'The posting itself is strict. Entries are double-entry, and a validator rejects a line carrying both a debit and a credit, or neither, so an unbalanced entry cannot reach the ledger. Amounts are held both in the currency on the document and in the entity\'s booking currency, with the rate applied at posting and revaluation at period end, rather than flattening everything on the way in and losing the original. Account pairings come from the chart of accounts and a rulebook rather than being hardcoded, and a rule not yet validated by a qualified accountant is marked as such instead of being silently trusted.',
-      'Around the ledger sit the things that make it a product rather than an engine: bank statement lines matched against entries, supporting documents linked across cases so an invoice and the payment settling it are connected, reports drawn on demand, and a period close that locks and permits only reversals afterwards. It is in closed beta — real business logic, a substantial migration history, and a test corpus of real documents behind it, but not released. We would rather say that than imply otherwise.',
-    ],
-    screens: ['acct-extract', 'acct-journal', 'acct-close'],
+    detail: [],
+    // The hero and the product card lead with the question: the exception the
+    // product hands to a person. Every draft still needs a person's approval too
+    // (research, pass 3); the copy says so in `solution` and step 4.
+    screens: ['acct-question'],
     cta: 'Talk to us',
     category: 'Finance',
     preRelease: true,

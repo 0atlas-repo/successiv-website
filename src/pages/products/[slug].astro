@@ -19,6 +19,8 @@ const { product } = Astro.props;
 
 const others = products.filter((p) => p.slug !== product.slug);
 const restScreens = product.screens.slice(1);
+// When every step draws its own screen, the gallery would only repeat them.
+const stepsCarryScreens = product.steps.every((s) => s.screen);
 ---
 <Layout
   title={product.name}
@@ -83,8 +85,22 @@ const restScreens = product.screens.slice(1);
     </div>
   </section>
 
+  <!-- The short answer to the problem, where a product has one (2026-09-24). -->
+  {product.solution && (
+    <section class="border-t border-line py-[90px]">
+      <div class="mx-auto grid max-w-[1180px] grid-cols-1 gap-10 px-6 md:grid-cols-[260px_1fr]">
+        <div class="reveal">
+          <span class="font-head text-[13px] font-semibold uppercase tracking-[0.12em] text-accent">Our solution</span>
+        </div>
+        <p class="reveal max-w-[720px] font-head text-[clamp(20px,2.6vw,28px)] font-medium leading-[1.4] text-fg">
+          {product.solution}
+        </p>
+      </div>
+    </section>
+  )}
+
   <!-- The long form. Absent by design on a placeholder page. -->
-  {product.detail.length > 0 && (
+  {!product.solution && product.detail.length > 0 && (
     <section class="border-t border-line py-[90px]">
       <div class="mx-auto grid max-w-[1180px] grid-cols-1 gap-10 px-6 md:grid-cols-[260px_1fr]">
         <div class="reveal">
@@ -102,7 +118,7 @@ const restScreens = product.screens.slice(1);
   )}
 
   <!-- Remaining screens. -->
-  {restScreens.length > 0 && (
+  {!stepsCarryScreens && restScreens.length > 0 && (
     <section class="border-t border-line py-[90px]">
       <div class="mx-auto max-w-[1180px] px-6">
         <div class="reveal mb-10 max-w-[640px]">
@@ -144,15 +160,34 @@ const restScreens = product.screens.slice(1);
 
       <div class="border-t border-line">
         {product.steps.map((step, i) => (
-          <article class="reveal grid grid-cols-[40px_1fr] items-baseline gap-4 border-b border-line py-[30px] sm:grid-cols-[64px_1fr] sm:gap-6">
-            <span class="font-head text-[15px] font-bold text-accent">
-              {String(i + 1).padStart(2, '0')}
-            </span>
-            <div>
-              <h3 class="mb-1.5 font-head text-[20px] font-semibold text-fg">{step.title}</h3>
-              <p class="max-w-[640px] text-[15px] text-fg-muted">{step.body}</p>
-            </div>
-          </article>
+          // A step with its own screen: text and screen side by side, sides alternating.
+          step.screen ? (
+            <article class="reveal grid items-center gap-8 border-b border-line py-[48px] lg:grid-cols-2 lg:gap-14">
+              <div class:list={['grid grid-cols-[40px_1fr] items-baseline gap-4 sm:grid-cols-[64px_1fr] sm:gap-6', i % 2 === 1 && 'lg:order-2']}>
+                <span class="font-head text-[15px] font-bold text-accent">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <div>
+                  <h3 class="mb-1.5 font-head text-[20px] font-semibold text-fg">{step.title}</h3>
+                  <p class="max-w-[520px] text-[15px] text-fg-muted">{step.body}</p>
+                </div>
+              </div>
+              <div class="relative mx-auto w-full max-w-[460px]">
+                <div class="mock-wash pointer-events-none absolute -inset-6" aria-hidden="true"></div>
+                <div class="relative"><ProductMock mock={step.screen} /></div>
+              </div>
+            </article>
+          ) : (
+            <article class="reveal grid grid-cols-[40px_1fr] items-baseline gap-4 border-b border-line py-[30px] sm:grid-cols-[64px_1fr] sm:gap-6">
+              <span class="font-head text-[15px] font-bold text-accent">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <div>
+                <h3 class="mb-1.5 font-head text-[20px] font-semibold text-fg">{step.title}</h3>
+                <p class="max-w-[640px] text-[15px] text-fg-muted">{step.body}</p>
+              </div>
+            </article>
+          )
         ))}
       </div>
     </div>

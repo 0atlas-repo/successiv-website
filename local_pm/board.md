@@ -8,6 +8,7 @@ One row per active plan. If it is not here, it does not exist.
 | [Capability depth](projects/capability-depth/specs/capability-depth.md) | shipped and live at cb92cd7 | Done. Two products hidden since, see loose tasks |
 | [Mock realism](projects/mock-realism/plans/rollout.md) | shipped and live at 36262da | Done. Three chrome flags open, see the log |
 | [Mock chrome variants](projects/mock-chrome-variants/plans/rollout.md) | shipped and live at c3a86f8 | Done. Founder to eyeball the five shells on the live site |
+| [Mock animation](projects/mock-animation/plans/pilot.md) | Accounting pilot merged to main 2026-09-24 | Plan Creators Sphere / KYC / Shopmgr the same way: research the shipped app with a subagent first. Still open: whether beta users have the phone app (step 1 shows it) |
 
 ## Loose tasks
 
