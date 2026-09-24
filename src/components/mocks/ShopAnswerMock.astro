@@ -1,0 +1,51 @@
+---
+import MockFrame from './MockFrame.astro';
+// Same widget as ChatMock's home-page hero, a different moment: a general
+// catalogue question (product_search), not a single-item lookup — so the
+// reply legitimately covers more than one Product{id,title,url}. No inline
+// product card, no image, no stock count of 3 or more shown as a number,
+// and no Add-to-cart button: none of that exists in the shipped widget
+// (the chat UI's own Product type is only {id, title, url}).
+// The waiting state is typing dots with no text: the widget appends an empty
+//   loading indicator (assets/newChatv6.js:508-518). Its "Remote is typing"
+//   line is a toast for a second message sent too early, not this state.
+// The two product lines paraphrase product_search's tool result — the
+//   backend, logics/shop_tools/product_search.py ("considered": up to
+//   several {id, title, url} entries; the model composes the reply prose).
+//   The "Stock: …" wording borrows the literal threshold rule from a
+//   neighbouring tool: exact count only under 3 units, else the word "in
+//   stock", never a number — the backend,
+//   logics/shop_tools/get_product_status.py.
+// "Highlight 2 considered products" — the widget,
+//   assets/newChatv6.js:840-849 (onProductConsidered). The shipped code
+//   also has a "recommanded" (sic) variant for suggested products
+//   elsewhere; deliberately not reproduced here.
+// Input placeholder "How can I help you?" — the widget,
+//   assets/newChatv6.js:1058
+// Source: local_pm/research/2026-09-24-shopmgr-ui-walkthrough.md, "2. A shopper asks…".
+---
+<MockFrame title="Shopmgr — Store A" meta="Live">
+  <div class="space-y-2.5">
+    <div class="flex flex-col items-end gap-1">
+      <p class="mock-step max-w-[78%] rounded-2xl rounded-br-sm bg-action px-3 py-2 text-[12px] leading-snug text-on-action" style="--step: 0">
+        Do you have any linen shirts in stock?
+      </p>
+    </div>
+
+    <div class="mock-step flex justify-start" style="--step: 1">
+      <div class="max-w-[85%] space-y-1 rounded-2xl rounded-bl-sm border border-line bg-surface px-3 py-2 text-[12px] leading-snug text-fg">
+        <div class="grid">
+          <span class="mock-before col-start-1 row-start-1 text-fg-subtle" style="--swap: 2"><span aria-hidden="true">• • •</span></span>
+          <span class="mock-step col-start-1 row-start-1 tabular-nums" style="--step: 2">— Linen Shirt&nbsp; Price: 68.00&nbsp; Stock: in stock</span>
+        </div>
+        <p class="mock-step tabular-nums text-fg" style="--step: 3">— Poplin Shirt&nbsp; Price: 72.00&nbsp; Stock: 2</p>
+      </div>
+    </div>
+
+    <p class="mock-step pl-1 text-[10.5px] font-medium text-action" style="--step: 4">Highlight 2 considered products</p>
+
+    <div class="mock-step flex items-center rounded-full border border-line bg-surface px-3 py-1.5 text-[10.5px] text-fg-subtle" style="--step: 5">
+      How can I help you?
+    </div>
+  </div>
+</MockFrame>

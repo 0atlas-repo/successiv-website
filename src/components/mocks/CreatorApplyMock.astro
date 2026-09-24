@@ -1,0 +1,77 @@
+---
+import MockFrame from './MockFrame.astro';
+// The app's campaign details screen: brand/title header, the "YOU GET PAID"
+// pay block with the "CAMPAIGN" date range, fact pills (days left,
+// deliverables, the campaign's own hashtag), "The brief", "What you'll do" —
+// one numbered row per real mission, not the app's 3-step fallback (that only
+// renders when a campaign has zero missions; this one has one, matching its
+// "1 deliverable" pill) — and the CTA button, one shared component
+// (campaign_enrollment_button.dart) with a label per application state.
+// Brand, title, brief and mission copy are fictional. The app hardcodes
+// its local currency; the founder chose S$ for the site (copy-batch-a.md), so pay reads
+// "S$ 500".
+// Reveal: header, pay block, pills, brief and the checklist row arrive in
+// order; the button appears already reading "Apply now", then swaps in place
+// to the disabled "Pending approval" — the real human gate, not an instant
+// accept, for an open (non-invited) campaign.
+// Source: local_pm/research/2026-09-24-creators-sphere-ui-walkthrough.md §2;
+// the app, lib/features/campaign/presentation/pages/campaign_details.dart:643,
+// 647 (brand/title), :752,776 (pay block labels), :821-839 (fact pills),
+// :672,694 (section headings), :887-919 (per-mission checklist row), and
+// lib/components/campaign_enrollment_button.dart:91,99 (button labels).
+const brand = 'Brand A';
+const title = 'Glow Serum Launch';
+const pay = 'S$ 500';
+const dateRange = 'Oct 1 – Oct 12';
+const pills = [
+  { icon: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/>', label: '8 days left' },
+  { icon: '<rect x="3" y="7" width="18" height="14" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>', label: '1 deliverable' },
+  { icon: '<path d="M4 9h16M4 15h16M10 3 8 21M16 3l-2 18"/>', label: '#BrandAGlow' },
+];
+---
+<MockFrame chrome="phone" title={title} meta={brand}>
+  <div class="space-y-2.5">
+    <div class="mock-step space-y-0.5" style="--step: 0">
+      <p class="font-head text-[13px] font-bold text-fg">{brand}</p>
+      <p class="text-[11px] text-fg-subtle">{title}</p>
+    </div>
+    <div class="mock-step flex items-center justify-between rounded-lg bg-surface-2 px-3 py-2.5" style="--step: 1">
+      <div>
+        <p class="font-head text-[8.5px] font-bold tracking-[0.1em] text-fg-subtle">YOU GET PAID</p>
+        <p class="font-head text-[19px] font-bold text-fg">{pay}</p>
+      </div>
+      <div class="text-right">
+        <p class="font-head text-[8px] font-bold tracking-[0.08em] text-fg-subtle">CAMPAIGN</p>
+        <p class="font-head text-[12px] font-bold text-fg">{dateRange}</p>
+      </div>
+    </div>
+    <div class="mock-step flex flex-wrap gap-1.5" style="--step: 2">
+      {pills.map((p) => (
+        <span class="flex items-center gap-1 rounded-full border border-line px-2 py-1 text-[9.5px] text-fg-subtle">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><Fragment set:html={p.icon} /></svg>
+          {p.label}
+        </span>
+      ))}
+    </div>
+    <div class="mock-step space-y-1" style="--step: 3">
+      <p class="font-head text-[12px] font-bold text-fg">The brief</p>
+      <p class="text-[10.5px] leading-snug text-fg-subtle">One static image post on your feed featuring the serum, shot in natural light — no other products in frame.</p>
+    </div>
+    <div class="mock-step space-y-1" style="--step: 4">
+      <p class="font-head text-[12px] font-bold text-fg">What you'll do</p>
+      <div class="flex items-start gap-2 rounded-lg border border-line bg-surface px-2.5 py-2">
+        <span class="grid h-4 w-4 shrink-0 place-items-center rounded-full bg-surface-2 font-head text-[9px] font-bold text-fg-subtle">1</span>
+        <div class="min-w-0 flex-1">
+          <p class="text-[11px] font-medium text-fg">Post one feed image featuring the serum</p>
+          <p class="mt-0.5 text-[10px] text-fg-subtle">Due Oct 12</p>
+        </div>
+      </div>
+    </div>
+    <div class="mock-step" style="--step: 5">
+      <div class="grid">
+        <div class="col-start-1 row-start-1 mock-before rounded-full bg-action py-1.5 text-center font-head text-[11px] font-semibold text-on-action" style="--swap: 6">Apply now</div>
+        <div class="col-start-1 row-start-1 mock-step rounded-full border border-line py-1.5 text-center font-head text-[11px] font-semibold text-fg-subtle" style="--step: 6">Pending approval</div>
+      </div>
+    </div>
+  </div>
+</MockFrame>

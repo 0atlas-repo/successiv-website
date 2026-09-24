@@ -1,0 +1,58 @@
+---
+import MockFrame from './MockFrame.astro';
+// The app's gigs list ("Track your," "work."): filter chips gate which
+// status groups render — a group shows only under "All" or its own chip
+// (_showGroup) — so with "Action needed" active, only the needsAction group
+// (approved + accepted applications, chips "Do it" / "Open") can show.
+// "In review" (chip "Waiting") and "Invited" cards cannot appear at the same
+// time as "Action needed" being active, so this mock does not draw a
+// "Waiting" chip, unlike the research doc's own suggested mix — corrected
+// here, not followed. "Paid" is never shown: it's a real, shipped chip and
+// card state, but per the app's own code comment nothing in the backend
+// writes it today, so it is left out of both the filter row and the cards.
+// Brand, titles and figures are fictional, reusing CreatorExploreMock's
+// example campaigns. The app hardcodes its local currency; the founder chose S$ for the
+// site (copy-batch-a.md).
+// Source: local_pm/research/2026-09-24-creators-sphere-ui-walkthrough.md §5;
+// the app, lib/features/progress/presentation/pages/gigs_page.dart:212-217
+// (filter chips, "Paid" omitted), :353-354 (_showGroup gating), :77-87
+// (status→label mapping), :337-344 (card fields: brand, campaign,
+// subtitle=deadline, pay); lib/features/progress/presentation/viewmodels/gigs_viewmodel.dart:8-10
+// (needsAction = approved + accepted).
+const chips = [
+  { label: 'All', active: false },
+  { label: 'Action needed', active: true },
+  { label: 'In review', active: false },
+  { label: 'Invited', active: false },
+];
+const cards = [
+  { status: 'Submit your proof', brand: 'Brand A', campaign: 'Glow Serum Launch', due: 'Due Oct 12', pay: 'S$ 500', chip: 'Do it' },
+  { status: 'Submit your proof', brand: 'Brand C', campaign: 'Skin Reset Kit', due: 'Due Oct 5', pay: 'S$ 180', chip: 'Do it' },
+  { status: 'Ready to start', brand: 'Brand D', campaign: 'Denim Capsule Drop', due: 'Due Oct 15', pay: 'S$ 300', chip: 'Open' },
+];
+---
+<MockFrame chrome="phone" title="Track your work">
+  <div class="space-y-2">
+    <div class="mock-step flex gap-1.5" style="--step: 0">
+      {chips.map((c) => (
+        <span class:list={['shrink-0 rounded-full px-2.5 py-1 font-head text-[10px] font-medium', c.active ? 'bg-action text-on-action' : 'border border-line text-fg-muted']}>{c.label}</span>
+      ))}
+    </div>
+    {cards.map((c, i) => (
+      <div class="mock-step flex items-stretch gap-0 overflow-hidden rounded-lg border border-line bg-surface" style={`--step: ${i + 1}`}>
+        <span class="w-1 shrink-0 bg-action"></span>
+        <div class="flex flex-1 items-center justify-between gap-2 py-2 pl-2 pr-2.5">
+          <div class="min-w-0">
+            <p class="font-head text-[9px] font-bold uppercase tracking-[0.06em] text-action">{c.status}</p>
+            <p class="mt-0.5 truncate text-[11px] font-medium text-fg">{c.brand} <span class="text-fg-subtle">×</span> {c.campaign}</p>
+            <p class="mt-0.5 text-[10px] text-fg-subtle">{c.due}</p>
+          </div>
+          <div class="shrink-0 text-right">
+            <p class="font-head text-[12px] font-bold text-fg">{c.pay}</p>
+            <span class="mt-1 inline-block rounded-full bg-action px-2 py-0.5 font-head text-[9px] font-bold uppercase tracking-[0.05em] text-on-action">{c.chip}</span>
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+</MockFrame>

@@ -1,0 +1,72 @@
+---
+import MockFrame from './MockFrame.astro';
+// "Generate Summary of Technical Scores" lists assessors (columns Name,
+// Assessor ID — the ID is a letter, A/B/C… by sort order) above a file list
+// titled "Assessors' Technical Scores" and a "Process" button — the portal,
+// src/pages/ScoresSummary/View.tsx:296-370, AssessorList.tsx:118-145. The
+// empty state is the list's own copy, "No existing records" (View.tsx:335).
+// While scores are still coming in, the resulting summary document sits at
+// status "Processing" (View.tsx:175,408) before landing at "Generated" — the
+// generic Document status enum, src/modelControllers/Document.tsx:78. This
+// screen ends at that summary: no ranking, no award, no lock exist anywhere
+// in the app (Claims table #12). Assessor names, filenames and the reference
+// below are invented placeholders in the real shape, never a real person.
+// Source: the research note for this page (tender-rfp-management.md), Claims
+// table #6, #11-12 and "Recommended steps…" §5.
+---
+<MockFrame chrome="sidebar" title="Tender — Summary of Technical Scores" meta="3 assessors">
+  <div class="space-y-2">
+    <div class="mock-step grid grid-cols-[1fr_44px_1fr] items-center gap-2 border-b border-line pb-1.5" style="--step: 0">
+      <span class="font-head text-[9.5px] font-semibold uppercase tracking-[0.1em] text-fg-subtle">Name</span>
+      <span class="font-head text-[9.5px] font-semibold uppercase tracking-[0.1em] text-fg-subtle">ID</span>
+      <span class="text-right font-head text-[9.5px] font-semibold uppercase tracking-[0.1em] text-fg-subtle">Score file</span>
+    </div>
+
+    <div class="grid">
+      <p class="mock-before col-start-1 row-start-1 py-1 text-[10.5px] italic text-fg-subtle" style="--swap: 1">No existing records</p>
+      <div class="mock-step col-start-1 row-start-1 grid grid-cols-[1fr_44px_1fr] items-center gap-2 rounded-lg border border-line bg-surface px-2 py-1.5" style="--step: 1">
+        <span class="truncate text-[12px] text-fg">Assessor A</span>
+        <span class="font-head text-[11px] tabular-nums text-fg-subtle">A</span>
+        <span class="truncate text-right text-[10px] text-fg-subtle">scores-a.xlsx</span>
+      </div>
+    </div>
+
+    <div class="mock-step grid grid-cols-[1fr_44px_1fr] items-center gap-2 rounded-lg border border-line bg-surface px-2 py-1.5" style="--step: 2">
+      <span class="truncate text-[12px] text-fg">Assessor B</span>
+      <span class="font-head text-[11px] tabular-nums text-fg-subtle">B</span>
+      <span class="truncate text-right text-[10px] text-fg-subtle">scores-b.xlsx</span>
+    </div>
+
+    <div class="grid">
+      <div class="mock-before col-start-1 row-start-1 grid grid-cols-[1fr_44px_1fr] items-center gap-2 rounded-lg border border-line bg-surface px-2 py-1.5" style="--swap: 3">
+        <span class="truncate text-[12px] text-fg">Assessor C</span>
+        <span class="font-head text-[11px] tabular-nums text-fg-subtle">C</span>
+        <span class="truncate text-right text-[10px] text-fg-subtle/50">—</span>
+      </div>
+      <div class="mock-step col-start-1 row-start-1 grid grid-cols-[1fr_44px_1fr] items-center gap-2 rounded-lg border border-line bg-surface px-2 py-1.5" style="--step: 3">
+        <span class="truncate text-[12px] text-fg">Assessor C</span>
+        <span class="font-head text-[11px] tabular-nums text-fg-subtle">C</span>
+        <span class="truncate text-right text-[10px] text-fg-subtle">scores-c.xlsx</span>
+      </div>
+    </div>
+
+    <div class="grid border-t border-line pt-2">
+      <span class="mock-before col-start-1 row-start-1 rounded-full bg-fg-subtle/15 py-1.5 text-center font-head text-[10.5px] font-semibold text-fg-subtle" style="--swap: 4">Process</span>
+      <span class="mock-step col-start-1 row-start-1 rounded-full bg-action py-1.5 text-center font-head text-[10.5px] font-semibold text-on-action" style="--step: 4">Process</span>
+    </div>
+
+    <div class="grid">
+      {/* Consolidating every assessor's scores into the summary document runs
+          as a queued step, not instantly — the extra lead-in lets the wait
+          read as real before the finished document lands. */}
+      <div class="mock-before col-start-1 row-start-1 flex items-center gap-1.5 text-[10.5px] text-fg-subtle" style="--swap: 5; --mock-lead-in: 1600ms">
+        <span class="h-1.5 w-1.5 shrink-0 rounded-full bg-fg-subtle/60"></span>
+        Processing
+      </div>
+      <div class="mock-step col-start-1 row-start-1 flex items-center gap-1.5 font-head text-[10.5px] font-semibold text-ok" style="--step: 5; --mock-lead-in: 1600ms">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m20 6-11 11-5-5" /></svg>
+        Summary of Technical Scores · Generated
+      </div>
+    </div>
+  </div>
+</MockFrame>

@@ -1,0 +1,72 @@
+---
+import MockFrame from './MockFrame.astro';
+// The provider's own service form. Screen title "New service" and every
+// field label are the app's own — the app, screens/service_manager.dart:162
+// (title), :224-228 (Auto confirm every booking, a checkbox), :229 (Duration
+// (mins), validated 15-120), :237 (Extra cooldown time (mins), validated
+// 0-15 in this form; the backend allows up to 30), :246 (Save). The bar is
+// this mock's own drawing of those two numbers, not a real UI element,
+// because what matters is that they're one setting spanning two fields: the
+// conflict check that keeps two bookings from sitting back-to-back covers
+// the service plus its cooldown, not just the appointment (research note,
+// claim #4). Every booking here is a video call, so the example is a
+// consultation, not an in-person appointment.
+// Source: research note "Real flow", step 2; copy-batch-b.md, Scheduling
+// systems, step 1.
+const title = 'Consultation — 45 min';
+const duration = 45; // of 15-120 validated range
+const cooldown = 10; // of 0-15 validated range in this form
+---
+<MockFrame chrome="panel" title="New service">
+  <div class="space-y-3">
+    <div class="mock-step space-y-1" style="--step: 0">
+      <p class="text-[10.5px] text-fg-subtle">Title</p>
+      <p class="rounded-md border border-line bg-surface px-2.5 py-1.5 font-head text-[11.5px] font-semibold text-fg">{title}</p>
+    </div>
+
+    <div class="mock-step space-y-1" style="--step: 1">
+      <p class="text-[10.5px] text-fg-subtle">Duration (mins)</p>
+      <div class="flex h-5 items-center overflow-hidden rounded-full border border-line bg-surface">
+        <div class="flex h-full items-center justify-end rounded-full bg-action pr-1.5" style={`width: ${(duration / 120) * 100}%`}>
+          <span class="font-head text-[9px] font-semibold text-on-action">{duration}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="mock-step space-y-1" style="--step: 2">
+      <p class="text-[10.5px] text-fg-subtle">Extra cooldown time (mins)</p>
+      <div class="flex h-5 items-center overflow-hidden rounded-full border border-line bg-surface">
+        <div class="flex h-full items-center justify-end rounded-full bg-action/30 pr-1.5" style={`width: ${(cooldown / 15) * 100}%`}>
+          <span class="font-head text-[9px] font-semibold text-fg-muted">{cooldown}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="mock-step space-y-1 rounded-lg border border-line bg-surface px-3 py-2" style="--step: 3">
+      <p class="font-head text-[11px] font-medium text-fg">Auto confirm every booking</p>
+      {/* Badge and switch swap together — one setting, shown as one state. */}
+      <div class="grid">
+        <div class="mock-before col-start-1 row-start-1 flex items-center justify-between" style="--swap: 4">
+          <span class="text-[10px] text-fg-subtle">Needs approval</span>
+          <span class="grid h-[18px] w-8 shrink-0 rounded-full border border-line">
+            <span class="flex h-full items-center rounded-full bg-surface-2 px-0.5">
+              <span class="block h-3 w-3 rounded-full bg-fg-subtle/60"></span>
+            </span>
+          </span>
+        </div>
+        <div class="mock-step col-start-1 row-start-1 flex items-center justify-between" style="--step: 4">
+          <span class="text-[10px] font-medium text-ok">Confirms instantly</span>
+          <span class="grid h-[18px] w-8 shrink-0 rounded-full border border-line">
+            <span class="flex h-full items-center justify-end rounded-full bg-action px-0.5">
+              <span class="block h-3 w-3 rounded-full bg-on-action"></span>
+            </span>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="mock-step rounded-full bg-action py-1.5 text-center font-head text-[11px] font-semibold text-on-action" style="--step: 5">
+      Save
+    </div>
+  </div>
+</MockFrame>

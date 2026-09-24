@@ -1,0 +1,76 @@
+---
+import MockFrame from './MockFrame.astro';
+// A per-item report, not just per-principal: each row is one item plus the
+// principal holding a role on it, matching the flatter report shape (path,
+// user, user type, permission, unique-permission flag) — the console app,
+// FolderPermissionReport2.cs:105-113. Role bindings are walked per item — the
+// console app, PermissionGetter.cs:76-124 — and mapped from configured
+// role-definition names (Read / Content Administrator / Full Control) to the
+// Read / Edit / Full control labels already used elsewhere on this site — the
+// console app, Config.cs:175-177. A grant held by an individual account
+// rather than a group gets its own flag — the console app,
+// PermissionGetter.cs:66-71 — and "HasUniqueRoleAssignments" is the real
+// broken-inheritance signal — the console app, PermissionGetter.cs:105.
+// Principals are teams and groups, or a role standing in for a single
+// account — never a person's name.
+// Source: local_pm/projects/mock-rollout/specs/copy-batch-b.md, "SharePoint
+// extensions".
+type Access = 'Read' | 'Edit' | 'Full control';
+type Row = { item: string; principal: string; access: Access; unique: boolean };
+const rows: Row[] = [
+  { item: 'Finance / 2024 / Planning', principal: 'Finance group', access: 'Edit', unique: false },
+  { item: 'Finance / 2024 / Planning', principal: 'Legal group', access: 'Full control', unique: false },
+  { item: 'Finance / 2024 / Planning', principal: 'Archive group', access: 'Read', unique: false },
+  { item: 'Finance / 2024 / Planning / Quarterly plan.xlsx', principal: 'External guest', access: 'Edit', unique: true },
+];
+const accessPill: Record<Access, string> = {
+  Read: 'bg-ok-soft text-ok',
+  Edit: 'bg-warn-soft text-warn',
+  'Full control': 'bg-danger-soft text-danger',
+};
+---
+<MockFrame chrome="tabs" title="Governance — Access audit" meta="1 unique">
+  <div class="space-y-2">
+    <div class="mock-step flex items-center gap-2 border-b border-line pb-1.5" style="--step: 0">
+      <span class="flex-1 font-head text-[9.5px] font-semibold uppercase tracking-[0.1em] text-fg-subtle">Item</span>
+      <span class="font-head text-[9.5px] font-semibold uppercase tracking-[0.1em] text-fg-subtle">Access</span>
+    </div>
+    <div class="space-y-1.5">
+      {rows.map((r, i) => (
+        <div
+          class:list={[
+            'mock-step flex items-center gap-2 rounded-lg border px-2.5 py-1.5',
+            r.unique ? 'border-action/35 bg-surface-2' : 'border-line bg-surface',
+          ]}
+          style={`--step: ${i + 1}`}
+        >
+          <span class="min-w-0 flex-1">
+            <span class="block truncate text-[11px] text-fg">{r.item}</span>
+            <span class="block truncate text-[9.5px] text-fg-subtle">{r.principal}</span>
+          </span>
+          <span
+            class:list={[
+              'shrink-0 whitespace-nowrap rounded-full px-1.5 py-px font-head text-[9.5px] font-semibold uppercase tracking-[0.06em]',
+              accessPill[r.access],
+            ]}
+          >
+            {r.access}
+          </span>
+          {r.unique && (
+            <span class="mock-step shrink-0 text-action" style="--step: 5">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="9" /><path d="M12 8v4" /><path d="M12 16h.01" />
+              </svg>
+            </span>
+          )}
+        </div>
+      ))}
+    </div>
+    <div class="mock-step flex items-center gap-2 border-t border-line pt-2.5" style="--step: 6">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="shrink-0 text-fg-subtle" aria-hidden="true">
+        <circle cx="12" cy="12" r="9" /><path d="M12 8v4" /><path d="M12 16h.01" />
+      </svg>
+      <span class="text-[10.5px] text-fg-subtle">Breaks inheritance from the folder above</span>
+    </div>
+  </div>
+</MockFrame>

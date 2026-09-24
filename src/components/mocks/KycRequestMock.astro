@@ -1,0 +1,62 @@
+---
+import MockFrame from './MockFrame.astro';
+// The web app's own request form. Its h1 is "Multiple Document" (the web
+// app, `page/requestForm.php:40`), used as the frame title so it isn't
+// repeated in the body. Checkboxes are its four working document types (the
+// web app, `page/requestForm.php:45,54,63,72`); "ID card" stands for the
+// form's own local ID-card label (`:54`), matching the "ID card" label
+// local_pm/projects/mock-rollout/specs/copy-batch-a.md's KYC option 1 uses
+// for the same document type. Each checkbox's own per-document "Verified"
+// toggle is real (`:41,48,55,62`) but is left off here, per instruction not
+// to make it prominent. "Application Description" is the form's own label
+// (`:75-77`, its trailing colon spacing not reproduced); "Submit" is its own
+// button (`:79`). Submitting shows "Your Application Id is : {N}" and a QR
+// image (the web app, `backend/submitDoc.php:99-101`) — the QR here is a
+// drawn token-coloured grid, not a working code, and the id is a plausible
+// fake, not the real numeric-only application id encoding.
+// Source: local_pm/research/2026-09-24-kyc-ui-walkthrough.md, "Recommended
+// screen per step" §3.
+const docs = ['Passport', 'ID card', 'Address', 'Phone Number'];
+const checkIcon = '<path d="M20 6 9 17l-5-5"/>';
+// A 7x7 placeholder pattern — never a real, scannable QR.
+const qr = [
+  1, 1, 1, 0, 1, 1, 1,
+  1, 0, 1, 0, 1, 0, 1,
+  1, 1, 1, 0, 1, 1, 1,
+  0, 0, 0, 1, 0, 0, 0,
+  1, 1, 1, 0, 1, 0, 1,
+  1, 0, 1, 0, 1, 1, 1,
+  1, 1, 1, 0, 1, 1, 1,
+];
+---
+<MockFrame chrome="panel" title="Multiple Document">
+  <div class="grid">
+    <div class="mock-before col-start-1 row-start-1 space-y-2.5" style="--swap: 6">
+      <div class="space-y-1.5">
+        {docs.map((d, i) => (
+          <div class="mock-step flex items-center gap-2 rounded-lg border border-line bg-surface px-2.5 py-1.5" style={`--step: ${i}`}>
+            <span class="grid h-3.5 w-3.5 shrink-0 place-items-center rounded-[3px] bg-action" aria-hidden="true">
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" class="text-on-action"><Fragment set:html={checkIcon} /></svg>
+            </span>
+            <span class="text-[12px] text-fg">{d}</span>
+          </div>
+        ))}
+      </div>
+      <div class="mock-step space-y-1" style="--step: 4">
+        <p class="text-[10.5px] text-fg-subtle">Application Description</p>
+        <div class="h-[38px] rounded-md border border-line bg-surface"></div>
+      </div>
+      <div class="mock-step rounded-full bg-action py-1.5 text-center font-head text-[11px] font-semibold text-on-action" style="--step: 5">
+        Submit
+      </div>
+    </div>
+    <div class="mock-step col-start-1 row-start-1 space-y-3 rounded-lg border border-line bg-surface p-3" style="--step: 6">
+      <p class="text-[11px] text-fg-subtle">Your Application ID is: <span class="font-semibold tabular-nums text-fg">4821</span></p>
+      <div class="mx-auto grid w-[112px] grid-cols-7 gap-[1.5px] rounded-md bg-surface-2 p-2">
+        {qr.map((cell) => (
+          <span class:list={['block aspect-square rounded-[1px]', cell ? 'bg-fg' : 'bg-surface']}></span>
+        ))}
+      </div>
+    </div>
+  </div>
+</MockFrame>

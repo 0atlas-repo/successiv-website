@@ -1,0 +1,43 @@
+---
+import MockFrame from './MockFrame.astro';
+// The phone app's own request-inbox screen, app-bar title "Information
+// Request" (the phone app,
+// `lib/pages/receive_information_request.dart:33`). The row's own subtitle
+// lines are "Requested by: {name}" and "Status: Pending" (`:63-68`); its own
+// third subtitle line, "Is Document verified?: …" (`:69-70`), is left off —
+// no verification claim anywhere in this product's copy. Tapping opens the
+// app's own dialog, "Accept Information Sharing" / "You have a pending
+// request for sharing information. Do you accept?", with Cancel / Decline /
+// Accept (`:117-119,127,164,202`). The check mark that fades onto Accept
+// last is this mock's own way of showing the outcome — the real button
+// carries no such badge.
+// Source: local_pm/research/2026-09-24-kyc-ui-walkthrough.md, "Recommended
+// screen per step" §4.
+const checkIcon = '<path d="M20 6 9 17l-5-5"/>';
+---
+<MockFrame chrome="phone" title="Information Request">
+  <div class="space-y-3">
+    <div class="mock-step rounded-lg border border-line bg-surface px-2.5 py-2" style="--step: 0">
+      <div class="flex items-center gap-2">
+        <span class="min-w-0 flex-1 truncate text-[12px] font-medium text-fg">Passport</span>
+        <span class="shrink-0 text-[10px] tabular-nums text-fg-subtle">10:24</span>
+      </div>
+      <p class="mt-0.5 truncate text-[10px] text-fg-subtle">Requested by: Store A</p>
+      <p class="text-[10px] text-fg-subtle">Status: Pending</p>
+    </div>
+    <div class="space-y-2 rounded-lg border border-line bg-surface p-2.5">
+      <p class="mock-step font-head text-[12px] font-semibold text-fg" style="--step: 1">Accept Information Sharing</p>
+      <p class="mock-step text-[10.5px] leading-snug text-fg-subtle" style="--step: 2">
+        You have a pending request for sharing information. Do you accept?
+      </p>
+      <div class="mock-step flex items-center justify-end gap-3 pt-1" style="--step: 3">
+        <span class="text-[10.5px] font-medium text-fg-subtle">Cancel</span>
+        <span class="text-[10.5px] font-medium text-fg-subtle">Decline</span>
+        <span class="flex items-center gap-1 rounded-full bg-action px-2.5 py-1 font-head text-[10.5px] font-semibold text-on-action">
+          Accept
+          <svg class="mock-step h-2.5 w-2.5" style="--step: 4" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><Fragment set:html={checkIcon} /></svg>
+        </span>
+      </div>
+    </div>
+  </div>
+</MockFrame>

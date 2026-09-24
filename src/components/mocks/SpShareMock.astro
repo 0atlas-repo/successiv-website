@@ -1,0 +1,67 @@
+---
+import MockFrame from './MockFrame.astro';
+// The dialog's own title, "Add files to bundle" — the extension,
+// TempAccessDialog.tsx:219-230. Fields below are the dialog's own labels:
+// Bundle Name, Target Audience (its real placeholder, "Email addresses, one
+// per line", shown as the empty placeholder rather than inventing an
+// address), Valid From / Valid To, Synchronization Frequency
+// (Daily/Weekly/Monthly) — TempAccessDialog.tsx:252-334. The dialog also
+// carries a Permission Level field, left off here on purpose: nothing
+// downstream ever reads or writes a SharePoint permission. Saving only
+// queues the files; the console app later downloads them and re-uploads them
+// to an external file-sharing service on its own schedule, sharing them
+// there instead — the console app, TempAccess.cs:174-266 — so status only
+// reaches "In Progress" once that scheduled sync runs, not on Save —
+// TempAccess.cs:112-137. Recipient is a role, never a name.
+// Source: local_pm/projects/mock-rollout/specs/copy-batch-b.md, "SharePoint
+// extensions".
+const files = ['Quarterly plan.xlsx', 'Cover letter.docx'];
+const docIcon = '<path d="M14 3v4a1 1 0 0 0 1 1h4" /><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z" />';
+---
+<MockFrame chrome="panel" title="Add files to bundle">
+  <div class="space-y-2.5">
+    <div class="flex flex-wrap gap-1.5">
+      {files.map((f, i) => (
+        <span class="mock-step flex items-center gap-1.5 rounded-full border border-line bg-surface px-2 py-1 text-[10.5px] text-fg" style={`--step: ${i}`}>
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-fg-subtle" aria-hidden="true"><Fragment set:html={docIcon} /></svg>
+          {f}
+        </span>
+      ))}
+    </div>
+
+    <div class="mock-step space-y-1" style="--step: 2">
+      <span class="font-head text-[9.5px] font-semibold uppercase tracking-[0.1em] text-fg-subtle">Bundle Name</span>
+      <div class="rounded-md border border-line bg-surface px-2.5 py-1.5 text-[12px] text-fg">External review</div>
+    </div>
+
+    <div class="mock-step space-y-1" style="--step: 3">
+      <span class="font-head text-[9.5px] font-semibold uppercase tracking-[0.1em] text-fg-subtle">Target Audience</span>
+      <div class="rounded-md border border-line bg-surface px-2.5 py-1.5 text-[12px] italic text-fg-subtle">Email addresses, one per line</div>
+    </div>
+
+    <div class="mock-step grid grid-cols-2 gap-2" style="--step: 4">
+      <div class="space-y-1">
+        <span class="font-head text-[9.5px] font-semibold uppercase tracking-[0.1em] text-fg-subtle">Valid From</span>
+        <div class="rounded-md border border-line bg-surface px-2.5 py-1.5 text-[11.5px] tabular-nums text-fg">2026-09-24</div>
+      </div>
+      <div class="space-y-1">
+        <span class="font-head text-[9.5px] font-semibold uppercase tracking-[0.1em] text-fg-subtle">Valid To</span>
+        <div class="rounded-md border border-line bg-surface px-2.5 py-1.5 text-[11.5px] tabular-nums text-fg">2026-10-08</div>
+      </div>
+    </div>
+
+    <div class="mock-step space-y-1" style="--step: 5">
+      <span class="font-head text-[9.5px] font-semibold uppercase tracking-[0.1em] text-fg-subtle">Synchronization Frequency</span>
+      <div class="rounded-md border border-line bg-surface px-2.5 py-1.5 text-[12px] text-fg">Weekly</div>
+    </div>
+
+    <div class="flex items-center justify-between gap-2 border-t border-line pt-2.5">
+      <span class="mock-step rounded-full bg-action px-3 py-1.5 font-head text-[10.5px] font-semibold text-on-action" style="--step: 6">Save</span>
+      <span class="grid">
+        {/* The console app syncs on its own schedule, not on Save — the status settles after a visible pause. */}
+        <span class="mock-before col-start-1 row-start-1 whitespace-nowrap rounded-full bg-surface-2 px-1.5 py-px font-head text-[9.5px] font-semibold uppercase tracking-[0.06em] text-fg-subtle" style="--swap: 7; --mock-lead-in: 1600ms">Pending</span>
+        <span class="mock-step col-start-1 row-start-1 whitespace-nowrap rounded-full bg-action/12 px-1.5 py-px font-head text-[9.5px] font-semibold uppercase tracking-[0.06em] text-action" style="--step: 7; --mock-lead-in: 1600ms">In Progress</span>
+      </span>
+    </div>
+  </div>
+</MockFrame>

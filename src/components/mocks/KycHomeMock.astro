@@ -1,0 +1,46 @@
+---
+import MockFrame from './MockFrame.astro';
+// The phone app's own Home screen — its app-bar title is literally "Home"
+// (the phone app, `lib/pages/main_homepage2.dart:88`). The profile card's own
+// copy is "Name: $name" / "Email: $email" (the phone app,
+// `lib/components/profile_card.dart:41,50`). Document rows are the four
+// working types (the phone app, `lib/pages/insert_document_page.dart:97-111`);
+// "ID card" is the approved-copy label for the code's own local ID-card label
+// identifier (the phone app, `lib/pages/main_homepage2.dart:353`), matching
+// local_pm/projects/mock-rollout/specs/copy-batch-a.md's KYC option 1.
+// No Verified/Not Verified pill: the real list shows one on every row
+// (the phone app, `lib/pages/main_homepage2.dart:270-284`), but it is
+// hardcoded to "Not Verified" forever and the founder's call is no
+// verification claim in this product's copy, so it is left off on purpose.
+// Source: local_pm/research/2026-09-24-kyc-ui-walkthrough.md, "Recommended
+// screen per step" §1.
+const docs = [
+  { type: 'Passport', icon: 'file' },
+  { type: 'ID card', icon: 'card' },
+  { type: 'Address', icon: 'pin' },
+  { type: 'Phone Number', icon: 'phone' },
+];
+const icons: Record<string, string> = {
+  file: '<path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z"/>',
+  card: '<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>',
+  pin: '<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>',
+  phone: '<path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"/>',
+};
+---
+<MockFrame chrome="phone" title="Home">
+  <div class="space-y-2">
+    <div class="mock-step rounded-lg bg-action px-3 py-2.5" style="--step: 0">
+      <p class="truncate text-[12px] font-semibold text-on-action">Name: A. Holder</p>
+      <p class="mt-0.5 truncate text-[10.5px] text-on-action">Email: a.holder@example.com</p>
+    </div>
+    {docs.map((d, i) => (
+      <div class="mock-step flex items-center gap-2.5 rounded-lg border border-line bg-surface px-2.5 py-2" style={`--step: ${i + 1}`}>
+        <span class="grid h-6 w-6 shrink-0 place-items-center rounded-md bg-surface-2 text-fg-subtle" aria-hidden="true">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><Fragment set:html={icons[d.icon]} /></svg>
+        </span>
+        <span class="min-w-0 flex-1 truncate text-[12px] text-fg">{d.type}</span>
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-fg-subtle/60" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+      </div>
+    ))}
+  </div>
+</MockFrame>

@@ -1,0 +1,54 @@
+---
+import MockFrame from './MockFrame.astro';
+// Real page title is "Case List" (the portal, cases.component.html:2); columns
+// are its own displayedTitles (the portal, cases.component.ts:19) — kept Case
+// ID, Incident Title, Status, dropped the vendor-named group column and the
+// Created Date / Action columns to keep the screen to what the copy claims.
+// Case ID format is C + 8 digits, assigned by incrementing the previous case's
+// number (the API, CaseController.cs:143-150), not a hyphenated ref — the IDs
+// below are invented in that shape, not real ones.
+// Status set is deliberately just Open/Resolved: the schema defines six states
+// (the API, CaseStatus.cs:11-16) but the code only ever assigns three —
+// CHATBOT at creation, INIT then OPEN on start (CaseController.cs:164,182),
+// and the one status-changing endpoint sets RESOLVED, not CLOSED or CONCLUDED
+// (CaseController.cs:209). Those two never get reached, so they're left off
+// here and off any filter shown.
+// Source: local_pm/projects/mock-rollout/specs/copy-batch-b.md, "Ops incident
+// support".
+const cases = [
+  { ref: 'C00048213', title: 'Access fault, Site B', status: 'Open' },
+  { ref: 'C00048206', title: 'Equipment alarm, unattended', status: 'Resolved' },
+  { ref: 'C00048198', title: 'Unattended spillage', status: 'Resolved' },
+  { ref: 'C00048185', title: 'Delivery access blocked', status: 'Resolved' },
+];
+const openCount = cases.filter((c) => c.status === 'Open').length;
+---
+<MockFrame chrome="tabs" title="Case List" meta={`${openCount} open`}>
+  <div class="space-y-1.5">
+    <div class="mock-step flex items-center gap-3 border-b border-line pb-1 text-[9.5px] uppercase tracking-[0.06em] text-fg-subtle" style="--step: 0">
+      <span class="w-[68px] shrink-0">Case ID</span>
+      <span class="flex-1">Incident Title</span>
+      <span>Status</span>
+    </div>
+    {cases.map((c, i) => (
+      <div
+        class:list={[
+          'mock-step flex items-center gap-3 rounded-lg border px-2.5 py-2',
+          c.status === 'Open' ? 'border-action/35 bg-surface-2' : 'border-line bg-surface',
+        ]}
+        style={`--step: ${i + 1}`}
+      >
+        <span class="w-[68px] shrink-0 font-head text-[9.5px] tabular-nums tracking-[0.04em] text-fg-subtle">{c.ref}</span>
+        <span class="min-w-0 flex-1 truncate text-[12px] text-fg">{c.title}</span>
+        <span
+          class:list={[
+            'shrink-0 whitespace-nowrap rounded-full px-1.5 py-px font-head text-[9.5px] font-semibold uppercase tracking-[0.06em]',
+            c.status === 'Open' ? 'bg-warn-soft text-warn' : 'bg-ok-soft text-ok',
+          ]}
+        >
+          {c.status}
+        </span>
+      </div>
+    ))}
+  </div>
+</MockFrame>

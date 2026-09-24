@@ -1,0 +1,86 @@
+---
+import MockFrame from './MockFrame.astro';
+// The register: each card shows a contract's code and title, and who's
+// handling it — the app's own card fields (the app,
+// pages/Contracts/View.tsx:106-156). No status pill is drawn: an earlier
+// version of this screen showed a "Live" pill, but the app's Contract model
+// carries no status field, so nothing backs it. Creating a contract is a
+// code, a title and an assigned member (the app,
+// pages/Contracts/CreateContractDrawer.tsx:274-395) — classification and
+// versioning start at the next step, once an entry is filed against it.
+// Codes and titles are fictional examples in the app's own format;
+// handlers are placeholder labels, not invented names — the research note
+// flags the source repo's own demo data as carrying real staff names, so
+// this mock avoids adding any invented-but-realistic ones of its own.
+// The last card's highlighted border stands in for "just registered" — a
+// directorial device, not a badge the app shows.
+// Source: research note "contract-lifecycle", "1. Contracts" and
+// "Recommended steps" step 1.
+const contracts = [
+  { code: 'CN-092', title: 'Framework agreement', handler: 'Handler A' },
+  { code: 'CN-097', title: 'Advisory retainer', handler: 'Handler B' },
+  { code: 'CN-101', title: 'Supply agreement', handler: 'Handler C' },
+  { code: 'CN-104', title: 'Service agreement', handler: 'Handler D' },
+];
+const docIcon = '<path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" /><path d="M14 2v6h6" />';
+const userIcon = '<path d="M20 21a8 8 0 1 0-16 0"/><circle cx="12" cy="7" r="4"/>';
+---
+<MockFrame title="Contracts — Register" meta="4 contracts">
+  <div class="space-y-1.5">
+    {contracts.slice(0, -1).map((c, i) => (
+      <div class="mock-step flex items-center gap-2.5 rounded-lg border border-line bg-surface px-2.5 py-2" style={`--step: ${i}`}>
+        <div class="grid h-7 w-7 shrink-0 place-items-center rounded-md border border-line bg-surface-2 text-fg-subtle/60">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><Fragment set:html={docIcon} /></svg>
+        </div>
+        <div class="min-w-0 flex-1">
+          <div class="flex items-baseline gap-1.5">
+            <span class="shrink-0 font-head text-[9.5px] tabular-nums tracking-[0.06em] text-fg-subtle">{c.code}</span>
+            <span class="truncate text-[12px] text-fg">{c.title}</span>
+          </div>
+          <div class="mt-0.5 flex items-center gap-1 text-[10.5px] text-fg-subtle">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><Fragment set:html={userIcon} /></svg>
+            {c.handler}
+          </div>
+        </div>
+      </div>
+    ))}
+
+    {/* The last, just-registered card: appears plainly, then its border
+        highlights — two full copies stacked, since the crossfade can only
+        replace a whole element, not recolour one in place. */}
+    <div class="mock-step" style="--step: 3">
+      <div class="grid">
+        <div class="mock-before col-start-1 row-start-1 flex items-center gap-2.5 rounded-lg border border-line bg-surface px-2.5 py-2" style="--swap: 4">
+          <div class="grid h-7 w-7 shrink-0 place-items-center rounded-md border border-line bg-surface-2 text-fg-subtle/60">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><Fragment set:html={docIcon} /></svg>
+          </div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-baseline gap-1.5">
+              <span class="shrink-0 font-head text-[9.5px] tabular-nums tracking-[0.06em] text-fg-subtle">CN-104</span>
+              <span class="truncate text-[12px] text-fg">Service agreement</span>
+            </div>
+            <div class="mt-0.5 flex items-center gap-1 text-[10.5px] text-fg-subtle">
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><Fragment set:html={userIcon} /></svg>
+              Handler D
+            </div>
+          </div>
+        </div>
+        <div class="mock-step col-start-1 row-start-1 flex items-center gap-2.5 rounded-lg border border-action/35 bg-surface-2 px-2.5 py-2" style="--step: 4">
+          <div class="grid h-7 w-7 shrink-0 place-items-center rounded-md border border-line bg-surface text-fg-subtle/60">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><Fragment set:html={docIcon} /></svg>
+          </div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-baseline gap-1.5">
+              <span class="shrink-0 font-head text-[9.5px] tabular-nums tracking-[0.06em] text-fg-subtle">CN-104</span>
+              <span class="truncate text-[12px] text-fg">Service agreement</span>
+            </div>
+            <div class="mt-0.5 flex items-center gap-1 text-[10.5px] text-fg-subtle">
+              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><Fragment set:html={userIcon} /></svg>
+              Handler D
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</MockFrame>

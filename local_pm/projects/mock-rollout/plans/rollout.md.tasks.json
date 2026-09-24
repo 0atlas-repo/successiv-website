@@ -1,0 +1,101 @@
+{
+  "tasks": [
+    {
+      "id": 1,
+      "subject": "Founder answers spec open questions (work structure, scope, batching, positioning) \u2014 Q1 re-ask pending",
+      "status": "completed",
+      "blockedBy": []
+    },
+    {
+      "id": 2,
+      "subject": "A: research Creators Sphere, Shopmgr, KYC (3 Sonnet subagents)",
+      "status": "completed",
+      "blockedBy": [
+        1
+      ]
+    },
+    {
+      "id": 3,
+      "subject": "A: copy proposal per product, founder approves",
+      "status": "completed",
+      "blockedBy": [
+        2
+      ]
+    },
+    {
+      "id": 4,
+      "subject": "A: build Creators Sphere (verify literals, mocks, entry)",
+      "status": "completed",
+      "blockedBy": [
+        3
+      ]
+    },
+    {
+      "id": 5,
+      "subject": "A: build Shopmgr, keeping the hero ChatMock working",
+      "status": "completed",
+      "blockedBy": [
+        3
+      ]
+    },
+    {
+      "id": 6,
+      "subject": "A: build KYC",
+      "status": "completed",
+      "blockedBy": [
+        3
+      ]
+    },
+    {
+      "id": 7,
+      "subject": "A: founder review, then squash-merge",
+      "status": "completed",
+      "blockedBy": [
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "id": 8,
+      "subject": "B: WorkItem solution + steps, work page template, verify 3b",
+      "status": "completed",
+      "blockedBy": [
+        1
+      ]
+    },
+    {
+      "id": 9,
+      "subject": "B: research 8 work items, anonymised (8 Sonnet subagents)",
+      "status": "completed",
+      "blockedBy": [
+        1
+      ]
+    },
+    {
+      "id": 10,
+      "subject": "B: copy proposals, founder approves",
+      "status": "completed",
+      "blockedBy": [
+        9
+      ]
+    },
+    {
+      "id": 11,
+      "subject": "B: build 8 work pages",
+      "status": "completed",
+      "blockedBy": [
+        8,
+        10
+      ]
+    },
+    {
+      "id": 12,
+      "subject": "B: founder review, then squash-merge",
+      "status": "completed",
+      "blockedBy": [
+        11
+      ]
+    }
+  ]
+}

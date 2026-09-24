@@ -1,0 +1,58 @@
+---
+import MockFrame from './MockFrame.astro';
+// The automatic compliance check: once an entry is filed, a background job
+// (not a person, not instant) compares it, chunk by chunk, against the
+// contract sections it's mapped to, and writes one row per finding —
+// contract section, entry section, a reason, and a confidence value
+// (research note "contract-lifecycle", Claims table #9). In the real app
+// this is a downloadable report, not a live screen, so this panel is our
+// own drawing of that report's rows, as the research note recommends. Every
+// row the real report keeps is a flagged discrepancy — passing comparisons
+// are dropped before the report is written — so no row here is shown as
+// passing.
+// The check is a queued job, so nothing it produced is shown inline: the
+// status line and every row it writes share the same long lead-in, so the
+// whole result — rows and the "N flagged" tally alike — lands after one
+// visible pause, not on the normal reveal beat.
+// The status line's own wording ("Checking…" / "N flagged") is this
+// drawing's invented caption, not a quoted app string — the app has no
+// live status line for this job. Section references use a generic §N.N
+// format; reasons and confidence values are fictional examples in the
+// report's real column shape (contract section, entry section, reason,
+// confidence level), not quoted values.
+// Source: research note "contract-lifecycle", Claims table #9 and
+// "Recommended steps" step 3.
+const flags = [
+  { contract: '§9.4', entry: '§2.1', reason: 'Amount differs from the mapped clause', confidence: 0.87 },
+  { contract: '§12.1', entry: '§3.4', reason: 'References a superseded revision', confidence: 0.64 },
+  { contract: '§15.3', entry: '§1.2', reason: 'Required certification missing', confidence: 0.81 },
+];
+const flagIcon = '<path d="M12 9v4M12 17h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/>';
+---
+<MockFrame title="Contracts — Compliance check" meta="CN-104">
+  <div class="space-y-2.5">
+    <div class="grid">
+      {/* A background job, not an inline check — the status line and every
+          row below share this long lead-in, so the whole result lands
+          together after a visible pause, not on the normal reveal beat. */}
+      <div class="mock-before col-start-1 row-start-1 flex items-center gap-1.5 text-[10.5px] text-fg-subtle" style="--swap: 3; --mock-lead-in: 1600ms">
+        <span class="h-1.5 w-1.5 shrink-0 rounded-full bg-fg-subtle/60"></span>
+        Checking against the contract's mapped sections…
+      </div>
+      <div class="mock-step col-start-1 row-start-1 flex items-center gap-1.5 font-head text-[10.5px] font-semibold uppercase tracking-[0.06em] text-warn" style="--step: 3; --mock-lead-in: 1600ms">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><Fragment set:html={flagIcon} /></svg>
+        3 flagged
+      </div>
+    </div>
+
+    {flags.map((f, i) => (
+      <div class="mock-step space-y-1 rounded-lg border border-line bg-surface px-2.5 py-2" style={`--step: ${i}; --mock-lead-in: 1600ms`}>
+        <div class="flex items-center justify-between gap-2">
+          <span class="font-head text-[9.5px] uppercase tabular-nums tracking-[0.08em] text-fg-subtle">Contract {f.contract} · Entry {f.entry}</span>
+          <span class="shrink-0 font-head text-[10px] font-semibold tabular-nums text-fg-subtle">{f.confidence.toFixed(2)}</span>
+        </div>
+        <p class="text-[11px] leading-snug text-fg">{f.reason}</p>
+      </div>
+    ))}
+  </div>
+</MockFrame>

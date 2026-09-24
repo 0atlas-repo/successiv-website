@@ -1,0 +1,66 @@
+---
+import MockFrame from './MockFrame.astro';
+// The portal's real nav item is "Knowledge" — the portal,
+// page/components/sidebar.php:21. Two panels only, both real headings:
+// "Shopping Guide" with subtitle "Add and manage knowledge about shipping,
+// refunds, privacy, and more to enhance your AI's support capabilities."
+// (category=guide), and "Shipping, refund, privacy, etc." (category=policy)
+// — the portal, page/knowledgePage.php:237,239,287. Products and
+// promotions are never manually added here; they come from catalogue sync
+// and background social indexing instead, so neither appears.
+// "Add New Knowledge" opens a form with a real Category select
+// (Guide/Policy) and a Title field — the portal,
+// page/knowledgePage.php:211 (button), 106,112 (Category/Title labels in
+// the modal). Each entry is a card with "Last updated:" and a "Detail"
+// button, colour-coded by the page's own "Indexing Status" legend: green
+// Success, yellow Pending, red Failed — the portal,
+// page/knowledgePage.php:215,218,221,224,261,263. The entry title
+// ("Holiday shipping cutoff") is fictional, generic policy copy.
+// Source: local_pm/research/2026-09-24-shopmgr-ui-walkthrough.md, "5. Staff keep the knowledge current…".
+---
+<MockFrame chrome="sidebar" title="Knowledge" meta="2 entries">
+  <div class="space-y-3">
+    <div class="mock-step space-y-0.5" style="--step: 0">
+      <p class="font-head text-[11.5px] font-semibold text-fg">Shopping Guide</p>
+      <p class="text-[10px] leading-snug text-fg-subtle">Add and manage knowledge about shipping, refunds, privacy, and more to enhance your AI's support capabilities.</p>
+    </div>
+
+    <div class="mock-step flex items-center justify-between" style="--step: 1">
+      <p class="font-head text-[11.5px] font-semibold text-fg">Shipping, refund, privacy, etc.</p>
+      <span class="rounded-full bg-action px-2.5 py-1 font-head text-[9.5px] font-semibold text-on-action">Add New Knowledge</span>
+    </div>
+
+    <div class="mock-step rounded-lg border border-line bg-surface px-2.5 py-2" style="--step: 2">
+      <div class="flex items-center justify-between gap-2">
+        <span class="min-w-0 flex-1 truncate text-[11.5px] text-fg">Returns policy</span>
+        <span class="shrink-0 rounded-full bg-ok-soft px-1.5 py-px font-head text-[9px] font-semibold uppercase tracking-[0.06em] text-ok">Success</span>
+      </div>
+      <div class="mt-1 flex items-center justify-between text-[10px] text-fg-subtle">
+        <span class="tabular-nums">Last updated: 2026-09-10</span>
+        <span class="rounded-full border border-line px-1.5 py-px font-head text-[9px] uppercase tracking-[0.06em]">Detail</span>
+      </div>
+    </div>
+
+    <div class="mock-step flex flex-wrap items-center gap-2 rounded-lg border border-dashed border-line bg-surface px-2.5 py-1.5 text-[10px] text-fg-subtle" style="--step: 3">
+      <span>Category</span>
+      <span class="rounded-full border border-action/40 bg-surface-2 px-1.5 py-px text-fg">Policy</span>
+      <span class="ml-2">Title</span>
+      <span class="text-fg">Holiday shipping cutoff</span>
+    </div>
+
+    <div class="mock-step rounded-lg border border-line bg-surface px-2.5 py-2" style="--step: 4">
+      <div class="flex items-center justify-between gap-2">
+        <span class="min-w-0 flex-1 truncate text-[11.5px] text-fg">Holiday shipping cutoff</span>
+        <span class="grid shrink-0">
+          {/* A background job settles this, so it arrives after a visible pause, not on the beat. */}
+          <span class="mock-before col-start-1 row-start-1 rounded-full bg-warn-soft px-1.5 py-px font-head text-[9px] font-semibold uppercase tracking-[0.06em] text-warn" style="--swap: 5; --mock-lead-in: 1600ms">Pending</span>
+          <span class="mock-step col-start-1 row-start-1 rounded-full bg-ok-soft px-1.5 py-px font-head text-[9px] font-semibold uppercase tracking-[0.06em] text-ok" style="--step: 5; --mock-lead-in: 1600ms">Success</span>
+        </span>
+      </div>
+      <div class="mt-1 flex items-center justify-between text-[10px] text-fg-subtle">
+        <span class="tabular-nums">Last updated: 2026-09-22</span>
+        <span class="rounded-full border border-line px-1.5 py-px font-head text-[9px] uppercase tracking-[0.06em]">Detail</span>
+      </div>
+    </div>
+  </div>
+</MockFrame>

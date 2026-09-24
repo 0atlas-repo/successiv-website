@@ -1,0 +1,76 @@
+---
+import MockFrame from './MockFrame.astro';
+// The app's "Explore" screen: a chip row that filters the feed server-side,
+// then a 2-column grid of campaign cards (brand, title, pay, deadline).
+// Category chips come from the API, not the creator's own niche — "All" plus
+// a fixed list; "Beauty" and "Food & drink" are quoted from the app's own
+// model doc comment (display-name examples). "Fashion" has no code citation —
+// it's illustrative only, per the research doc's suggested set.
+// No featured/hero card is drawn: the app only shows one under the
+// unfiltered "All" feed, never under a tag filter, and this mock settles
+// with "Beauty" active.
+// Brands, titles and pay figures are fictional. The app hardcodes its local currency; the
+// founder chose S$ for the site (copy-batch-a.md), so pay reads "S$ 500".
+// Reveal: chips appear, then three cards fill the grid; the fourth slot (part
+// of the fuller "All" catalog) fades out as the chip swaps from "All" to
+// "Beauty" — both share one --swap step, standing in for the tap-and-refilter
+// moment described in the brief.
+// Source: local_pm/research/2026-09-24-creators-sphere-ui-walkthrough.md §1;
+// the app, lib/features/campaign/presentation/pages/explore_page.dart:193
+// ("All" chip) and lib/core/models/predefined_campaign_tag.dart:9-10 (chip
+// display-name examples).
+const chips = ['All', 'Beauty', 'Food & drink', 'Fashion'];
+const cards = [
+  { brand: 'Brand A', title: 'Glow Serum Launch', pay: 'S$ 500', due: 'Due Oct 12' },
+  { brand: 'Brand B', title: 'Matte Lip Set', pay: 'S$ 240', due: 'Due Oct 20' },
+  { brand: 'Brand C', title: 'Skin Reset Kit', pay: 'S$ 180', due: 'Due Oct 5' },
+];
+const extraCard = { brand: 'Brand D', title: 'Denim Capsule Drop', pay: 'S$ 300', due: 'Due Oct 15' };
+const imgIcon = '<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m21 17-5-5-9 8"/>';
+---
+<MockFrame chrome="phone" title="Explore">
+  <div class="space-y-2.5">
+    <div class="mock-step" style="--step: 0">
+      <div class="grid">
+        <div class="col-start-1 row-start-1 mock-before flex gap-1.5" style="--swap: 5">
+          {chips.map((c, i) => (
+            <span class:list={['shrink-0 rounded-full px-2.5 py-1 font-head text-[10px] font-medium', i === 0 ? 'bg-action text-on-action' : 'border border-line text-fg-muted']}>{c}</span>
+          ))}
+        </div>
+        <div class="col-start-1 row-start-1 mock-step flex gap-1.5" style="--step: 5">
+          {chips.map((c) => (
+            <span class:list={['shrink-0 rounded-full px-2.5 py-1 font-head text-[10px] font-medium', c === 'Beauty' ? 'bg-action text-on-action' : 'border border-line text-fg-muted']}>{c}</span>
+          ))}
+        </div>
+      </div>
+    </div>
+    <div class="grid grid-cols-2 gap-2">
+      {cards.map((c, i) => (
+        <div class="mock-step space-y-1 rounded-lg border border-line bg-surface p-2" style={`--step: ${i + 1}`}>
+          <div class="grid h-12 w-full place-items-center rounded-md bg-surface-2 text-fg-subtle/60">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><Fragment set:html={imgIcon} /></svg>
+          </div>
+          <p class="truncate font-head text-[9px] font-semibold text-fg-subtle">{c.brand}</p>
+          <p class="truncate text-[11px] font-medium text-fg">{c.title}</p>
+          <div class="flex items-center justify-between">
+            <span class="font-head text-[11px] font-bold text-fg">{c.pay}</span>
+            <span class="text-[9px] text-fg-subtle">{c.due}</span>
+          </div>
+        </div>
+      ))}
+      <div class="mock-step" style="--step: 4">
+        <div class="mock-before space-y-1 rounded-lg border border-line bg-surface p-2" style="--swap: 5">
+          <div class="grid h-12 w-full place-items-center rounded-md bg-surface-2 text-fg-subtle/60">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><Fragment set:html={imgIcon} /></svg>
+          </div>
+          <p class="truncate font-head text-[9px] font-semibold text-fg-subtle">{extraCard.brand}</p>
+          <p class="truncate text-[11px] font-medium text-fg">{extraCard.title}</p>
+          <div class="flex items-center justify-between">
+            <span class="font-head text-[11px] font-bold text-fg">{extraCard.pay}</span>
+            <span class="text-[9px] text-fg-subtle">{extraCard.due}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</MockFrame>

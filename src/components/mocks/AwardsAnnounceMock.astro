@@ -1,0 +1,74 @@
+---
+import MockFrame from './MockFrame.astro';
+// The results page's own header, kept close to its default copy — the
+// portal, WinnersPanelWebPart.ts:172 ("Congratulations to all the
+// winners!"). One block per category, heading "{category} winners" — :151.
+// Each candidate tile is real: a type badge (individual/team) and a winner
+// badge are images in the source, not text — stood in for here as a small
+// text pill, the same way this repo draws other real icons as shapes
+// rather than graphics; name and department are real fields — :88-99.
+// The fallback is a real, literal link and is shown here verbatim — :156
+// ("No winners in this category") — but only the way the source actually
+// gates it: once per category, and only when *neither* an individual nor a
+// team winner exists yet for it, never as a per-slot placeholder next to an
+// already-decided winner. Category and candidate names below are fictional
+// placeholders, not the real seeded set.
+// Source: research note "awards-portals", Real flow §6 and Recommended
+// steps §4.
+---
+<MockFrame title="Awards — Announce" meta="3 categories">
+  <div class="space-y-3">
+    <p class="mock-step font-head text-[12.5px] font-semibold text-fg" style="--step: 0">Congratulations to all the winners!</p>
+
+    <div class="space-y-1.5 border-t border-line pt-2">
+      <p class="mock-step font-head text-[9.5px] font-semibold uppercase tracking-[0.1em] text-fg-subtle" style="--step: 1">Initiative winners</p>
+      <div class="mock-step grid grid-cols-2 gap-2" style="--step: 2">
+        <div class="flex items-center gap-2 rounded-lg border border-line bg-ok-soft px-2 py-1.5">
+          <div class="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-surface font-head text-[9.5px] font-semibold text-fg-muted">CA</div>
+          <div class="min-w-0">
+            <p class="truncate text-[10.5px] font-medium text-fg">Candidate A</p>
+            <p class="truncate text-[9px] text-fg-subtle">Client Services</p>
+            <p class="text-[9px] uppercase tracking-[0.06em] text-ok">Individual</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2 rounded-lg border border-line bg-ok-soft px-2 py-1.5">
+          <div class="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-surface font-head text-[9.5px] font-semibold text-fg-muted">TB</div>
+          <div class="min-w-0">
+            <p class="truncate text-[10.5px] font-medium text-fg">Team B</p>
+            <p class="truncate text-[9px] text-fg-subtle">Product</p>
+            <p class="text-[9px] uppercase tracking-[0.06em] text-ok">Team</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="space-y-1.5 border-t border-line pt-2">
+      <p class="mock-step font-head text-[9.5px] font-semibold uppercase tracking-[0.1em] text-fg-subtle" style="--step: 3">Craftsmanship winners</p>
+      <div class="mock-step grid grid-cols-2 gap-2" style="--step: 4">
+        <div class="flex items-center gap-2 rounded-lg border border-line bg-ok-soft px-2 py-1.5">
+          <div class="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-surface font-head text-[9.5px] font-semibold text-fg-muted">CC</div>
+          <div class="min-w-0">
+            <p class="truncate text-[10.5px] font-medium text-fg">Candidate C</p>
+            <p class="truncate text-[9px] text-fg-subtle">Research</p>
+            <p class="text-[9px] uppercase tracking-[0.06em] text-ok">Individual</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2 rounded-lg border border-line bg-ok-soft px-2 py-1.5">
+          <div class="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-surface font-head text-[9.5px] font-semibold text-fg-muted">TD</div>
+          <div class="min-w-0">
+            <p class="truncate text-[10.5px] font-medium text-fg">Team D</p>
+            <p class="truncate text-[9px] text-fg-subtle">Design</p>
+            <p class="text-[9px] uppercase tracking-[0.06em] text-ok">Team</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="space-y-1.5 border-t border-line pt-2">
+      <p class="mock-step font-head text-[9.5px] font-semibold uppercase tracking-[0.1em] text-fg-subtle" style="--step: 5">Reliability winners</p>
+      <div class="mock-step rounded-lg border border-line bg-surface px-2 py-1.5" style="--step: 6">
+        <p class="text-[10px] leading-snug text-fg-subtle">No winners in this category</p>
+      </div>
+    </div>
+  </div>
+</MockFrame>

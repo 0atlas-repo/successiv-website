@@ -1,0 +1,64 @@
+---
+import MockFrame from './MockFrame.astro';
+// The real grid is rows of requirements (leading columns "Paragraph", then
+// "Criteria") against one column per bidder, each cell a status mark —
+// Fulfilled (green check), Incomplete (amber warning), or Missing (red X);
+// "N/A" renders nothing at all, not a pill — the portal,
+// src/pages/CompletedChecklist/EditView.tsx:100-158. A joint-venture bidder's
+// cell shows one mark per named member, not a single rolled-up mark, with the
+// member name on the mark — same file, :189-206 (the checkmarks loop; member
+// names are left off the marks here, since a real member name would identify
+// the bidder). Paragraph refs and the criteria wording below are invented
+// placeholders in the real shape, not lifted from the app's own checklist.
+// Source: the research note for this page (tender-rfp-management.md), Claims
+// table #3 and #7, and "Recommended steps…" §2.
+type Mark = 'ok' | 'warn' | 'missing' | null;
+type Row = { para: string; criteria: string; a: Mark; b: Mark[]; c: Mark; flag?: boolean };
+const rows: Row[] = [
+  { para: '3.2', criteria: 'Insurance cover', a: 'ok', b: ['ok', 'ok', 'ok'], c: 'ok' },
+  { para: '3.4', criteria: 'References', a: 'ok', b: ['ok', 'ok', 'ok'], c: 'warn' },
+  { para: '4.1', criteria: 'Pricing schedule', a: 'ok', b: ['ok', 'ok', 'ok'], c: 'ok' },
+  { para: '4.3', criteria: 'Compliance declaration', a: 'ok', b: ['ok', 'missing', 'ok'], c: 'ok', flag: true },
+];
+const iconPath = {
+  ok: 'm20 6-11 11-5-5',
+  warn: 'M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z',
+  missing: 'M18 6 6 18M6 6l12 12',
+};
+const iconClass = { ok: 'text-ok', warn: 'text-warn', missing: 'text-danger' };
+const mark = (m: Mark) =>
+  m
+    ? `<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 ${iconClass[m]}" aria-hidden="true"><path d="${iconPath[m]}"/></svg>`
+    : `<span class="block h-[9px] w-[9px]" aria-hidden="true"></span>`;
+---
+<MockFrame chrome="sidebar" title="Tender — Submission checklist" meta="1 missing">
+  <div class="space-y-1.5">
+    <div class="mock-step grid grid-cols-[26px_1fr_repeat(3,26px)] items-center gap-1.5 border-b border-line pb-1.5" style="--step: 0">
+      <span class="font-head text-[9px] font-semibold uppercase tracking-[0.08em] text-fg-subtle">Para.</span>
+      <span class="font-head text-[9px] font-semibold uppercase tracking-[0.08em] text-fg-subtle">Criteria</span>
+      {['A', 'B', 'C'].map((h) => (
+        <span class="text-center font-head text-[9.5px] font-semibold text-fg-subtle">{h}</span>
+      ))}
+    </div>
+    {rows.map((r, i) => (
+      <div
+        class:list={[
+          'mock-step grid grid-cols-[26px_1fr_repeat(3,26px)] items-center gap-1.5 rounded-lg border px-1.5 py-1.5',
+          r.flag ? 'border-danger/35 bg-danger-soft' : 'border-line bg-surface',
+        ]}
+        style={`--step: ${i + 1}`}
+      >
+        <span class="font-head text-[10px] tabular-nums text-fg-subtle">{r.para}</span>
+        <span class="truncate text-[11px] text-fg">{r.criteria}</span>
+        <span class="flex justify-center" set:html={mark(r.a)} />
+        <span class="flex items-center justify-center gap-[3px]">
+          {r.b.map((m) => <Fragment set:html={mark(m)} />)}
+        </span>
+        <span class="flex justify-center" set:html={mark(r.c)} />
+      </div>
+    ))}
+    <p class="mock-step border-t border-line pt-2 text-[10.5px] text-fg-subtle" style="--step: 5">
+      B is a joint venture — tracked by each named member.
+    </p>
+  </div>
+</MockFrame>

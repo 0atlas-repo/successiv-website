@@ -1,0 +1,44 @@
+---
+import MockFrame from './MockFrame.astro';
+// Same conversation as ShopAnswerMock, continued. The escalation itself is
+// real and quotable from the system prompt: "Do not answer if you do not
+// know" and, for complaints, "Do not handle complain by yourself. Use
+// ticket tool to create support tickets for customer complain." — the
+// backend, config/default_prompts/default_chat_prompt.
+// There is no fixed on-screen ticket-confirmation string to quote: the
+// tool's own return value ("Ticket ID=#{ticket_id} created successfully.",
+// logics/shop_tools/create_customer_service_ticket.py) is fed back to the
+// model, which paraphrases it for the shopper in a normal chat reply — so
+// the reply text below is a minimal, invented paraphrase, not a quoted
+// string, kept deliberately short per that gap. The word it names,
+// "refund", is one of the tool's real four ticket types: refund, return,
+// cancel, generic — the backend, classes/tenant.py TicketType.
+// Waiting state: typing dots with no text (assets/newChatv6.js:508-518).
+// Source: local_pm/research/2026-09-24-shopmgr-ui-walkthrough.md, "3. The assistant escalates…".
+---
+<MockFrame title="Shopmgr — Store A" meta="Live">
+  <div class="space-y-2.5">
+    <div class="flex justify-start">
+      <p class="mock-step max-w-[85%] rounded-2xl rounded-bl-sm border border-line bg-surface px-3 py-2 text-[12px] leading-snug text-fg" style="--step: 0">
+        Sure — that ships within 3 business days.
+      </p>
+    </div>
+
+    <div class="flex flex-col items-end gap-1">
+      <p class="mock-step max-w-[78%] rounded-2xl rounded-br-sm bg-action px-3 py-2 text-[12px] leading-snug text-on-action" style="--step: 1">
+        It arrived damaged — can I get a refund?
+      </p>
+    </div>
+
+    <div class="mock-step flex justify-start" style="--step: 2">
+      <div class="max-w-[85%] rounded-2xl rounded-bl-sm border border-line bg-surface px-3 py-2 text-[12px] leading-snug text-fg">
+        <div class="grid">
+          <span class="mock-before col-start-1 row-start-1 text-fg-subtle" style="--swap: 3"><span aria-hidden="true">• • •</span></span>
+          <span class="mock-step col-start-1 row-start-1" style="--step: 3">
+            I can't process a refund myself, so I've raised this as a refund ticket for our team to review.
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</MockFrame>

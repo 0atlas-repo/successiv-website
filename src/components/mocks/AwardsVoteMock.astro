@@ -1,0 +1,61 @@
+---
+import MockFrame from './MockFrame.astro';
+// The vote button lives on the candidate's own page, next to a Share
+// button, not on a grid tile — the portal, ProfilePanelWebPart.ts (Vote at
+// :259, Share at :276; candidate panel — thumbnail, type badge, name,
+// department, category — :254-286). Candidate, department and category
+// values below are fictional placeholders, not the real seeded set.
+// Clicking Vote opens a dialog whose warning text is a configurable
+// property with this default, and whose two button labels are its own,
+// kept verbatim with the candidate name substituted — :289-295. Previous /
+// Next are real link labels, and the indicator's own format is
+// "{category} candidate" over "{n}/{count}" (zero-padded) — :519-521. Once
+// a vote is cast the real page simply stops rendering the Vote link at all
+// and only Share remains (no confirmation message exists in the source) —
+// stated here rather than animated, since depicting it would leave the
+// still-open confirm dialog contradicting its own "already voted" ending in
+// the settled, no-animation frame. No vote count or tally is shown anywhere
+// in this file, which is why none appears here either.
+// Source: research note "awards-portals", Real flow §5 and Claims table
+// (vote uniqueness by category + type, no running tallies).
+const initials = 'CA';
+const name = 'Candidate A';
+const candidateType = 'Individual';
+const department = 'Client Services';
+const category = 'Craftsmanship';
+---
+<MockFrame chrome="panel" title="Awards — Vote" meta="Voting open">
+  <div class="space-y-2.5">
+    <div class="mock-step flex items-center gap-2.5" style="--step: 0">
+      <div class="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-line bg-bg font-head text-[10.5px] font-semibold text-fg-muted">{initials}</div>
+      <div class="min-w-0 space-y-0.5">
+        <div class="flex items-center gap-1.5">
+          <span class="truncate font-head text-[12px] font-semibold text-fg">{name}</span>
+          <span class="shrink-0 rounded-full border border-line px-1.5 py-px font-head text-[9px] uppercase tracking-[0.06em] text-fg-subtle">{candidateType}</span>
+        </div>
+        <p class="truncate text-[10.5px] text-fg-subtle">{department} · {category}</p>
+      </div>
+    </div>
+
+    <div class="mock-step flex items-center justify-between border-y border-line py-1.5" style="--step: 1">
+      <span class="text-[10.5px] font-medium text-fg-subtle">Previous</span>
+      <p class="text-center text-[10.5px] leading-tight text-fg-subtle">
+        {category} candidate<br /><span class="tabular-nums">03/08</span>
+      </p>
+      <span class="text-[10.5px] font-medium text-fg-subtle">Next</span>
+    </div>
+
+    <div class="mock-step flex gap-3" style="--step: 2">
+      <span class="rounded-full bg-action px-3 py-1 font-head text-[10.5px] font-semibold text-on-action">Vote</span>
+      <span class="text-[10.5px] font-medium text-fg-subtle">Share</span>
+    </div>
+
+    <div class="rounded-lg border border-line bg-surface p-2.5 space-y-2">
+      <p class="mock-step text-[10.5px] leading-snug text-fg-subtle" style="--step: 3">Think before clicking the VOTE button. You can only vote 1 individual and 1 team.</p>
+      <div class="mock-step flex items-center justify-end gap-3" style="--step: 4">
+        <span class="text-[10.5px] font-medium text-fg-subtle">Oops...</span>
+        <span class="rounded-full bg-action px-2.5 py-1 font-head text-[10.5px] font-semibold text-on-action">I vote for {name}!</span>
+      </div>
+    </div>
+  </div>
+</MockFrame>

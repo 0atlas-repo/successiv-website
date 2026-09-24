@@ -1,0 +1,63 @@
+---
+import MockFrame from './MockFrame.astro';
+// Header is the widget's own string, "Action List (⌛{unchecked} / ✅{checked})"
+// (the portal, chat-action-list.component.html:3) — represented here as a
+// plain count in the frame's meta slot, the same way the currently-shipped
+// action-list mock already represents this counter, rather than reproducing
+// the emoji literally.
+// Checkbox, the lightbulb that only shows on an AI-suggested item, and its
+// reason revealing on click are all real (the portal,
+// chat-action-list.component.html:16-27; the API, ActionItem.cs:35,37
+// `AISuggested`/`AISuggestedReason`). Only one item's reason is ever open at a
+// time in the real widget (`lightbulbId`), matched below by only the
+// confirmed item showing its reason. There is no "Awaiting confirmation"
+// label in the real UI — dropped. A completion time is written when an item
+// is checked (the API, ActionItem.cs:33 `CheckedTime`) and shown only once
+// checked, never before.
+// Source: local_pm/projects/mock-rollout/specs/copy-batch-b.md, "Ops incident
+// support".
+const checkIcon = '<path d="M20 6 9 17l-5-5"/>';
+const lightbulbIcon = '<path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5.6.6 1.25 1.42 1.5 2.5"/>';
+---
+<MockFrame chrome="tabs" title="Action List" meta="3 of 4">
+  <div class="space-y-2">
+    <div class="mock-step flex items-center gap-2.5 rounded-lg border border-line bg-surface px-2.5 py-2" style="--step: 0">
+      <span class="flex h-4 w-4 shrink-0 items-center justify-center rounded-[4px] border border-action bg-action">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-on-action" aria-hidden="true"><Fragment set:html={checkIcon} /></svg>
+      </span>
+      <span class="min-w-0 flex-1 truncate text-[12px] text-fg-muted">Notify duty lead</span>
+      <span class="shrink-0 font-head text-[9.5px] tabular-nums text-fg-subtle">09:14</span>
+    </div>
+
+    <div class="mock-step flex items-center gap-2.5 rounded-lg border border-line bg-surface px-2.5 py-2" style="--step: 1">
+      <span class="flex h-4 w-4 shrink-0 items-center justify-center rounded-[4px] border border-action bg-action">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-on-action" aria-hidden="true"><Fragment set:html={checkIcon} /></svg>
+      </span>
+      <span class="min-w-0 flex-1 truncate text-[12px] text-fg-muted">Log incident summary</span>
+      <span class="shrink-0 font-head text-[9.5px] tabular-nums text-fg-subtle">09:16</span>
+    </div>
+
+    <div class="mock-step flex items-center gap-2.5 rounded-lg border border-line bg-surface px-2.5 py-2" style="--step: 2">
+      <span class="h-4 w-4 shrink-0 rounded-[4px] border border-line bg-bg"></span>
+      <span class="min-w-0 flex-1 truncate text-[12px] text-fg">Verify access log entry</span>
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-fg-subtle" aria-hidden="true"><Fragment set:html={lightbulbIcon} /></svg>
+      <span class="shrink-0 whitespace-nowrap rounded-full border border-line px-1.5 py-0.5 font-head text-[9px] uppercase tracking-[0.06em] text-fg-subtle">Suggested</span>
+    </div>
+
+    <div class="space-y-1">
+      <div class="mock-step flex items-center gap-2.5 rounded-lg border border-action/35 bg-surface-2 px-2.5 py-2" style="--step: 3">
+        <span class="grid shrink-0">
+          <span class="mock-before col-start-1 row-start-1 h-4 w-4 rounded-[4px] border border-line bg-bg" style="--swap: 5"></span>
+          <span class="mock-step col-start-1 row-start-1 flex h-4 w-4 items-center justify-center rounded-[4px] border border-action bg-action" style="--step: 5">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-on-action" aria-hidden="true"><Fragment set:html={checkIcon} /></svg>
+          </span>
+        </span>
+        <span class="min-w-0 flex-1 truncate text-[12px] text-fg">Confirm Site B status</span>
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-fg-subtle" aria-hidden="true"><Fragment set:html={lightbulbIcon} /></svg>
+        <span class="shrink-0 whitespace-nowrap rounded-full border border-line px-1.5 py-0.5 font-head text-[9px] uppercase tracking-[0.06em] text-fg-subtle">Suggested</span>
+        <span class="mock-step shrink-0 font-head text-[9.5px] tabular-nums text-fg-subtle" style="--step: 6">09:24</span>
+      </div>
+      <p class="mock-step pl-1 text-[10.5px] leading-snug text-warn" style="--step: 4">Suggested — the conversation flagged Site B's access status as unresolved.</p>
+    </div>
+  </div>
+</MockFrame>

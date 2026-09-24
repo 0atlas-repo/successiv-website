@@ -1,0 +1,62 @@
+---
+import MockFrame from './MockFrame.astro';
+// The same campaign details screen as CreatorApplyMock, later in its
+// lifecycle: the pay block and fact pills reused (days-left is lower now),
+// then the shared enrollment button — one component, state-driven — showing
+// its post-submission states. What decides this is a queued background job
+// (an AI judging the live post against the brief, or against an
+// already-approved draft), not an inline instant check, so there is no
+// spinner: the button reads a neutral "Proof under review" and only later
+// swaps to "Proof verified" — the swap stands in for that wait, not an
+// instant pass.
+// Brand, title and figures are fictional, continuing CreatorApplyMock's
+// example campaign. The app hardcodes its local currency; the founder chose S$ for the
+// site (copy-batch-a.md), so pay reads "S$ 500".
+// Source: local_pm/research/2026-09-24-creators-sphere-ui-walkthrough.md §4;
+// the app, lib/features/campaign/presentation/pages/campaign_details.dart:643,
+// 647 (brand/title), :752,776 (pay block labels), :821-839 (fact pills), and
+// lib/components/campaign_enrollment_button.dart:146,152 (button labels for
+// the proofPending / proofVerified states).
+const brand = 'Brand A';
+const title = 'Glow Serum Launch';
+const pay = 'S$ 500';
+const dateRange = 'Oct 1 – Oct 12';
+const pills = [
+  { icon: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/>', label: '2 days left' },
+  { icon: '<rect x="3" y="7" width="18" height="14" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>', label: '1 deliverable' },
+  { icon: '<path d="M4 9h16M4 15h16M10 3 8 21M16 3l-2 18"/>', label: '#BrandAGlow' },
+];
+---
+<MockFrame chrome="phone" title={title} meta={brand}>
+  <div class="space-y-2.5">
+    <div class="mock-step space-y-0.5" style="--step: 0">
+      <p class="font-head text-[13px] font-bold text-fg">{brand}</p>
+      <p class="text-[11px] text-fg-subtle">{title}</p>
+    </div>
+    <div class="mock-step flex items-center justify-between rounded-lg bg-surface-2 px-3 py-2.5" style="--step: 1">
+      <div>
+        <p class="font-head text-[8.5px] font-bold tracking-[0.1em] text-fg-subtle">YOU GET PAID</p>
+        <p class="font-head text-[19px] font-bold text-fg">{pay}</p>
+      </div>
+      <div class="text-right">
+        <p class="font-head text-[8px] font-bold tracking-[0.08em] text-fg-subtle">CAMPAIGN</p>
+        <p class="font-head text-[12px] font-bold text-fg">{dateRange}</p>
+      </div>
+    </div>
+    <div class="mock-step flex flex-wrap gap-1.5" style="--step: 2">
+      {pills.map((p) => (
+        <span class="flex items-center gap-1 rounded-full border border-line px-2 py-1 text-[9.5px] text-fg-subtle">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><Fragment set:html={p.icon} /></svg>
+          {p.label}
+        </span>
+      ))}
+    </div>
+    <div class="mock-step" style="--step: 3">
+      <div class="grid">
+        {/* A background job settles this, so it arrives after a visible pause, not on the beat. */}
+        <div class="col-start-1 row-start-1 mock-before rounded-full border border-line bg-surface py-1.5 text-center font-head text-[11px] font-semibold text-fg-muted" style="--swap: 4; --mock-lead-in: 1600ms">Proof under review</div>
+        <div class="col-start-1 row-start-1 mock-step rounded-full bg-ok-soft py-1.5 text-center font-head text-[11px] font-semibold text-ok" style="--step: 4; --mock-lead-in: 1600ms">Proof verified</div>
+      </div>
+    </div>
+  </div>
+</MockFrame>

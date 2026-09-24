@@ -1,0 +1,57 @@
+---
+import MockFrame from './MockFrame.astro';
+// The provider's view of their bookings. "Today" is our caption; the app's
+// own list (screens/customer_bookings.dart:79) shows only a title and a time,
+// so the confirm controls below come from each booking's own page. Each
+// row's "Confirmed?" question and its Yes/No answer, and the provider-only
+// "Confirm this booking" button, are also the app's own
+// (screens/service_screen.dart:386-392); this mock shows two of those rows
+// together, one per service, which the real app renders one at a time —
+// a compression, not an invented field. The first row is the consultation
+// from SchedServiceMock, whose auto-confirm setting means it never asks the
+// question; the second is a different, manual-confirm service, which must
+// wait for the provider or auto-cancels within an hour of its start
+// (booking-table.js:1474-1496, cronCancelUnconfirmed).
+// Source: research note "Real flow", step 6, claim #5; copy-batch-b.md,
+// Scheduling systems, step 3.
+---
+{/* The provider's side: "Confirm this booking" is shown only to the provider, on
+    a booking's own page, never in the customer's list. Two bookings sit together here
+    to show one that confirms itself beside one that waits. */}
+<MockFrame chrome="panel" title="Bookings" meta="Provider">
+  <div class="space-y-2.5">
+    <p class="mock-step text-[10px] uppercase tracking-[0.06em] text-fg-subtle" style="--step: 0">Today</p>
+
+    <div class="mock-step space-y-1 rounded-lg border border-line bg-surface px-3 py-2" style="--step: 1">
+      <p class="font-head text-[11px] font-semibold text-fg">Consultation — 45 min</p>
+      <div class="flex items-center justify-between">
+        <span class="text-[10.5px] tabular-nums text-fg-subtle">10:45-11:30</span>
+        <span class="flex items-center gap-1 text-[10px] text-fg-subtle">Confirmed? <span class="font-medium text-ok">Yes</span></span>
+      </div>
+    </div>
+
+    <div class="space-y-1 rounded-lg border border-line bg-surface px-3 py-2">
+      <div class="mock-step space-y-1" style="--step: 2">
+        <p class="font-head text-[11px] font-semibold text-fg">Deep-dive review — 60 min</p>
+        <p class="text-[10.5px] tabular-nums text-fg-subtle">14:00-15:00</p>
+      </div>
+
+      <div class="mock-step" style="--step: 3">
+        <div class="grid">
+          {/* The provider confirms on their own time, not on the beat — same reason CreatorCheckMock's review swap carries the longer lead-in. */}
+          <div class="mock-before col-start-1 row-start-1 space-y-1.5" style="--swap: 4; --mock-lead-in: 1600ms">
+            <div class="flex items-center justify-between">
+              <span class="flex items-center gap-1 text-[10px] text-fg-subtle">Confirmed? <span class="font-medium text-fg">No</span></span>
+              <span class="rounded-full bg-action px-2.5 py-1 font-head text-[9.5px] font-semibold text-on-action">Confirm this booking</span>
+            </div>
+            <p class="text-[9.5px] text-warn">Needs the provider's OK before 13:00</p>
+          </div>
+          <div class="mock-step col-start-1 row-start-1 flex items-center gap-1.5" style="--step: 4; --mock-lead-in: 1600ms">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-ok" aria-hidden="true"><path d="m20 6-11 11-5-5" /></svg>
+            <span class="flex items-center gap-1 text-[10px] text-fg-subtle">Confirmed? <span class="font-medium text-ok">Yes</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</MockFrame>

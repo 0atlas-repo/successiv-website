@@ -1,0 +1,50 @@
+---
+import MockFrame from './MockFrame.astro';
+// Real statuses, from the monitoring list's own Status field: "Valid" or
+// "Broken" — the console app, CheckExistence.cs:99-123. The check runs once
+// a day per flagged document — CheckExistence.cs:74-78 — so a row's status
+// only changes after that visible pause, not instantly. Newly-broken items
+// are grouped by whoever flagged them (the monitoring item's own Author
+// field, not necessarily the document's actual author) and emailed, subject
+// literally "Broken Link Detected" — Program.cs:188-249. The approved copy
+// calls that person "the watcher" rather than "author", since it isn't
+// necessarily the document's owner. Locations are library-relative paths,
+// never a site URL. Neutral document names only; no person named.
+// Source: local_pm/projects/mock-rollout/specs/copy-batch-b.md, "SharePoint
+// extensions".
+const rows = [
+  { path: 'Shared Documents/Vendor onboarding pack.docx' },
+  { path: 'Shared Documents/Onboarding checklist.xlsx' },
+  { path: 'Shared Documents/Vendor terms.pdf', flips: true },
+  { path: 'Shared Documents/Reference architecture.pptx' },
+];
+---
+<MockFrame chrome="tabs" title="Governance — Link monitor" meta="1 broken">
+  <div class="space-y-2">
+    <div class="space-y-1.5">
+      {rows.map((d, i) => (
+        <div class="mock-step flex items-center gap-2.5 rounded-lg border border-line bg-surface px-2.5 py-2" style={`--step: ${i}`}>
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-fg-subtle" aria-hidden="true">
+            <path d="M14 3v4a1 1 0 0 0 1 1h4" /><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z" />
+          </svg>
+          <div class="min-w-0 flex-1 truncate text-[12px] text-fg">{d.path}</div>
+          {d.flips ? (
+            <span class="grid shrink-0">
+              {/* The daily check settles this; not an instant flip. */}
+              <span class="mock-before col-start-1 row-start-1 whitespace-nowrap rounded-full bg-ok-soft px-1.5 py-px font-head text-[9.5px] font-semibold uppercase tracking-[0.06em] text-ok" style="--swap: 4; --mock-lead-in: 1600ms">Valid</span>
+              <span class="mock-step col-start-1 row-start-1 whitespace-nowrap rounded-full bg-danger-soft px-1.5 py-px font-head text-[9.5px] font-semibold uppercase tracking-[0.06em] text-danger" style="--step: 4; --mock-lead-in: 1600ms">Broken</span>
+            </span>
+          ) : (
+            <span class="shrink-0 whitespace-nowrap rounded-full bg-ok-soft px-1.5 py-px font-head text-[9.5px] font-semibold uppercase tracking-[0.06em] text-ok">Valid</span>
+          )}
+        </div>
+      ))}
+    </div>
+    <div class="mock-step flex items-center gap-2 border-t border-line pt-2.5" style="--step: 5; --mock-lead-in: 1600ms">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-fg-subtle" aria-hidden="true">
+        <rect x="2" y="4" width="20" height="16" rx="2" /><path d="m22 6-10 7L2 6" />
+      </svg>
+      <span class="text-[10.5px] text-fg-subtle">Watcher emailed — "Broken Link Detected"</span>
+    </div>
+  </div>
+</MockFrame>

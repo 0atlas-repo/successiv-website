@@ -144,6 +144,24 @@ const depthOf = (html, heading) => {
   return (html.slice(start, end).match(/<p[\s>]/g) || []).length;
 };
 
+// 2026-09-24: the founder asked for "our solution", shorter, in place of the
+// long form. A page that has it is held to short instead of long: one or two
+// sentences, 45 words at most, and never both sections at once. Returns false
+// when the page has no solution, so the caller falls back to the depth rule.
+const checkSolution = (slug, html, longHeading) => {
+  const sol = html.indexOf('Our solution');
+  if (sol === -1) return false;
+  const end = html.indexOf('</section>', sol);
+  const text = html.slice(sol, end).replace(/<[^>]+>/g, ' ').replace('Our solution', '').replace(/\s+/g, ' ').trim();
+  const words = text.split(' ').length;
+  const sentences = (text.match(/[.?!](\s|$)/g) || []).length;
+  const alsoLong = html.includes(longHeading);
+  words <= 45 && sentences >= 1 && sentences <= 2 && !alsoLong
+    ? pass(`${slug}: solution, ${sentences} sentence(s), ${words} words`)
+    : fail(`${slug}: solution must be 1–2 sentences and ≤45 words, without the long form (got ${sentences}, ${words}${alsoLong ? ', long form present' : ''})`);
+  return true;
+};
+
 // 1line.ai is hidden as of 2026-09-17, so this loop never reaches it — `slugs`
 // now comes from the built output. The exemption stays because it is the rule
 // that applies if the product is ever unhidden: a real product the founder has
@@ -160,21 +178,7 @@ for (const slug of slugs) {
     continue;
   }
   const html = readFileSync(join(dist, 'products', slug, 'index.html'), 'utf8');
-  // 2026-09-24: the founder asked for "our solution", shorter, in place of the
-  // long form. A page that has it is held to short instead of long: one or two
-  // sentences, 45 words at most, and never both sections at once.
-  const sol = html.indexOf('Our solution');
-  if (sol !== -1) {
-    const end = html.indexOf('</section>', sol);
-    const text = html.slice(sol, end).replace(/<[^>]+>/g, ' ').replace('Our solution', '').replace(/\s+/g, ' ').trim();
-    const words = text.split(' ').length;
-    const sentences = (text.match(/[.?!](\s|$)/g) || []).length;
-    const alsoLong = html.includes('What it actually does');
-    words <= 45 && sentences >= 1 && sentences <= 2 && !alsoLong
-      ? pass(`${slug}: solution, ${sentences} sentence(s), ${words} words`)
-      : fail(`${slug}: solution must be 1–2 sentences and ≤45 words, without the long form (got ${sentences}, ${words}${alsoLong ? ', long form present' : ''})`);
-    continue;
-  }
+  if (checkSolution(slug, html, 'What it actually does')) continue;
   const n = depthOf(html, 'What it actually does');
   n >= 3 ? pass(`${slug}: ${n} paragraphs`) : fail(`${slug}: ${n} paragraphs, needs 3`);
 }
@@ -183,6 +187,7 @@ const workSrc = readFileSync(join(root, 'src/content/work.ts'), 'utf8');
 const workSlugs = [...workSrc.matchAll(/slug: '([^']+)'/g)].map((m) => m[1]);
 for (const slug of workSlugs) {
   const html = readFileSync(join(dist, 'work', slug, 'index.html'), 'utf8');
+  if (checkSolution(slug, html, 'What we built')) continue;
   const n = depthOf(html, 'What we built');
   n >= 3 ? pass(`${slug}: ${n} paragraphs`) : fail(`${slug}: ${n} paragraphs, needs 3`);
 }
@@ -319,9 +324,55 @@ const rmOff = [...rmBlock.matchAll(/([^{}]+)\{([^{}]*)\}/g)].filter(([, , body])
 // A swap (--swap: N) retires an earlier state as step N arrives, so every
 // swap must name a step that exists.
 // Page order: the hero, then the screens in step order.
-const expectedSteps = { accounting: [8, 6, 4, 7, 8, 3] };
+// A screen may give a slow, background result a longer --mock-lead-in. Start
+// time is lead-in + step × interval, so a longer lead-in on a middle step makes
+// the steps after it arrive first. Every screen on every page must start its
+// steps in order, and each replaced state must fade as its replacement lands.
+{
+  const css = readFileSync(join(root, 'src/styles/global.css'), 'utf8');
+  const baseLead = Number(css.match(/--mock-lead-in:\s*(\d+)ms/)[1]);
+  const interval = Number(css.match(/--mock-interval:\s*(\d+)ms/)[1]);
+  const leadOf = (style) => Number(style.match(/--mock-lead-in:\s*(\d+)ms/)?.[1] ?? baseLead);
+  const bad = [];
+  for (const file of htmlFiles) {
+    const frames = readFileSync(file, 'utf8').split(/class="mock-frame\b/).slice(1);
+    frames.forEach((f, fi) => {
+      const styles = [...f.matchAll(/style="([^"]*)"/g)].map((m) => m[1]);
+      const steps = styles.filter((st) => /--step:\s*\d/.test(st))
+        .map((st) => ({ n: Number(st.match(/--step:\s*(\d+)/)[1]), t: leadOf(st) + Number(st.match(/--step:\s*(\d+)/)[1]) * interval }));
+      if (steps.length === 0) return;
+      const at = new Map(steps.map((q) => [q.n, q.t]));
+      const byN = [...at.entries()].sort((a, b) => a[0] - b[0]);
+      const ordered = byN.every(([, t], i) => i === 0 || t >= byN[i - 1][1]);
+      const swapsTimed = styles.filter((st) => /--swap:\s*\d/.test(st)).every((st) => {
+        const n = Number(st.match(/--swap:\s*(\d+)/)[1]);
+        return at.get(n) === leadOf(st) + n * interval;
+      });
+      if (!ordered || !swapsTimed) bad.push(`${file.slice(dist.length + 1)} screen ${fi}${ordered ? '' : ' (steps out of order)'}${swapsTimed ? '' : ' (a swap is timed apart from its step)'}`);
+    });
+  }
+  bad.length === 0
+    ? pass('every screen starts its steps in order, swaps on their step')
+    : fail(`screens with steps arriving out of order: ${bad.join('; ')}`);
+}
+
+// The highest --step in each screen: the hero first, then one per step.
+const expectedSteps = {
+  'products/accounting': [8, 6, 4, 7, 8, 3],
+  'products/kyc': [4, 4, 5, 6, 4, 6],
+  'products/creators-sphere': [4, 5, 6, 4, 4, 3],
+  'products/shopmgr': [6, 5, 5, 3, 6, 5],
+  'work/tender-rfp-management': [5, 4, 5, 4, 4, 5],
+  'work/contract-lifecycle': [3, 4, 4, 3, 4],
+  'work/document-bundling-redaction': [5, 5, 8, 5, 4],
+  'work/ops-incident-support': [6, 4, 4, 6],
+  'work/content-cms-platforms': [4, 4, 4, 4, 5],
+  'work/sharepoint-extensions': [6, 6, 7, 5, 5, 6],
+  'work/scheduling-systems': [7, 5, 5, 4, 7],
+  'work/awards-portals': [4, 5, 4, 6],
+};
 for (const [slug, expected] of Object.entries(expectedSteps)) {
-  const html = readFileSync(join(dist, 'products', slug, 'index.html'), 'utf8');
+  const html = readFileSync(join(dist, slug, 'index.html'), 'utf8');
   const frames = html.split(/class="mock-frame\b/).slice(1);
   const seqs = frames
     .map((f) => ({
@@ -340,25 +391,46 @@ for (const [slug, expected] of Object.entries(expectedSteps)) {
 }
 
 // ---------------------------------------------------------------------------
-console.log('\n10. Accounting — the shipped app only (research 2026-09-24)');
-{
-  const html = readFileSync(join(dist, 'products', 'accounting', 'index.html'), 'utf8');
-  const text = html.replace(/<[^>]+>/g, ' ');
-  // Each of these was on the page, and none of it is in the shipped app. See
-  // local_pm/research/2026-09-24-accounting-ui-walkthrough.md for each one.
-  const retired = [
+console.log('\n10. Shipped app only — retired claims stay off (research 2026-09-24)');
+// Each pattern was on the page and is not in the shipped product. Sources:
+// local_pm/research/2026-09-24-<product>-ui-walkthrough.md.
+const retiredClaims = {
+  'products/accounting': [
     /revers(al|ed)/i, /unreviewed rule/i, /which account/i, /\bTerms\b/, /bank lines unmatched/i,
     /client on their phone/i, /Auto-confirmed/i, /Audit Confidence/i, /classif/i,
-  ];
+  ],
+  // No reviewer, no one-time code, no expiry, no event log, and a "verified"
+  // flag that the app sets without any check, so no verification claims.
+  // No balance or payout, no slot release, no hashtag check, no creator insights.
+  // "YOU GET PAID" is the app's own label for a campaign's pay, so only the
+  // old tagline is retired, not the words.
+  'products/creators-sphere': [/publish it, get paid/i, /\bbalance\b/i, /hashtag/i, /next creator/i, /insights/i, /reward moves/i],
+  // Staff never review or rate conversations; only Shopify is wired end to end.
+  'products/shopmgr': [/rate answers/i, /review conversations/i, /WooCommerce/i],
+  'products/kyc': [/reviewer/i, /one-time code/i, /expir/i, /event log/i, /\bverified\b/i, /stamped/i],
+  // Work pages (research 2026-09-24, kept out of this public repo).
+  'work/tender-rfp-management': [/\baward\b/i, /\brank(ing|ed)?\b/i, /declaration of interest/i, /frozen|freezes/i],
+  'work/contract-lifecycle': [/audit log/i, /before and after/i, /timeline/i, /works contract/i],
+  'work/document-bundling-redaction': [/before anything is processed/i, /signing|signature/i, /Simplified|Traditional/i],
+  'work/ops-incident-support': [/transcri/i, /audio/i, /write-up/i, /severity/i],
+  'work/content-cms-platforms': [/restore/i, /side by side/i, /regenerat/i],
+  'work/sharepoint-extensions': [/second access system/i, /inside the tenant/i, /later phase/i],
+  'work/awards-portals': [/already-decided/i, /rejected for/i],
+  'work/scheduling-systems': [/marketplace/i, /two-sided/i, /at checkout/i, /haircut|massage|manicure/i],
+};
+for (const [slug, retired] of Object.entries(retiredClaims)) {
+  const html = readFileSync(join(dist, slug, 'index.html'), 'utf8');
+  const text = html.replace(/<[^>]+>/g, ' ');
   const hits = retired.filter((re) => re.test(text));
   hits.length === 0
-    ? pass('no retired claim on the Accounting page')
-    : fail(`retired claims still on the Accounting page: ${hits.map(String).join(', ')}`);
+    ? pass(`${slug}: no retired claim`)
+    : fail(`${slug}: retired claims still on the page: ${hits.map(String).join(', ')}`);
   // One screen per step, plus the hero; and the gallery they replace is gone.
+  const want = expectedSteps[slug].length;
   const frameCount = (html.match(/class="mock-frame\b/g) || []).length;
-  frameCount === 6 && !html.includes('Drawn, not screenshotted')
-    ? pass('5 steps each carry a screen, plus the hero; no gallery')
-    : fail(`expected 6 screens and no gallery, found ${frameCount}${html.includes('Drawn, not screenshotted') ? ' and the gallery' : ''}`);
+  frameCount === want && !html.includes('Drawn, not screenshotted')
+    ? pass(`${slug}: ${want - 1} steps each carry a screen, plus the hero; no gallery`)
+    : fail(`${slug}: expected ${want} screens and no gallery, found ${frameCount}${html.includes('Drawn, not screenshotted') ? ' and the gallery' : ''}`);
 }
 
 // ---------------------------------------------------------------------------

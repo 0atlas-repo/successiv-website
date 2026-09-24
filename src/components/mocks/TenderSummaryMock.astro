@@ -1,0 +1,47 @@
+---
+import MockFrame from './MockFrame.astro';
+// Three AI extraction types. The app's own type names describe the client's
+// kind of work, so generic labels stand in for them (the portal,
+// src/modelControllers/AiProposalEvaluation.tsx:5-13). Each extract is a
+// Document; status moves from "Generated" to "Edited" once a person confirms
+// or edits it — the service's own convert_generated_to_edited_proposal_
+// evaluation function (service/tender_deliverable_service.py:698). Extraction
+// reads the submission through a model pipeline per type
+// (service.batch/jobs/generate_summary_*.py), so one row can still be
+// working while another is already done and already reviewed — hence the
+// lead-in on the last row below.
+// Source: the research note for this page (tender-rfp-management.md), Claims
+// table #9-10 and "Recommended steps…" §4.
+const thirdExtract = 'Cost breakdown';
+---
+<MockFrame chrome="sidebar" title="Tender — Evaluation extract" meta="Bidder B">
+  <div class="space-y-1.5">
+    <p class="mock-step text-[10.5px] text-fg-subtle" style="--step: 0">Bidder B — extracts</p>
+
+    <div class="mock-step flex items-center gap-2 rounded-lg border border-line bg-surface px-2.5 py-1.5" style="--step: 1">
+      <span class="min-w-0 flex-1 truncate text-[11.5px] text-fg">Delivery team</span>
+      <span class="grid shrink-0">
+        <span class="mock-before col-start-1 row-start-1 rounded-full bg-surface-2 px-1.5 py-px font-head text-[9px] font-semibold uppercase tracking-[0.06em] text-fg-subtle" style="--swap: 3">Generated</span>
+        <span class="mock-step col-start-1 row-start-1 rounded-full bg-ok-soft px-1.5 py-px font-head text-[9px] font-semibold uppercase tracking-[0.06em] text-ok" style="--step: 3">Edited</span>
+      </span>
+    </div>
+
+    <div class="mock-step flex items-center gap-2 rounded-lg border border-line bg-surface px-2.5 py-1.5" style="--step: 2">
+      <span class="min-w-0 flex-1 truncate text-[11.5px] text-fg">Supply chain</span>
+      <span class="shrink-0 rounded-full bg-surface-2 px-1.5 py-px font-head text-[9px] font-semibold uppercase tracking-[0.06em] text-fg-subtle">Generated</span>
+    </div>
+
+    <div class="grid">
+      {/* Extraction reads the submission through a model pipeline before a
+          row lands — the extra lead-in keeps this row from reading as an
+          instant toggle once the other two are already settled. */}
+      <div class="mock-before col-start-1 row-start-1 flex items-center gap-2 rounded-lg border border-line bg-surface px-2.5 py-1.5" style="--swap: 4; --mock-lead-in: 1600ms">
+        <span class="h-[13px] flex-1 rounded bg-surface-2"></span>
+      </div>
+      <div class="mock-step col-start-1 row-start-1 flex items-center gap-2 rounded-lg border border-line bg-surface px-2.5 py-1.5" style="--step: 4; --mock-lead-in: 1600ms">
+        <span class="min-w-0 flex-1 truncate text-[11.5px] text-fg">{thirdExtract}</span>
+        <span class="shrink-0 rounded-full bg-surface-2 px-1.5 py-px font-head text-[9px] font-semibold uppercase tracking-[0.06em] text-fg-subtle">Generated</span>
+      </div>
+    </div>
+  </div>
+</MockFrame>

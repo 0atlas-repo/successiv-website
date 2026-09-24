@@ -12,35 +12,46 @@
 // Outcomes are qualitative on purpose. We have no published metrics for this
 // work, and CLAUDE.md forbids inventing them.
 //
-// `detail` is what the engagement actually was, read out of the source. Three
-// paragraphs minimum, enforced by scripts/verify.mjs. Claims here must be
-// traceable to something that exists — if the code does not do it, it does not
+// Since 2026-09-24 every entry tells its story as `solution` plus `steps`, one
+// screen each, read out of the delivered system's code; `detail` is empty and
+// the long-form rule (three paragraphs, scripts/verify.mjs) applies only to an
+// entry without a `solution`. Claims here must be traceable to something that exists — if the code does not do it, it does not
 // go in. Three entries were rewritten in 2026-09 for exactly that reason, and a
 // fourth was removed outright because nothing supported it.
 
 export type WorkMock =
-  | 'scoring'
-  | 'timeline'
-  | 'bundle-redaction'
-  | 'incident-cases'
-  | 'tender-checklist'
-  | 'tender-ranking'
-  | 'contract-registry'
-  | 'contract-clause'
-  | 'bundle-builder'
-  | 'incident-chat'
-  | 'incident-actions'
-  | 'cms-editor'
-  | 'cms-publish'
-  | 'cms-news'
-  | 'sp-permissions'
-  | 'sp-access'
-  | 'sp-links'
-  | 'awards-nomination'
-  | 'awards-shortlist'
-  | 'sched-marketplace'
-  | 'sched-slots'
-  | 'sched-calendar';
+  | 'awards-announce'
+  | 'awards-vote'
+  | 'awards-nominate'
+  | 'sched-settle'
+  | 'sched-confirm'
+  | 'sched-book'
+  | 'sched-service'
+  | 'sp-history'
+  | 'sp-checked-out'
+  | 'sp-link-check'
+  | 'sp-share'
+  | 'sp-audit'
+  | 'cms-quick'
+  | 'cms-release'
+  | 'cms-preview'
+  | 'cms-draft'
+  | 'incident-action-list'
+  | 'incident-ask'
+  | 'incident-case'
+  | 'bundle-lock'
+  | 'bundle-mask'
+  | 'bundle-fill'
+  | 'bundle-assemble'
+  | 'contract-ask'
+  | 'contract-check'
+  | 'contract-file'
+  | 'contract-register'
+  | 'tender-scores'
+  | 'tender-summary'
+  | 'tender-query'
+  | 'tender-check'
+  | 'tender-list';
 
 export interface WorkItem {
   slug: string;
@@ -50,50 +61,71 @@ export interface WorkItem {
   problem: string;
   approach: string;
   outcome: string;
-  /** The long form, for /work/<slug>. Three paragraphs minimum. */
+  /** The long form, for /work/<slug>. Three paragraphs minimum when there is no `solution`. */
   detail: string[];
   /** Mocked screens, sized to what the system actually has. Never a screenshot. */
   screens: WorkMock[];
+  /**
+   * The short answer to `problem`, in place of the long form (2026-09-24, same
+   * rule as products). With it set, the page drops the long form and the
+   * problem/approach/outcome row. One or two sentences, 45 words at most.
+   */
+  solution?: string;
+  /** How it works, one animated screen per step. With these set, the gallery goes. */
+  steps?: { title: string; body: string; screen: WorkMock }[];
 }
 
 export const work: WorkItem[] = [
   {
     slug: 'tender-rfp-management',
     title: 'Tender / RFP management',
-    angle: 'Intake, scoring, award',
+    angle: 'Intake, checklist, scoring',
     featured: true,
     problem:
-      'Bids arrive by email. Each evaluator keeps a private spreadsheet. By award time, nobody can reconstruct how the decision was reached.',
+      'Bids arrive by email and get evaluated off separate spreadsheets. When the result is questioned later, nobody can show what was missing, what was asked, or how the scores were reached.',
     approach:
-      'One intake queue, the same scoring model for every evaluator, and a summary that freezes the record at award.',
+      'One shared record per bid: what each bidder still owes, questions logged against that bidder, and every evaluator’s scores in one place.',
     outcome:
-      'Scoring lives in one place, with a trail of who scored what, when, and against which criterion.',
-    detail: [
-      'Competitive procurement fails quietly. Each evaluator keeps their own spreadsheet, scores drift as the process runs, and a bidder who asks why they lost gets an answer assembled after the fact from memory and mailboxes. The buyer we built this for was running large, contested awards on exactly that footing. The risk was not that the wrong supplier would win — it was that nobody could show why the right one had.',
-      'The system holds one process from first download to final ranking. A bidder reads the instructions, attests a declaration of interest before anything else is accepted, then works a submission checklist that will not let them submit while a mandatory document is missing. Evaluators raise written clarification questions against specific submissions, and the answers attach to the bid rather than living in a thread. Scoring runs against fixed criteria with per-criterion weightings applied by the system, not by whoever is holding the spreadsheet. Consortium bids are modelled properly, as one bidder with named members, because treating them as a single anonymous entity is where accountability goes missing.',
-      'Two details matter more than they sound. Amendments issued mid-process are tracked with acknowledgement, so it is provable which version of the requirements each bidder was answering. And the registers that usually arrive as unread appendices — proposed sub-contractors, committed staffing — are extracted and indexed, so an evaluator can compare across bids instead of taking each submission at face value. Draft scores can be generated from the submission text to give evaluators a starting point, but nothing is recorded until a person signs it off.',
-      'The system stops at award. It does not raise a purchase order or track what happens next, because loading a buying process with everything downstream of it is how these tools become the thing nobody wants to open. What it produces is a record that stands up when the decision is questioned months later.',
+      'Scoring lives in one place, with each evaluator’s scores kept against the bid they belong to.',
+    // 2026-09-24: rebuilt from the delivered system's code (research kept out of
+    // this public repo). The long form it replaces made claims the code does not
+    // support, so it is gone rather than hidden.
+    solution:
+      'One shared record per bid: a checklist of what each bidder still owes, clarification questions logged against that bidder, and every evaluator’s scores collected in one place.',
+    steps: [
+      { title: 'Track every bid in one list', body: 'Each round shows its bidders and where each one stands.', screen: 'tender-list' },
+      { title: 'Check off what’s missing', body: 'Each requirement is marked met, incomplete or missing per bidder, including group bids tracked by member.', screen: 'tender-check' },
+      { title: 'Raise a clarification', body: 'A missing or unclear item becomes a written question to that bidder, and the answer is filed against the bid.', screen: 'tender-query' },
+      { title: 'A first read of the detail', body: 'Long supporting sections get a drafted summary, which a reviewer confirms or edits.', screen: 'tender-summary' },
+      { title: 'Bring the scores together', body: 'Each evaluator’s scores are collected into one consolidated view.', screen: 'tender-scores' },
     ],
-    screens: ['tender-checklist', 'scoring', 'tender-ranking'],
+    detail: [],
+    screens: ['tender-check'],
   },
   {
     slug: 'contract-lifecycle',
-    title: 'Capital / works contract management',
+    title: 'Contract lifecycle management',
     angle: 'Lifecycle after award',
     featured: true,
     problem:
-      'Major contracts run for years across variations, claims, and certificates. The live state sits in whichever file someone opened last.',
+      'Large contracts run for years, and everything filed after signing has to be logged, checked against the contract and tracked to a decision. In email and shared drives, nobody knows a contract’s current state.',
     approach:
-      'Treat the contract as a register of typed, versioned submissions so a variation or claim attaches to the contract instead of floating in a folder.',
+      'Treat the contract as a register of typed, versioned entries, each checked against the sections it relates to, so nothing floats in a folder.',
     outcome:
       'The state of a contract is a page, not a hunt across shared drives.',
-    detail: [
-      'A contract signed today is administered for years by people who were not in the room when it was negotiated. The questions that come up are always the same shape — does this variation need approval, what does the contract say about this claim, which revision is current — and answering them traditionally means finding the right document, then finding the right clause inside it, then trusting that the copy you opened is the live one.',
-      'We modelled the contract as a register rather than a folder. Every submission has a type — variation, claim, payment certificate, milestone — and each type drives its own form and its own validation, because a claim and a milestone do not need the same things. Re-uploading does not overwrite: it creates a new version, and the previous one stays readable, so revision history is a property of the system rather than a filename convention. Status changes are deliberate and manual, because a contract does not expire on a schedule and pretending it does produces wrong data.',
-      'The part that earns its keep is the mapping layer. Documents are indexed on upload through a pipeline with its own visible states, and an administrator maps document fields to the clauses that govern them. That mapping is what lets the assistant answer a question with the clause behind it, rather than a plausible paraphrase. Users rate the answers, the ratings are reviewable, and the glossary the assistant leans on is edited by an administrator rather than redeployed by a developer.',
-      'Everything is written to an audit log that records before and after values, not merely that something changed. The system deliberately does not negotiate terms or re-open what was agreed — administering an agreement is a different job from striking one. It also does not chase anyone: there are no escalation timers, because the people doing this work do not need software to tell them a deadline exists.',
+    // 2026-09-24: rebuilt from the delivered system's code (research kept out of
+    // this public repo). The long form it replaces made claims the code does not
+    // support, so it is gone rather than hidden.
+    solution:
+      'Every contract keeps a register of filed entries, each checked automatically against the sections it relates to, so a reviewer sees what was filed, whether it holds up, and the clause behind the answer.',
+    steps: [
+      { title: 'Register the contract', body: 'Add it once, by code and title, and assign who handles it.', screen: 'contract-register' },
+      { title: 'File an entry against it', body: 'A variation, a claim or a certificate, classified by type and versioned so nothing filed is lost.', screen: 'contract-file' },
+      { title: 'The system checks it', body: 'Each entry is compared with the contract sections it relates to, and flagged where it doesn’t line up.', screen: 'contract-check' },
+      { title: 'Ask, and get the clause', body: 'A reviewer asks a plain question and gets an answer with its source attached.', screen: 'contract-ask' },
     ],
-    screens: ['contract-registry', 'timeline', 'contract-clause'],
+    detail: [],
+    screens: ['contract-check'],
   },
   {
     slug: 'document-bundling-redaction',
@@ -101,18 +133,24 @@ export const work: WorkItem[] = [
     angle: 'Assemble, redact, release',
     featured: true,
     problem:
-      'A release pack means gathering four formats, blacking out what must not leave, and doing it by hand every time.',
+      'Putting a document pack together means gathering files in several formats, blacking out what can’t go, and doing it by hand every time.',
     approach:
-      'A service that merges mixed formats into one ordered PDF, fills template values, masks regions by coordinate, and locks the result.',
+      'A service that merges mixed formats into one ordered PDF, fills template values, masks regions by coordinate, and can lock the result.',
     outcome:
       'Assembly is a repeatable job with the same output each time — not an afternoon in a PDF editor.',
-    detail: [
-      'Releasing a file to someone outside the organisation is a small, dangerous, repetitive job. The material is in whatever format it arrived in, some of it must be blacked out before it goes anywhere, and the person doing it is working by hand under time pressure. Hand redaction is where mistakes happen, and a redaction mistake is not recoverable once the file has been sent.',
-      'We built this as a service rather than a screen, because it runs inside a larger case system rather than being somewhere a person visits. It accepts documents in mixed formats — word processor files, PDFs, several image types, plain text — converts each to PDF, and merges them in a caller-defined order into one file. Placeholder values in the source documents are substituted on the way through, so a bundle assembled for a specific matter comes out already populated. A watermark can be applied across the merged result.',
-      'Masking is done properly rather than cosmetically. The caller supplies regions in either pixels or inches, per page; the page is rasterised, the regions are painted out, and the raster is re-embedded in place of the original page. That matters, because drawing a black rectangle over a PDF text layer hides nothing — the text is still there for anyone who selects it. Rendering the page to an image first is what makes the redaction real. The finished file can then be password-protected before release.',
-      'Two supporting behaviours came with it: uploads are passed to a virus scanner with retries before anything is processed, and text can be converted between Traditional and Simplified Chinese so one source document serves both audiences. To be precise about what this is not — it applies no cryptographic signature and issues no certificate. It prepares and protects documents; it does not execute them.',
+    // 2026-09-24: rebuilt from the delivered system's code (research kept out of
+    // this public repo). The long form it replaces made claims the code does not
+    // support, so it is gone rather than hidden.
+    solution:
+      'A service that merges mixed formats into one ordered file, fills in placeholder values, masks set regions, and can lock the result with a password before it leaves.',
+    steps: [
+      { title: 'Assemble', body: 'Files in different formats are put in order and combined; if one can’t be converted, the rest still go through.', screen: 'bundle-assemble' },
+      { title: 'Fill the template', body: 'Placeholder values are swapped for real ones on the way through.', screen: 'bundle-fill' },
+      { title: 'Mask', body: 'A region is flattened to an image and painted over, so the original content is gone, not hidden.', screen: 'bundle-mask' },
+      { title: 'Lock', body: 'The finished file can be password-protected before it is sent on.', screen: 'bundle-lock' },
     ],
-    screens: ['bundle-builder', 'bundle-redaction'],
+    detail: [],
+    screens: ['bundle-mask'],
   },
   {
     slug: 'ops-incident-support',
@@ -120,18 +158,23 @@ export const work: WorkItem[] = [
     angle: 'During the incident, and after',
     featured: true,
     problem:
-      'The answer usually exists in a handbook or procedure, but nobody has time to find it. The write-up afterwards is rebuilt from memory.',
+      'During an incident the right procedure usually exists, in a handbook or a policy library, but nobody has time to search for it while the incident is live.',
     approach:
-      'An assistant that reads the incident conversation, answers from the indexed procedure library with sources, and drafts the action list and the review.',
+      'An assistant that reads the incident conversation, answers from the indexed procedure library with sources, and proposes the action list.',
     outcome:
-      'The procedure is available while the incident is live, and the record afterwards is drafted from what actually happened.',
-    detail: [
-      'Operational incidents are handled by people under time pressure who already know their job. What they do not have, mid-incident, is the ability to stop and search a policy library. So procedures get applied from memory, and the write-up afterwards is assembled days later from a group conversation and recollection. We were brought in for part of a larger system, and this is the part we built.',
-      'The assistant sits on the incident itself. Messages from the incident conversation are ingested and analysed as they arrive. An operator can ask a question in plain language and get an answer drawn from an indexed library of handbooks, notices, and standing procedures, with the source document behind it — confidentiality-classified, so restricted material does not surface to someone who should not see it. The assistant also proposes follow-up questions, which sounds cosmetic and is not: the useful thing during an incident is often knowing what you have not asked yet.',
-      'From the same conversation it drafts an action checklist, marking which items it suggested and what in the conversation prompted each one. An operator confirms, edits, or discards them, and completion is timestamped as the incident unfolds. Audio can be uploaded and transcribed, and the post-incident write-up is pre-filled from the transcript and the conversation rather than typed from memory. A case moves through explicit states from first contact to closed, so the review is a stage rather than an afterthought.',
-      'Every answer can be rated, and the ratings roll into a view that shows where the assistant is weak — which is how the prompt templates and the glossary get improved, by an administrator, without a release. What it does not do is judge severity or decide who owns the incident. Those stay human calls; the system records them, it does not make them.',
+      'The procedure is available while the incident is live, and each action taken is timestamped.',
+    // 2026-09-24: rebuilt from the delivered system's code (research kept out of
+    // this public repo). The long form it replaces made claims the code does not
+    // support, so it is gone rather than hidden.
+    solution:
+      'An assistant that reads the incident conversation as it happens, answers from the procedure library with the source cited, and keeps a shared action list that timestamps what’s done.',
+    steps: [
+      { title: 'Every incident, one case', body: 'Each incident becomes a case with its own ID and status.', screen: 'incident-case' },
+      { title: 'Ask, and see the source', body: 'A plain-language question gets an answer from the procedure library, with the page cited.', screen: 'incident-ask' },
+      { title: 'One shared action list', body: 'The assistant proposes actions from the conversation and says why; a person confirms them, and the time is recorded.', screen: 'incident-action-list' },
     ],
-    screens: ['incident-cases', 'incident-chat', 'incident-actions'],
+    detail: [],
+    screens: ['incident-action-list'],
   },
   {
     slug: 'content-cms-platforms',
@@ -139,18 +182,24 @@ export const work: WorkItem[] = [
     angle: 'Multilingual publishing, static front end',
     featured: false,
     problem:
-      'A site in three languages turns every content change into a developer ticket, and the editor cannot see what is about to go live.',
+      'A site in several languages turns every content change into a developer ticket, and an editor can’t see what’s about to go live until it is.',
     approach:
-      'One editor record holds all language versions, with a preview step, and publishing that regenerates static pages.',
+      'One record holds every language version, with a preview step, and publishing writes the page without a deploy.',
     outcome:
       'Editors publish in three languages without a deploy. The public site stays static and fast.',
-    detail: [
-      'A site that must exist in three languages has a structural problem: the three versions drift. Someone updates one, the other two lag, and because each language is a separate set of pages, nobody notices until a customer does. Add a marketing team that cannot publish without a developer and the site slowly stops reflecting the business.',
-      'We built the editor around the record rather than the page. One content item holds all three language versions together — every section, in each language, edited side by side — so publishing incomplete translations is a visible choice rather than an accident. Editors work on short news items and longer feature stories, upload their own media, and preview the result before anything goes live. Publishing is a status change, not a deployment.',
-      'Underneath, publishing regenerates static HTML on disk rather than serving pages from a query at request time. That decision is why the public site is fast, cheap to serve, and has almost nothing to attack: there is no database behind the pages a visitor sees. The trade is that publishing does real work, which is fine for a site that changes daily rather than continuously. Before any overwrite the system writes a timestamped copy of the previous state, so a bad edit is recoverable by an operator without going to infrastructure backups.',
-      'The public side carries an enquiry form behind a challenge check, forwarding qualified enquiries into the CRM the sales team already lives in rather than creating another inbox to monitor. The system stays deliberately small: no approval chains, no per-section editor roles, no comment threads. For a team of a few editors, workflow software is overhead, and the backup trail does the job an approval gate would have been bought for.',
+    // 2026-09-24: rebuilt from the delivered system's code (research kept out of
+    // this public repo). The long form it replaces made claims the code does not
+    // support, so it is gone rather than hidden.
+    solution:
+      'Each piece of content holds every language together, with a switch per language, and publishing writes the page straight to the site, with no deploy and no database behind it.',
+    steps: [
+      { title: 'Draft in every language', body: 'A language becomes required only once it is switched on for that piece.', screen: 'cms-draft' },
+      { title: 'Preview it', body: 'The real page renders at a temporary address before it is published.', screen: 'cms-preview' },
+      { title: 'Publish without a deploy', body: 'A timestamped copy of the old version is kept, then the new page is written to the live site.', screen: 'cms-release' },
+      { title: 'Quick updates', body: 'Short, frequent items use a simpler list per language, with the same draft-and-publish rhythm.', screen: 'cms-quick' },
     ],
-    screens: ['cms-editor', 'cms-publish', 'cms-news'],
+    detail: [],
+    screens: ['cms-release'],
   },
   {
     slug: 'sharepoint-extensions',
@@ -158,18 +207,25 @@ export const work: WorkItem[] = [
     angle: 'Governance and audit inside Microsoft 365',
     featured: false,
     problem:
-      'A large tenant accumulates documents faster than anyone can govern them. Who can see what, what is stale, and what broke last week are hard to answer.',
+      'A large Microsoft 365 tenant gathers documents faster than anyone can govern them. Who can see a folder, what’s stale and what just broke get answered by guessing.',
     approach:
-      'Reporting and governance tooling in the tenant itself — permission audits, usage and growth reports, time-limited access, link monitoring.',
+      'Reporting and governance tooling around the tenant — permission audits, usage and growth reports, time-limited sharing, link monitoring.',
     outcome:
       'Tenant questions get answered from a report instead of an administrator guessing.',
-    detail: [
-      'Microsoft 365 is excellent at letting people store and share things, and poor at telling you what happened afterwards. In a tenant of any size the practical questions are unanswerable from the interface: who actually has access to this library, which documents have not been touched in three years, what is our version bloat costing, who has left files checked out, and which links broke when somebody reorganised a folder. Administrators end up guessing, or writing one-off scripts nobody maintains.',
-      'We delivered this over several phases as tooling inside the tenant rather than another portal to log into. The reporting side walks the item hierarchy and produces permission audits down to individual items, growth and version-impact reports, usage and access reports, and stale-content reports — driven by a job queue, so a large scan runs unattended and emails the requester a spreadsheet when it finishes. Activity data is pulled nightly into a database, because the platform keeps only a short window and the questions people ask are historical.',
-      'The governance side is where behaviour changes. Access can be granted from a right-click, time-limited, against a pre-defined bundle rather than by hand-editing permissions — with expiry cleaned up on a schedule instead of relying on someone to remember. Documents can be flagged for link monitoring, and when a referenced item is moved or deleted the author is emailed rather than finding out from a colleague. Bulk metadata operations cover the tagging work that otherwise happens one item at a time.',
-      'A later phase added retrieval for correspondence-heavy libraries: structured search across the metadata that actually identifies a document — reference, date, type, stage, who sent it, who received it, inbound or outbound — rather than text search over filenames. Alongside it, per-item audit lookup opens from the document itself, so "who changed this and when" is answered where the question is asked. All of it stays inside the platform\'s own permissions model; none of it invents a second access system to keep in sync.',
+    // 2026-09-24: rebuilt from the delivered system's code (research kept out of
+    // this public repo). The long form it replaces made claims the code does not
+    // support, so it is gone rather than hidden.
+    solution:
+      'Reporting and governance tools around the tenant: permission audits down to single files, sharing that expires by itself, link checks, and a per-file history, answered from a screen instead of a script.',
+    steps: [
+      { title: 'Who has access, and why', body: 'A report walks every folder and file, and flags grants made to a person instead of a group.', screen: 'sp-audit' },
+      { title: 'Share for a limited time', body: 'Pick files, a recipient and a window; a copy goes out and is removed when the window closes.', screen: 'sp-share' },
+      { title: 'Catch a broken link first', body: 'Flagged documents are checked daily, and the watcher gets an email when one stops resolving.', screen: 'sp-link-check' },
+      { title: 'See who’s holding a file', body: 'A report lists every checked-out file, who has it, and since when.', screen: 'sp-checked-out' },
+      { title: 'Answer “who changed this”', body: 'From the file, open its history: every access and change, already filtered to it.', screen: 'sp-history' },
     ],
-    screens: ['sp-permissions', 'sp-access', 'sp-links'],
+    detail: [],
+    screens: ['sp-audit'],
   },
   {
     slug: 'awards-portals',
@@ -177,37 +233,48 @@ export const work: WorkItem[] = [
     angle: 'Nominate, shortlist, vote on a deadline',
     featured: false,
     problem:
-      'An annual recognition programme runs on forms, a spreadsheet, and a deadline — and the result has to feel fair to everyone who entered.',
+      'A recognition programme runs on a fixed deadline in front of the whole organisation, and a process that feels arbitrary does more harm than none.',
     approach:
       'A campaign site with a nomination window, a curated shortlist, per-category voting with enforced rules, and a results reveal.',
     outcome:
       'The programme runs on the dates it was given. Voting rules are enforced, not hoped for.',
-    detail: [
-      'An internal recognition programme is a small system with a hard constraint: it runs once a year, on fixed dates, in front of the whole organisation, and if it feels arbitrary it does more damage than not running it at all. The work is not complicated — collect nominations, shortlist them, let people vote, announce winners — but every part of it is deadline-bound and publicly visible.',
-      'The portal moves through phases rather than being a single site. During the nomination window it presents the categories and takes submissions through a forms product, with a confirmation step that prompts the nominator to consider another category while they are still engaged. Administrators then assess and shortlist, and publishing the shortlist flips the same site into its next phase: a gallery indexed by category, with a profile page for each shortlisted individual or team. When voting closes and winners are marked, it flips again to the announcement.',
-      'The voting rules are enforced, not assumed. One vote per category per candidate type, with individual and team treated as separate things. Votes are rejected outside the configured window, rejected for already-decided categories, and rejected on a second attempt by the same voter. No running tallies are shown to anyone while voting is open, which removes both the bandwagon effect and the argument afterwards about whether a visible leaderboard shaped the result. The panel reviewing each category is displayed alongside it, so the people making the judgement are visible.',
-      'Deliberately absent: editing a nomination after submission, and any live count. Both were decisions about fairness rather than gaps in the build. Setup is a one-time provisioning run that creates the lists, fields, and category structure, so the following year is a configuration change rather than a rebuild.',
+    // 2026-09-24: rebuilt from the delivered system's code (research kept out of
+    // this public repo). The long form it replaces made claims the code does not
+    // support, so it is gone rather than hidden.
+    solution:
+      'A campaign site that opens for nominations, runs voting by category with one vote each, and then reveals the winners, with no running tally while voting is open.',
+    steps: [
+      { title: 'Nominate', body: 'Anyone can nominate a colleague or a team, in the category that fits, before the window closes.', screen: 'awards-nominate' },
+      { title: 'Vote', body: 'Each person gets one vote per category, individuals and teams counted separately, cast on the candidate’s own page.', screen: 'awards-vote' },
+      { title: 'Announce', body: 'When voting closes, winners appear by category, individuals and teams side by side.', screen: 'awards-announce' },
     ],
-    screens: ['awards-nomination', 'awards-shortlist'],
+    detail: [],
+    screens: ['awards-vote'],
   },
   {
     slug: 'scheduling-systems',
     title: 'Scheduling systems',
-    angle: 'Two-sided booking with payment and delivery',
+    angle: 'Booking with payment and delivery',
     featured: false,
     problem:
-      'Most booking tools assume one calendar and one kind of appointment. Real providers have different service lengths, turnaround between them, and money attached.',
+      'Most booking tools assume one calendar and one kind of appointment. Real services vary in length, need a gap after each one, and have money riding on whether they happen.',
     approach:
-      'A two-sided marketplace where providers model their own availability and services, and a booking carries payment and delivery through to completion.',
+      'A booking page per provider, who models their own availability and services, and a booking that carries payment and delivery through to completion.',
     outcome:
       'A booking is the full transaction — reserved, paid, delivered, settled — not just a slot on a calendar.',
-    detail: [
-      'Most scheduling tools model a calendar with slots in it. That breaks as soon as a provider offers services of genuinely different shapes: a thirty-minute consultation and a two-hour session are not interchangeable, and the gap a provider needs after each one differs too. Bolt payment onto that and it breaks again, because the money and the appointment end up in separate systems that disagree.',
-      'Providers here model their own world. They define services with both a duration and a cooldown, bundle services into packages, and configure locations with working hours per day of the week, a timezone, and a country whose public holidays block the calendar automatically. The conflict check spans the service plus its cooldown rather than just the appointment, which is what prevents the back-to-back bookings that look fine in a calendar and are impossible in practice. Auto-confirmation is a per-service setting, because some appointments need a person to accept them and some do not.',
-      'A booking carries the full transaction. The customer pays at checkout, and an unpaid booking is released automatically rather than holding a slot indefinitely. A video room is provisioned for the booking and opens in its window, so remote delivery is part of the flow rather than a link pasted into an email. Attendance is marked afterwards, and that mark is what releases the payout to the provider — money moves on delivery, not on booking. Customer and provider can message inside the booking, and a dispute can be raised against it.',
-      'Timezones are handled where the errors normally live: working hours are stored and edited in the provider\'s local time, and everything is normalised on the way into a query. Known gaps, stated honestly — no external calendar synchronisation, no recurring bookings, and a location maps to one provider, so a booking cannot be reassigned to a colleague.',
+    // 2026-09-24: rebuilt from the delivered system's code (research kept out of
+    // this public repo). The long form it replaces made claims the code does not
+    // support, so it is gone rather than hidden.
+    solution:
+      'Each provider runs their own booking page. Services carry a length and a gap, hours and holidays are built in, and every booking is tracked from reserved to paid, delivered and settled.',
+    steps: [
+      { title: 'Set the shape of a service', body: 'A length, a gap after it, and whether it confirms itself or waits for the provider.', screen: 'sched-service' },
+      { title: 'Book inside what’s open', body: 'The calendar already leaves out holidays, closed hours and each booking’s gap.', screen: 'sched-book' },
+      { title: 'Confirm before it’s due', body: 'Self-confirming services confirm on booking; the rest wait for the provider.', screen: 'sched-confirm' },
+      { title: 'Follow it to settlement', body: 'Payment is due before the slot, attendance is detected from the call, and payout follows.', screen: 'sched-settle' },
     ],
-    screens: ['sched-marketplace', 'sched-slots', 'sched-calendar'],
+    detail: [],
+    screens: ['sched-settle'],
   },
 ];
 

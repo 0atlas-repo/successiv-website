@@ -1,0 +1,38 @@
+---
+import MockFrame from './MockFrame.astro';
+// Same library, no screen of its own (see BundleAssembleMock's header for the
+// full note) — this is our drawing of the substitution step: placeholder
+// tokens going in, real values coming out. The bracket-style token shown here
+// ({{field}}) stands for the real syntax family the service accepts; the key
+// names and values below are invented examples, not any real document's
+// fields.
+const fields = [
+  { label: 'Recipient', token: '{{recipient_name}}', value: 'Recipient A' },
+  { label: 'Reference', token: '{{reference_number}}', value: 'REF-2291' },
+  { label: 'Issue date', token: '{{issue_date}}', value: '24 Sep 2026' },
+  { label: 'Address', token: '{{address_line}}', value: '12 Oak Street' },
+];
+---
+<MockFrame chrome="panel" title="Fill the template" meta={`${fields.length} fields`}>
+  <div class="space-y-1.5">
+    {fields.map((f, i) => (
+      <div class="mock-step flex items-center gap-2 rounded-lg border border-line bg-surface px-2.5 py-1.5" style={`--step: ${i}`}>
+        <span class="w-[64px] shrink-0 font-head text-[9.5px] uppercase tracking-[0.06em] text-fg-subtle">{f.label}</span>
+        <span class="grid min-w-0 flex-1">
+          <span class="mock-before col-start-1 row-start-1 truncate font-mono text-[10.5px] text-fg-subtle/70" style={`--swap: ${i + 4}`}>
+            {f.token}
+          </span>
+          <span class="mock-step col-start-1 row-start-1 truncate text-[12px] text-fg" style={`--step: ${i + 4}`}>
+            {f.value}
+          </span>
+        </span>
+      </div>
+    ))}
+    <div class="mock-step flex items-center gap-2 border-t border-line pt-2.5" style="--step: 8">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-ok" aria-hidden="true">
+        <path d="M20 6 9 17l-5-5" />
+      </svg>
+      <span class="text-[10.5px] text-fg-subtle">Ready to merge</span>
+    </div>
+  </div>
+</MockFrame>

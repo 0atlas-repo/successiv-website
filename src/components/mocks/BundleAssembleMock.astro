@@ -1,0 +1,70 @@
+---
+import MockFrame from './MockFrame.astro';
+// This entry is a class library with no screen of its own — it is called
+// from inside a larger system, not visited by a person. This mock is our own
+// honest drawing of its inputs and output: an ordered list of source files in
+// different formats going in, and the single combined file that comes out.
+// It is not a recreation of any real interface.
+//
+// The one behaviour worth showing beyond the happy path: a source that fails
+// to convert does not stop the rest. The real service logs that failure and
+// keeps going, still returning the file assembled from everything that did
+// convert — so the failing row below still lets the other three complete and
+// the combined file still gets produced.
+type Status = 'ok' | 'fail';
+type Source = { seq: number; name: string; fmt: string; status: Status };
+const sources: Source[] = [
+  { seq: 1, name: 'Cover letter', fmt: 'DOCX', status: 'ok' },
+  { seq: 2, name: 'Inspection notes', fmt: 'TXT', status: 'ok' },
+  { seq: 3, name: 'Site photo', fmt: 'JPG', status: 'fail' },
+  { seq: 4, name: 'Reference report', fmt: 'PDF', status: 'ok' },
+];
+---
+<MockFrame chrome="panel" title="Assemble" meta={`${sources.length} sources`}>
+  <div class="space-y-2">
+    {sources.map((s, i) => (
+      <div class="mock-step flex items-center gap-2.5 rounded-lg border border-line bg-surface px-2.5 py-2" style={`--step: ${i}`}>
+        <div class="grid h-7 w-7 shrink-0 place-items-center rounded-md border border-line bg-surface-2 text-fg-subtle/60">
+          {s.fmt === 'JPG' ? (
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2.5" /><circle cx="9" cy="9" r="1.75" /><path d="m21 15-4.35-4.35a2 2 0 0 0-2.83 0L4 21" />
+            </svg>
+          ) : (
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 3v4a1 1 0 0 0 1 1h4" /><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z" />
+            </svg>
+          )}
+        </div>
+        <div class="min-w-0 flex-1">
+          <div class="flex items-baseline gap-1.5">
+            <span class="shrink-0 font-head text-[9.5px] tabular-nums tracking-[0.06em] text-fg-subtle">{s.seq}</span>
+            <span class="truncate text-[12px] text-fg">{s.name}</span>
+          </div>
+          <span class="mt-0.5 inline-block rounded-[4px] border border-line px-1.5 py-0.5 font-head text-[9.5px] font-semibold uppercase tracking-[0.06em] text-fg-subtle">
+            {s.fmt}
+          </span>
+        </div>
+        {s.status === 'ok' ? (
+          <span class="shrink-0 whitespace-nowrap rounded-full bg-ok-soft px-1.5 py-px font-head text-[9.5px] font-semibold uppercase tracking-[0.06em] text-ok">
+            Converted
+          </span>
+        ) : (
+          <span class="grid shrink-0">
+            <span class="mock-before col-start-1 row-start-1 whitespace-nowrap rounded-full bg-warn-soft px-1.5 py-px font-head text-[9.5px] font-semibold uppercase tracking-[0.06em] text-warn" style="--swap: 4">
+              Converting
+            </span>
+            <span class="mock-step col-start-1 row-start-1 whitespace-nowrap rounded-full bg-danger-soft px-1.5 py-px font-head text-[9.5px] font-semibold uppercase tracking-[0.06em] text-danger" style="--step: 4">
+              Couldn't convert
+            </span>
+          </span>
+        )}
+      </div>
+    ))}
+    <div class="mock-step flex items-center gap-2 border-t border-line pt-2.5" style="--step: 5">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-fg-subtle" aria-hidden="true">
+        <path d="M14 3v4a1 1 0 0 0 1 1h4" /><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z" />
+      </svg>
+      <span class="text-[10.5px] text-fg-subtle">Combined into one file · PDF</span>
+    </div>
+  </div>
+</MockFrame>

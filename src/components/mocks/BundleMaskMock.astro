@@ -1,0 +1,43 @@
+---
+import MockFrame from './MockFrame.astro';
+// Same library, no screen of its own (see BundleAssembleMock's header). This
+// is our drawing of one page and two marked regions, not a real editor. The
+// page is rendered to an image before a region is painted over — that
+// render-to-image step is real, and it's why the original content is gone
+// rather than merely covered by a black box sitting on top of live text.
+---
+<MockFrame chrome="panel" title="Mask" meta="Page 2 of 6">
+  <div class="space-y-2.5">
+    <div class="grid h-[74px] w-full overflow-hidden rounded-lg border border-line bg-surface p-2.5">
+      <div class="mock-before col-start-1 row-start-1 flex flex-col justify-center gap-1.5" style="--swap: 1">
+        <div class="h-1.5 w-full rounded-full bg-fg-subtle/20"></div>
+        <div class="h-1.5 w-5/6 rounded-full bg-fg-subtle/20"></div>
+        <div class="h-1.5 w-full rounded-full bg-fg-subtle/20"></div>
+        <div class="h-1.5 w-2/3 rounded-full bg-fg-subtle/20"></div>
+      </div>
+      <div class="mock-step col-start-1 row-start-1 grid place-items-center rounded-md bg-surface-2 text-fg-subtle/50" style="--step: 1">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="2.5" /><circle cx="9" cy="9" r="1.75" /><path d="m21 15-4.35-4.35a2 2 0 0 0-2.83 0L4 21" />
+        </svg>
+      </div>
+    </div>
+
+    <div class="mock-step flex items-center gap-2.5 rounded-lg border border-line bg-surface px-2.5 py-1.5" style="--step: 0">
+      <span class="grid h-6 w-9 shrink-0">
+        <span class="mock-before col-start-1 row-start-1 rounded-[3px] border border-dashed border-action" style="--swap: 2"></span>
+        <span class="mock-step col-start-1 row-start-1 rounded-[3px] bg-fg" style="--step: 2"></span>
+      </span>
+      <span class="text-[10.5px] text-fg-subtle">Region 1 · 1.4in × 0.5in</span>
+    </div>
+
+    <div class="mock-step flex items-center gap-2.5 rounded-lg border border-line bg-surface px-2.5 py-1.5" style="--step: 3">
+      <span class="grid h-6 w-9 shrink-0">
+        <span class="mock-before col-start-1 row-start-1 rounded-[3px] border border-dashed border-action" style="--swap: 4"></span>
+        <span class="mock-step col-start-1 row-start-1 rounded-[3px] bg-fg" style="--step: 4"></span>
+      </span>
+      <span class="text-[10.5px] text-fg-subtle">Region 2 · 0.8in × 0.3in</span>
+    </div>
+
+    <p class="mock-step text-[10.5px] text-fg-subtle" style="--step: 5">The original content is gone, not hidden.</p>
+  </div>
+</MockFrame>

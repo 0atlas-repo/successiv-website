@@ -1,0 +1,60 @@
+---
+import MockFrame from './MockFrame.astro';
+// The admin app's own editor: an availability toggle per language gates which
+// language's fields are required — the admin app, Stories.js:900-943 (real
+// label "Available Language", checkboxes, and the "Please Select At least 1
+// Lagnuage" validation), Stories.js:1205-1300 (one stacked field row per
+// language, a red asterisk marking a field required only when that language
+// is ticked available). Real language names are replaced with generic L1/L2/L3
+// codes, per the anonymisation rule. Values below are fictional examples in
+// the real field's format, not real content.
+// Source: local_pm/projects/mock-rollout/specs/copy-batch-b.md, "Content &
+// CMS platforms" step 1.
+const languages = [
+  { code: 'L1', on: true, value: 'Quarterly update' },
+  { code: 'L2', on: true, value: '[L2 translation]' },
+  { code: 'L3', on: false, value: '' },
+];
+---
+<MockFrame chrome="sidebar" title="Editor" meta="3 languages">
+  <div class="space-y-2.5">
+    <div class="mock-step space-y-1.5" style="--step: 0">
+      <p class="font-head text-[9.5px] uppercase tracking-[0.08em] text-fg-subtle">Available languages</p>
+      <div class="flex gap-1.5">
+        {languages.map((l) => (
+          <span
+            class:list={[
+              'rounded-full px-2.5 py-1 font-head text-[9.5px] font-semibold uppercase tracking-[0.08em]',
+              l.on ? 'bg-action text-on-action' : 'border border-line text-fg-subtle',
+            ]}
+          >
+            {l.code}
+          </span>
+        ))}
+      </div>
+    </div>
+
+    {languages.map((l, i) => (
+      <div
+        class:list={[
+          'mock-step space-y-1 rounded-lg border p-2.5',
+          l.on ? 'border-line bg-surface' : 'border-dashed border-line/60 bg-surface/40',
+        ]}
+        style={`--step: ${i + 1}`}
+      >
+        <p class="flex items-center gap-1 font-head text-[9.5px] uppercase tracking-[0.08em] text-fg-subtle">
+          Title{l.on && <span class="text-danger">*</span>}
+        </p>
+        {l.value ? (
+          <p class="text-[12px] font-medium text-fg">{l.value}</p>
+        ) : (
+          <div class="h-[14px] w-2/3 rounded bg-surface-2"></div>
+        )}
+      </div>
+    ))}
+
+    <p class="mock-step text-[10.5px] leading-snug text-fg-muted" style="--step: 4">
+      A short recap of what shipped this quarter, written for the team rather than a press release.
+    </p>
+  </div>
+</MockFrame>

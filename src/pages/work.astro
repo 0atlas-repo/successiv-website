@@ -20,7 +20,7 @@ import { featuredWork, listedWork } from '../content/work';
     <div class="mx-auto max-w-[1180px] px-6">
       <div class="space-y-6">
         {featuredWork.map((w, i) => (
-          <article class="reveal grid gap-8 overflow-hidden rounded-[18px] border border-line surface-card p-6 md:p-8 lg:grid-cols-[1fr_0.8fr] lg:items-center">
+          <article class="reveal grid grid-cols-1 gap-8 overflow-hidden rounded-[18px] border border-line surface-card p-6 md:p-8 lg:grid-cols-[1fr_0.8fr] lg:items-center">
             <div class:list={[i % 2 === 1 ? 'lg:order-2' : '']}>
               <span class="font-head text-[11px] uppercase tracking-[0.1em] text-fg-subtle">{w.angle}</span>
               <h2 class="mt-2 font-head text-[clamp(22px,3vw,28px)] font-semibold text-fg">
@@ -53,7 +53,7 @@ import { featuredWork, listedWork } from '../content/work';
               </a>
             </div>
 
-            <div class="relative max-lg:mx-auto max-lg:max-w-[420px]">
+            <div class="relative w-full max-lg:mx-auto max-lg:max-w-[420px]">
               <div class="mock-wash pointer-events-none absolute -inset-8" aria-hidden="true"></div>
               <div class="relative"><WorkMock mock={w.screens[0]} /></div>
             </div>

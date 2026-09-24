@@ -1,0 +1,70 @@
+---
+import MockFrame from './MockFrame.astro';
+// The portal's real nav item is "Support Ticket" — the portal,
+// page/components/sidebar.php:30. Filters and columns are the page's own,
+// not invented: Status options All/Open/Closed and Type options
+// All/Generic/Refund/Return — the portal, page/supportTicketPage.php:108-118.
+// There is genuinely no "Cancel" option in that Type filter, even though
+// the ticket-creation tool's real enum includes it — the backend,
+// classes/tenant.py TicketType (_refund/_return/_cancel/_generic) — so a
+// merchant can't filter their list down to cancellations today. Kept as a
+// deliberate, faithful gap, not an omission.
+// Table columns Title | Status | Ticket Type | Date Created | Date
+// Modified — the portal, page/supportTicketPage.php:200-208 (Order ID,
+// Message and Remark are columns too, but hidden until a row is opened).
+// "Remark" is the modal's own field label — the portal,
+// page/supportTicketPage.php:166 (label for="view-remark").
+// Ticket IDs are short opaque strings from create_uid(len=12), and a
+// ticket with no title falls back to "Ticket #{id}" — the backend,
+// cores/utils.py create_uid; logics/shop_tools/create_customer_service_ticket.py:45.
+// The ID below ("af6TqX9mZp3E") is invented in that same shape, not a real one.
+// Source: local_pm/research/2026-09-24-shopmgr-ui-walkthrough.md, "4. Staff resolve the ticket…".
+---
+<MockFrame chrome="sidebar" title="Support Ticket" meta="1 result">
+  <div class="space-y-2.5">
+    <div class="mock-step flex flex-wrap items-center gap-1.5" style="--step: 0">
+      <span class="text-[10px] text-fg-subtle">Filter by</span>
+      {['All', 'Open', 'Closed'].map((s) => (
+        <span class:list={['rounded-full border px-2 py-0.5 text-[10px]', s === 'Open' ? 'border-action/40 bg-surface-2 text-fg' : 'border-line text-fg-subtle']}>{s}</span>
+      ))}
+    </div>
+
+    <div class="mock-step flex flex-wrap items-center gap-1.5" style="--step: 1">
+      {['All', 'Generic', 'Refund', 'Return'].map((t) => (
+        <span class:list={['rounded-full border px-2 py-0.5 text-[10px]', t === 'Refund' ? 'border-action/40 bg-surface-2 text-fg' : 'border-line text-fg-subtle']}>{t}</span>
+      ))}
+      <span class="ml-auto rounded-full bg-action px-2.5 py-1 font-head text-[9.5px] font-semibold text-on-action">Apply Filter</span>
+    </div>
+
+    <div class="mock-step flex items-center gap-3 border-b border-line pb-1 text-[9.5px] uppercase tracking-[0.06em] text-fg-subtle" style="--step: 2">
+      <span class="flex-1">Title</span>
+      <span>Status</span>
+      <span>Ticket Type</span>
+    </div>
+
+    <div class="mock-step space-y-1.5 rounded-lg border border-line bg-surface px-2.5 py-2" style="--step: 3">
+      <div class="flex items-center gap-2">
+        <span class="min-w-0 flex-1 truncate font-head text-[11px] font-medium tabular-nums text-fg">Ticket #af6TqX9mZp3E</span>
+        <span class="grid shrink-0">
+          <span class="mock-before col-start-1 row-start-1 rounded-full bg-warn-soft px-1.5 py-px font-head text-[9px] font-semibold uppercase tracking-[0.06em] text-warn" style="--swap: 5">Open</span>
+          <span class="mock-step col-start-1 row-start-1 rounded-full bg-ok-soft px-1.5 py-px font-head text-[9px] font-semibold uppercase tracking-[0.06em] text-ok" style="--step: 5">Closed</span>
+        </span>
+      </div>
+      <div class="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[10px] text-fg-subtle">
+        <span class="rounded-full border border-line px-1.5 py-px font-head text-[9px] uppercase tracking-[0.06em]">Refund</span>
+        <span>·</span>
+        <span class="tabular-nums">Date Created 2026-09-22</span>
+        <span>·</span>
+        <span class="grid">
+          <span class="mock-before col-start-1 row-start-1 tabular-nums" style="--swap: 6">Date Modified 2026-09-22</span>
+          <span class="mock-step col-start-1 row-start-1 tabular-nums" style="--step: 6">Date Modified 2026-09-23</span>
+        </span>
+      </div>
+    </div>
+
+    <div class="mock-step space-y-0.5 border-t border-line pt-2" style="--step: 4">
+      <p class="font-head text-[9.5px] font-medium uppercase tracking-[0.06em] text-fg-subtle">Remark</p>
+      <p class="text-[10.5px] leading-snug text-fg">Refund approved — processing today.</p>
+    </div>
+  </div>
+</MockFrame>

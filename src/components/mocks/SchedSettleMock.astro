@@ -1,0 +1,81 @@
+---
+import MockFrame from './MockFrame.astro';
+// A new screen — the app has no single status line like this; it is drawn
+// from four real, sequenced fields on one booking record (research note,
+// claim #13): reserved is set the moment a booking is made
+// (booking-table.js:966-986); paid is set once a hosted checkout completes,
+// any time up to a pay-by deadline of one hour before the start
+// (booking-table.js:1017); delivered is set the instant the provider's own
+// client joins the video call — detected from that join event, not marked by
+// a person (claim #8); settled is set when payout runs, some days after the
+// meeting ends (booking-table.js:1424-1443, cronPayOutAfterEnd). Paid,
+// delivered and settled all depend on something outside the booking itself
+// finishing later, so both sides of each of those three swaps carry the
+// longer lead-in; only "Reserved" is instant.
+// Source: research note "Real flow", steps 4,5,7,9, and "Recommended steps",
+// step 4; copy-batch-b.md, Scheduling systems, step 4.
+const check = 'm20 6-11 11-5-5';
+const video = 'M2 7a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7ZM15 10l6-3.5v11L15 14';
+const pending = '<span class="grid h-6 w-6 place-items-center rounded-full border-2 border-line bg-surface"><span class="block h-2 w-2 rounded-full bg-fg-subtle/50"></span></span>';
+---
+<MockFrame chrome="panel" title="Consultation — 45 min" meta="10:45–11:30">
+  <div class="space-y-3">
+    <div class="flex items-start gap-1">
+      <div class="mock-step flex flex-1 flex-col items-center gap-1" style="--step: 0">
+        <span class="grid h-6 w-6 place-items-center rounded-full bg-ok-soft text-ok">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={check} /></svg>
+        </span>
+        <span class="text-[10px] font-medium text-fg">Reserved</span>
+      </div>
+
+      <div class="mock-step flex flex-1 flex-col items-center gap-1" style="--step: 1">
+        <div class="grid place-items-center">
+          <div class="col-start-1 row-start-1 mock-before flex flex-col items-center gap-1" style="--swap: 4; --mock-lead-in: 1600ms">
+            <Fragment set:html={pending} />
+            <span class="text-[9.5px] text-fg-subtle">Pay by 09:45</span>
+          </div>
+          <div class="col-start-1 row-start-1 mock-step flex flex-col items-center gap-1" style="--step: 4; --mock-lead-in: 1600ms">
+            <span class="grid h-6 w-6 place-items-center rounded-full bg-ok-soft text-ok">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={check} /></svg>
+            </span>
+            <span class="text-[10px] font-medium text-fg">Paid</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mock-step flex flex-1 flex-col items-center gap-1" style="--step: 2">
+        <div class="grid place-items-center">
+          <div class="col-start-1 row-start-1 mock-before flex flex-col items-center gap-1" style="--swap: 5; --mock-lead-in: 1600ms">
+            <Fragment set:html={pending} />
+            <span class="text-[10px] text-fg-subtle">Delivered</span>
+          </div>
+          <div class="col-start-1 row-start-1 mock-step flex flex-col items-center gap-1" style="--step: 5; --mock-lead-in: 1600ms">
+            <span class="grid h-6 w-6 place-items-center rounded-full bg-ok-soft text-ok">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={video} /></svg>
+            </span>
+            <span class="text-[10px] font-medium text-fg">Delivered</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mock-step flex flex-1 flex-col items-center gap-1" style="--step: 3">
+        <div class="grid place-items-center">
+          <div class="col-start-1 row-start-1 mock-before flex flex-col items-center gap-1" style="--swap: 6; --mock-lead-in: 1600ms">
+            <Fragment set:html={pending} />
+            <span class="text-[10px] text-fg-subtle">Settled</span>
+          </div>
+          <div class="col-start-1 row-start-1 mock-step flex flex-col items-center gap-1" style="--step: 6; --mock-lead-in: 1600ms">
+            <span class="grid h-6 w-6 place-items-center rounded-full bg-ok-soft text-ok">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={check} /></svg>
+            </span>
+            <span class="text-[10px] font-medium text-fg">Settled</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="mock-step border-t border-line pt-2.5 text-[10px] leading-snug text-fg-subtle" style="--step: 7; --mock-lead-in: 1600ms">
+      Delivered comes from the video call itself, not a manual mark; payout follows a few days after.
+    </p>
+  </div>
+</MockFrame>

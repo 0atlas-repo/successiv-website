@@ -1,0 +1,44 @@
+---
+import MockFrame from './MockFrame.astro';
+// The web app's own request inbox. Its h1 is "API Portal" (the web app,
+// `page/requestedDataTable.php:18`), used as the frame title. Its sub-table
+// columns are its own: "Request At", "Name", "Email", "Document Type",
+// "Actions" (`:85-89`); a row reads "Info not shared" until the holder
+// accepts, then becomes "View Detail" (`:110-116`). The detail screen's own
+// field labels are "Document Type: Passport", "Passport Number: ", and
+// "Passport name: " (sic, lower-case n) (the web app,
+// `page/requestedSingleData.php:65,71,80`). Its own "Is Document
+// Verified?" line (`:113-127`) is left off, per instruction — no
+// verification claim in this product's copy. Values are fake.
+// Source: local_pm/research/2026-09-24-kyc-ui-walkthrough.md, "Recommended
+// screen per step" §5.
+const cols = ['Request At', 'Name', 'Email', 'Document Type', 'Actions'];
+const rows = [
+  { at: '2026-09-20', name: 'A. Holder', email: 'a.holder@example.com', type: 'Address', action: 'Info not shared' },
+  { at: '2026-09-19', name: 'A. Holder', email: 'a.holder@example.com', type: 'Passport', action: 'View Detail' },
+];
+---
+<MockFrame chrome="panel" title="API Portal">
+  <div class="grid">
+    <div class="mock-before col-start-1 row-start-1 space-y-1.5" style="--swap: 3">
+      <div class="mock-step grid grid-cols-5 gap-1 border-b border-line pb-1 font-head text-[8px] font-semibold uppercase tracking-[0.05em] text-fg-subtle" style="--step: 0">
+        {cols.map((c) => <span class="truncate">{c}</span>)}
+      </div>
+      {rows.map((r, i) => (
+        <div class="mock-step grid grid-cols-5 items-center gap-1 rounded-md px-1 py-1.5 text-[9.5px] text-fg" style={`--step: ${i + 1}`}>
+          <span class="truncate tabular-nums text-fg-subtle">{r.at}</span>
+          <span class="truncate">{r.name}</span>
+          <span class="truncate text-fg-subtle">{r.email}</span>
+          <span class="truncate">{r.type}</span>
+          <span class:list={['truncate font-medium', r.action === 'View Detail' ? 'text-action' : 'text-fg-subtle']}>{r.action}</span>
+        </div>
+      ))}
+    </div>
+    <div class="col-start-1 row-start-1 space-y-1.5">
+      <p class="mock-step font-head text-[11.5px] font-semibold text-fg" style="--step: 3">Document Type: Passport</p>
+      <p class="mock-step text-[10.5px] text-fg" style="--step: 4"><span class="font-semibold">Passport Number: </span>A1234567</p>
+      <p class="mock-step text-[10.5px] text-fg" style="--step: 5"><span class="font-semibold">Passport name: </span>A. Holder</p>
+      <p class="mock-step text-[10.5px] font-medium text-action" style="--step: 6">Back</p>
+    </div>
+  </div>
+</MockFrame>

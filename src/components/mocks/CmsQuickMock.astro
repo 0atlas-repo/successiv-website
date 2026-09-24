@@ -1,0 +1,72 @@
+---
+import MockFrame from './MockFrame.astro';
+// A simpler, different mechanism from the editor screen: items are edited one
+// language at a time behind a language-tab switch, not held together in one
+// record — the admin app, NewsList.js:341-343 (language tabs, real labels
+// replaced with generic L1/L2/L3 per the anonymisation rule). Publish Date,
+// Title and Status are the item's own fields and Draft/Published its own
+// status values — the admin app, News.js:635-653. The attachment icon+count
+// reflects a real per-item field — the admin app, NewsController.cs:83-119.
+// Headlines and dates are fictional examples, continuing CmsQuickMock's
+// sibling screens' style.
+// Source: local_pm/projects/mock-rollout/specs/copy-batch-b.md, "Content &
+// CMS platforms" step 4.
+type Item = { headline: string; date: string; attachments: number; status: 'Published' | 'Draft'; flips?: boolean };
+const items: Item[] = [
+  { headline: 'Quarterly update', date: 'Mar 12', attachments: 0, status: 'Published' },
+  { headline: 'New office opens', date: 'Mar 08', attachments: 2, status: 'Published' },
+  { headline: 'Holiday schedule', date: 'Mar 02', attachments: 0, status: 'Draft', flips: true },
+  { headline: 'Team welcomes new hires', date: 'Feb 24', attachments: 0, status: 'Published' },
+];
+const paperclip = '<path d="M21.44 11.05l-6.19 6.19a4 4 0 01-5.66-5.66l6.19-6.19a2.5 2.5 0 013.54 3.54l-6.2 6.19a1 1 0 01-1.41-1.41" />';
+---
+<MockFrame chrome="sidebar" title="Updates" meta="4 items">
+  <div class="space-y-2.5">
+    <div class="mock-step flex gap-1.5" style="--step: 0">
+      {['L1', 'L2', 'L3'].map((code, i) => (
+        <span
+          class:list={[
+            'rounded-full px-2.5 py-1 font-head text-[9.5px] font-semibold uppercase tracking-[0.08em]',
+            i === 0 ? 'bg-action text-on-action' : 'border border-line text-fg-subtle',
+          ]}
+        >
+          {code}
+        </span>
+      ))}
+    </div>
+
+    <div class="space-y-1.5">
+      {items.map((i, idx) => (
+        <div class="mock-step flex items-center gap-2.5 rounded-lg border border-line bg-surface px-2.5 py-2" style={`--step: ${idx + 1}`}>
+          <div class="min-w-0 flex-1">
+            <div class="truncate text-[12px] text-fg">{i.headline}</div>
+            <div class="mt-0.5 text-[10.5px] tabular-nums text-fg-subtle">{i.date}</div>
+          </div>
+          {i.attachments > 0 && (
+            <span class="flex shrink-0 items-center gap-1 text-fg-subtle">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <Fragment set:html={paperclip} />
+              </svg>
+              <span class="text-[9.5px] tabular-nums">{i.attachments}</span>
+            </span>
+          )}
+          {i.flips ? (
+            <span class="grid shrink-0">
+              <span class="mock-before col-start-1 row-start-1 rounded-full bg-warn-soft px-2 py-0.5 font-head text-[9.5px] font-semibold uppercase tracking-[0.08em] text-warn" style="--swap: 5">Draft</span>
+              <span class="mock-step col-start-1 row-start-1 rounded-full bg-ok-soft px-2 py-0.5 font-head text-[9.5px] font-semibold uppercase tracking-[0.08em] text-ok" style="--step: 5">Published</span>
+            </span>
+          ) : (
+            <span
+              class:list={[
+                'shrink-0 whitespace-nowrap rounded-full px-2 py-0.5 font-head text-[9.5px] font-semibold uppercase tracking-[0.08em]',
+                i.status === 'Published' ? 'bg-ok-soft text-ok' : 'bg-warn-soft text-warn',
+              ]}
+            >
+              {i.status}
+            </span>
+          )}
+        </div>
+      ))}
+    </div>
+  </div>
+</MockFrame>

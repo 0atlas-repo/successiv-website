@@ -5,56 +5,76 @@
 // A lookup map rather than a chain of conditionals — at this count the chain
 // stops being readable, and the Record<WorkMock, ...> type makes a missing key
 // a build error instead of a silently blank panel.
-import ScoringMock from './ScoringMock.astro';
-import TimelineMock from './TimelineMock.astro';
-import BundleRedactionMock from './BundleRedactionMock.astro';
-import IncidentCasesMock from './IncidentCasesMock.astro';
-import TenderChecklistMock from './TenderChecklistMock.astro';
-import TenderRankingMock from './TenderRankingMock.astro';
-import ContractRegistryMock from './ContractRegistryMock.astro';
-import ContractClauseMock from './ContractClauseMock.astro';
-import BundleBuilderMock from './BundleBuilderMock.astro';
-import IncidentChatMock from './IncidentChatMock.astro';
-import IncidentActionsMock from './IncidentActionsMock.astro';
-import CmsEditorMock from './CmsEditorMock.astro';
-import CmsPublishMock from './CmsPublishMock.astro';
-import CmsNewsMock from './CmsNewsMock.astro';
-import SpPermissionsMock from './SpPermissionsMock.astro';
-import SpAccessMock from './SpAccessMock.astro';
-import SpLinksMock from './SpLinksMock.astro';
-import AwardsNominationMock from './AwardsNominationMock.astro';
-import AwardsShortlistMock from './AwardsShortlistMock.astro';
-import SchedMarketplaceMock from './SchedMarketplaceMock.astro';
-import SchedSlotsMock from './SchedSlotsMock.astro';
-import SchedCalendarMock from './SchedCalendarMock.astro';
+import TenderListMock from './TenderListMock.astro';
+import TenderCheckMock from './TenderCheckMock.astro';
+import TenderQueryMock from './TenderQueryMock.astro';
+import TenderSummaryMock from './TenderSummaryMock.astro';
+import TenderScoresMock from './TenderScoresMock.astro';
+import ContractRegisterMock from './ContractRegisterMock.astro';
+import ContractFileMock from './ContractFileMock.astro';
+import ContractCheckMock from './ContractCheckMock.astro';
+import ContractAskMock from './ContractAskMock.astro';
+import BundleAssembleMock from './BundleAssembleMock.astro';
+import BundleFillMock from './BundleFillMock.astro';
+import BundleMaskMock from './BundleMaskMock.astro';
+import BundleLockMock from './BundleLockMock.astro';
+import IncidentCaseMock from './IncidentCaseMock.astro';
+import IncidentAskMock from './IncidentAskMock.astro';
+import IncidentActionListMock from './IncidentActionListMock.astro';
+import CmsDraftMock from './CmsDraftMock.astro';
+import CmsPreviewMock from './CmsPreviewMock.astro';
+import CmsReleaseMock from './CmsReleaseMock.astro';
+import CmsQuickMock from './CmsQuickMock.astro';
+import SpAuditMock from './SpAuditMock.astro';
+import SpShareMock from './SpShareMock.astro';
+import SpLinkCheckMock from './SpLinkCheckMock.astro';
+import SpCheckedOutMock from './SpCheckedOutMock.astro';
+import SpHistoryMock from './SpHistoryMock.astro';
+import SchedServiceMock from './SchedServiceMock.astro';
+import SchedBookMock from './SchedBookMock.astro';
+import SchedConfirmMock from './SchedConfirmMock.astro';
+import SchedSettleMock from './SchedSettleMock.astro';
+import AwardsNominateMock from './AwardsNominateMock.astro';
+import AwardsVoteMock from './AwardsVoteMock.astro';
+import AwardsAnnounceMock from './AwardsAnnounceMock.astro';
 import type { WorkMock } from '../../content/work';
 
 interface Props { mock: WorkMock }
 const { mock } = Astro.props;
 
 const screens: Record<WorkMock, any> = {
-  'scoring': ScoringMock,
-  'timeline': TimelineMock,
-  'bundle-redaction': BundleRedactionMock,
-  'incident-cases': IncidentCasesMock,
-  'tender-checklist': TenderChecklistMock,
-  'tender-ranking': TenderRankingMock,
-  'contract-registry': ContractRegistryMock,
-  'contract-clause': ContractClauseMock,
-  'bundle-builder': BundleBuilderMock,
-  'incident-chat': IncidentChatMock,
-  'incident-actions': IncidentActionsMock,
-  'cms-editor': CmsEditorMock,
-  'cms-publish': CmsPublishMock,
-  'cms-news': CmsNewsMock,
-  'sp-permissions': SpPermissionsMock,
-  'sp-access': SpAccessMock,
-  'sp-links': SpLinksMock,
-  'awards-nomination': AwardsNominationMock,
-  'awards-shortlist': AwardsShortlistMock,
-  'sched-marketplace': SchedMarketplaceMock,
-  'sched-slots': SchedSlotsMock,
-  'sched-calendar': SchedCalendarMock,
+  'awards-announce': AwardsAnnounceMock,
+  'awards-vote': AwardsVoteMock,
+  'awards-nominate': AwardsNominateMock,
+  'sched-settle': SchedSettleMock,
+  'sched-confirm': SchedConfirmMock,
+  'sched-book': SchedBookMock,
+  'sched-service': SchedServiceMock,
+  'sp-history': SpHistoryMock,
+  'sp-checked-out': SpCheckedOutMock,
+  'sp-link-check': SpLinkCheckMock,
+  'sp-share': SpShareMock,
+  'sp-audit': SpAuditMock,
+  'cms-quick': CmsQuickMock,
+  'cms-release': CmsReleaseMock,
+  'cms-preview': CmsPreviewMock,
+  'cms-draft': CmsDraftMock,
+  'incident-action-list': IncidentActionListMock,
+  'incident-ask': IncidentAskMock,
+  'incident-case': IncidentCaseMock,
+  'bundle-lock': BundleLockMock,
+  'bundle-mask': BundleMaskMock,
+  'bundle-fill': BundleFillMock,
+  'bundle-assemble': BundleAssembleMock,
+  'contract-ask': ContractAskMock,
+  'contract-check': ContractCheckMock,
+  'contract-file': ContractFileMock,
+  'contract-register': ContractRegisterMock,
+  'tender-scores': TenderScoresMock,
+  'tender-summary': TenderSummaryMock,
+  'tender-query': TenderQueryMock,
+  'tender-check': TenderCheckMock,
+  'tender-list': TenderListMock,
 };
 
 const Screen = screens[mock];

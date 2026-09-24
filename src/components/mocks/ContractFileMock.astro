@@ -1,0 +1,83 @@
+---
+import MockFrame from './MockFrame.astro';
+// The register grid, genericised: the app's own columns are Contract,
+// Entry, Revision, Handler, Report, Type, Subtype, Progress, Approval
+// Status, Date (the app, pages/Submission/View.tsx:503-590) — trimmed here
+// to Entry, Revision, Type and Progress, the four the copy's step is about.
+// "Approval Status" is left off: in the app it's a free-text field, not the
+// fixed set the UI defines but never uses, so a clean status chip would be
+// aspirational, not a thing the app does today.
+// One fixed form covers every type; only which Subtypes are offered changes
+// (the app, pages/Submission/ProjectSubmissionDrawer.tsx:600-690). Revision
+// is free text, max three characters — "A" / "B" here are fictional
+// examples in that shape, not the system's own values. Abbreviated to "Rev"
+// in the column header for width, same field either way.
+// Progress moves from an early stage to "Extracted" (50%) to "Completed"
+// (100%) as a batch job runs after filing (the app,
+// pages/Submission/Models.tsx:161-172); the 50% midpoint is skipped in the
+// animation below since a crossfade only holds two states, not three — a
+// simplification of the timing, not of what the field means. Since this is
+// a batch job's result, not instant, the 0%→100% swap and the Report icon
+// that depends on it both carry the long lead-in, same as the check step's
+// job result. The Report icon only appears once an entry reaches 100% (the
+// app, pages/Submission/View.tsx:528-544).
+// Entry titles and Type values are fictional examples in the copy's own
+// three categories (variation, claim, certificate).
+// Source: research note "contract-lifecycle", "4. Submissions" and
+// "Recommended steps" step 2.
+const filed = [
+  { entry: 'Certificate 05', rev: 'A', type: 'Certificate' },
+  { entry: 'Claim 02', rev: 'B', type: 'Claim' },
+];
+const reportIcon = '<path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><path d="M14 2v6h6"/><path d="M9 15h6M9 11h6"/>';
+---
+<MockFrame title="Contracts — Entries" meta="CN-104">
+  <div class="space-y-2">
+    <div class="grid grid-cols-[1fr_28px_74px] gap-2 border-b border-line pb-1.5 font-head text-[9.5px] font-semibold uppercase tracking-[0.1em] text-fg-subtle">
+      <span>Entry</span><span>Rev</span><span>Type</span>
+    </div>
+
+    {filed.map((f, i) => (
+      <div class="mock-step space-y-1.5 rounded-lg border border-line bg-surface px-2.5 py-2" style={`--step: ${i}`}>
+        <div class="grid grid-cols-[1fr_28px_74px] items-center gap-2 text-[12px] text-fg">
+          <span class="truncate">{f.entry}</span>
+          <span class="tabular-nums text-fg-subtle">{f.rev}</span>
+          <span class="truncate text-fg-subtle">{f.type}</span>
+        </div>
+        <div class="flex items-center justify-between gap-2">
+          <div class="h-1 flex-1 overflow-hidden rounded-full bg-surface-2"><div class="h-full w-full rounded-full bg-ok"></div></div>
+          <span class="flex shrink-0 items-center gap-1 text-[9.5px] text-ok">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><Fragment set:html={reportIcon} /></svg>
+            Report
+          </span>
+        </div>
+      </div>
+    ))}
+
+    {/* The new entry: slides in at 0% on the normal reveal beat, then waits
+        out the batch job's own long lead-in before its progress swaps to
+        100%; the Report icon shares that lead-in too, so it can't arrive
+        before the swap that unlocks it. */}
+    <div class="mock-step space-y-1.5 rounded-lg border border-action/35 bg-surface-2 px-2.5 py-2" style="--step: 2">
+      <div class="grid grid-cols-[1fr_28px_74px] items-center gap-2 text-[12px] text-fg">
+        <span class="truncate">Variation 04</span>
+        <span class="tabular-nums text-fg-subtle">A</span>
+        <span class="truncate text-fg-subtle">Variation</span>
+      </div>
+      <div class="grid">
+        <div class="mock-before col-start-1 row-start-1 flex items-center justify-between gap-2" style="--swap: 3; --mock-lead-in: 1600ms">
+          <div class="h-1 flex-1 overflow-hidden rounded-full bg-surface-2"><div class="h-full w-0 rounded-full bg-action"></div></div>
+          <span class="shrink-0 tabular-nums text-[9.5px] text-fg-subtle">0%</span>
+        </div>
+        <div class="mock-step col-start-1 row-start-1 flex items-center justify-between gap-2" style="--step: 3; --mock-lead-in: 1600ms">
+          <div class="h-1 flex-1 overflow-hidden rounded-full bg-surface-2"><div class="h-full w-full rounded-full bg-ok"></div></div>
+          <span class="shrink-0 tabular-nums text-[9.5px] text-ok">100%</span>
+        </div>
+      </div>
+      <div class="mock-step flex items-center gap-1 text-[9.5px] text-ok" style="--step: 4; --mock-lead-in: 1600ms">
+        <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><Fragment set:html={reportIcon} /></svg>
+        Report
+      </div>
+    </div>
+  </div>
+</MockFrame>

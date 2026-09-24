@@ -1,0 +1,38 @@
+---
+import MockFrame from './MockFrame.astro';
+// The portal's per-round title is literally "[{contract_number}] {tender_title}"
+// with an uppercased Stage badge — the portal, src/pages/TenderDetails/View.tsx:347-359.
+// Real Stage values are "Prequalification"/"Tender" (src/modelControllers/Tender.tsx:9-24);
+// "Tender" is used here. Opening a round shows its bidder list: columns Name,
+// Entity ("Joint Venture (N)" or "Single"), Status ("Active"/"Inactive") — the
+// portal, src/pages/Tenderer/TenderersList.tsx:118-145. The round reference,
+// title and bidder names below are invented placeholders in that real shape,
+// not lifted from the app's own data.
+// Source: the research note for this page (tender-rfp-management.md), "Real
+// flow, screen by screen" §1-2 and the Claims table #7.
+type Bidder = { name: string; entity: string; status: 'Active' | 'Inactive' };
+const bidders: Bidder[] = [
+  { name: 'Bidder A', entity: 'Single', status: 'Active' },
+  { name: 'Bidder B', entity: 'Joint Venture (3)', status: 'Active' },
+  { name: 'Bidder C', entity: 'Single', status: 'Active' },
+];
+---
+<MockFrame chrome="sidebar" title="[RFP-2024-014] Facilities maintenance renewal" meta="Tender">
+  <div class="space-y-2">
+    <div class="mock-step grid grid-cols-[1fr_86px_52px] items-center gap-2 border-b border-line pb-1.5" style="--step: 0">
+      <span class="font-head text-[9.5px] font-semibold uppercase tracking-[0.1em] text-fg-subtle">Name</span>
+      <span class="font-head text-[9.5px] font-semibold uppercase tracking-[0.1em] text-fg-subtle">Entity</span>
+      <span class="text-right font-head text-[9.5px] font-semibold uppercase tracking-[0.1em] text-fg-subtle">Status</span>
+    </div>
+    {bidders.map((b, i) => (
+      <div class="mock-step grid grid-cols-[1fr_86px_52px] items-center gap-2 rounded-lg border border-line bg-surface px-2.5 py-1.5" style={`--step: ${i + 1}`}>
+        <span class="truncate text-[12px] text-fg">{b.name}</span>
+        <span class="truncate text-[10.5px] text-fg-muted">{b.entity}</span>
+        <span class="justify-self-end rounded-full bg-ok-soft px-1.5 py-px font-head text-[9px] font-semibold uppercase tracking-[0.06em] text-ok">{b.status}</span>
+      </div>
+    ))}
+    <p class="mock-step border-t border-line pt-2 text-[10.5px] text-fg-subtle" style="--step: 4">
+      One shared list for every bidder on this round.
+    </p>
+  </div>
+</MockFrame>

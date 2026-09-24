@@ -2,8 +2,8 @@
 //
 // Every product carries all the fields below — the type makes a missing one a
 // build error, not a review note. `detail` is the long form for the product
-// page: three paragraphs minimum, enforced by scripts/verify.mjs, and every
-// claim in it traceable to something the product actually does.
+// page: three paragraphs minimum, enforced by scripts/verify.mjs, unless the
+// product has a `solution` (then it is empty), and every claim in it traceable to something the product actually does.
 //
 // Two entries are hidden and one is qualified, all founder decisions, recorded in
 // local_pm/projects/capability-depth/specs/capability-depth.md:
@@ -24,15 +24,21 @@
 //   replaces `detail`, and each step carries its own animated screen.
 
 export type ProductMock =
-  | 'creator'
-  | 'creator-proof'
-  | 'creator-insights'
-  | 'chat'
-  | 'shop-knowledge'
-  | 'shop-tickets'
-  | 'identity'
-  | 'kyc-share'
-  | 'kyc-review'
+  | 'cs-explore'
+  | 'cs-apply'
+  | 'cs-submit'
+  | 'cs-check'
+  | 'cs-track'
+  | 'shop-connect'
+  | 'shop-answer'
+  | 'shop-escalate'
+  | 'shop-ticket'
+  | 'shop-knowledge-add'
+  | 'kyc-home'
+  | 'kyc-add'
+  | 'kyc-request'
+  | 'kyc-consent'
+  | 'kyc-portal'
   | 'calendar'
   | 'acct-upload'
   | 'acct-reading'
@@ -87,22 +93,25 @@ const allProducts: Product[] = [
     // (plural), not "Creator Sphere" as docs/BRIEF.md has it. The live product wins.
     slug: 'creators-sphere',
     name: 'Creators Sphere',
-    oneLiner: 'Paid brand campaigns for creators: find the work, publish it, get paid.',
+    oneLiner: 'Paid brand campaigns for creators: find the work, post it, prove it.',
     problem:
-      'Creator deals still run on DMs and agency threads. Pay shows up late in the conversation, and brands often cannot prove who actually delivered.',
+      'Creator deals still run on DMs and agency threads. A brand can’t easily tell whether the post that went up is the one it paid for.',
+    // 2026-09-24: rebuilt from the shipped app, not from the old copy. See
+    // local_pm/research/2026-09-24-creators-sphere-ui-walkthrough.md. There is
+    // no balance or payout (the "Paid" status is never written), no slot
+    // release and no hashtag check, and creators see no insights, so none of
+    // that is claimed. The founder chose S$ for the mocks' currency.
+    solution:
+      'Brands post campaigns with the real brief and decide only who takes each gig. Creators apply, publish and submit the live post, and the AI checks it against the brief.',
     steps: [
-      { title: 'Discover gigs', body: 'Browse live brand campaigns, filtered to the niches you actually create in.' },
-      { title: 'Apply in seconds', body: 'Tap apply on an open campaign, or accept an invite-only one sent straight to you.' },
-      { title: 'Create and post', body: 'Make the content in your own voice and publish it to your linked account.' },
-      { title: 'Submit proof, get paid', body: 'Drop the post link, the system checks it against the brief, and the reward moves to your balance.' },
+      { title: 'Find a campaign', body: 'Browse live campaigns by category, each with its pay, deadline and brief.', screen: 'cs-explore' },
+      { title: 'Apply, and the brand picks', body: 'Apply with one tap. The brand approves who takes each slot.', screen: 'cs-apply' },
+      { title: 'Post it, then submit it', body: 'Publish on your own Instagram, then pick the post in the app.', screen: 'cs-submit' },
+      { title: 'The AI checks the post', body: 'It reads the image and caption against the brief, or against the approved draft, and marks the proof within minutes.', screen: 'cs-check' },
+      { title: 'Track every gig', body: 'One list shows what needs you next.', screen: 'cs-track' },
     ],
-    detail: [
-      'Influencer marketing runs on trust in both directions and evidence in neither. A creator negotiates in direct messages without knowing the budget, delivers, and then waits. A brand books a creator on follower count, hopes the brief is followed, and finds out weeks later whether it was. Both sides manage the relationship by hand, which is why agencies exist and why the fee is what it is.',
-      'Creators Sphere makes the campaign the unit of work. A brand publishes a campaign holding the actual brief — the dos and don\'ts, required hashtags and mentions, the mood board — and breaks it into missions a creator can accept. Campaigns run open to applications or invite-only, so a brand can approach specific creators or broadcast to a filtered audience by tier, audience profile, or topic. Where a brand wants sight of the work first, an optional approval gate holds the creator\'s draft for sign-off before anything is published.',
-      'Proof is the part that is usually manual, and here it is not. A creator links their account once, and when they submit a post the system pulls it directly and checks it against the brief — that the required hashtags and mentions are actually present — rather than trusting a screenshot. Engagement figures are collected on a schedule afterwards, so a brand sees delivery rather than promises. A creator\'s balance splits into pending and available, which makes the wait visible instead of leaving them wondering.',
-      'Campaign slots are managed rather than abandoned: if an accepted creator goes quiet past the deadline, the slot is released and offered to the next creator in the queue, so a campaign does not stall on one unresponsive person. Two things are deliberately absent. There is no direct creator-to-brand messaging, which keeps terms in the campaign where they can be enforced rather than in a thread where they cannot. And settlement itself sits outside the product for now — the platform tracks what is owed and when it clears, and says so honestly.',
-    ],
-    screens: ['creator', 'creator-proof', 'creator-insights'],
+    detail: [],
+    screens: ['cs-check'],
     cta: 'Book a demo',
     category: 'Creator marketplace',
     url: 'https://creatorsphere.sg',
@@ -113,43 +122,46 @@ const allProducts: Product[] = [
     oneLiner: 'Store chat that answers from your catalogue and policies — and escalates when it should.',
     problem:
       'Storefront chat handles the easy questions and stalls on the ones that decide a sale: stock, variants, delivery, returns. Shoppers leave; staff never see the thread.',
+    // 2026-09-24: rebuilt from the shipped product, not from the old copy. See
+    // local_pm/research/2026-09-24-shopmgr-ui-walkthrough.md. Staff do not
+    // review or rate conversations (shoppers rate answers), and only Shopify
+    // is wired end to end, so neither claim is made.
+    solution:
+      'The assistant answers shoppers from your real catalogue and policies, and raises a ticket when it can’t. Your staff handle the tickets and fill the gaps.',
     steps: [
-      { title: 'Connect the store', body: 'Install on your store and point the assistant at your catalogue and policies.' },
-      { title: 'Use your real catalogue', body: 'Replies come from your real products and rules, retrieved per question, not from the model’s guesswork.' },
-      { title: 'Do the next step', body: 'The assistant can look up an order, check a policy, or raise a ticket rather than apologising.' },
-      { title: 'Watch it from the portal', body: 'Staff review conversations, rate answers, and fix what the assistant should have known.' },
+      { title: 'Switch it on in Shopify', body: 'Turn on the app embed in your theme. The catalogue syncs by itself.', screen: 'shop-connect' },
+      { title: 'It answers from your catalogue', body: 'Each reply comes from your products and policies, found by meaning, not keywords.', screen: 'shop-answer' },
+      { title: 'It raises a ticket instead of guessing', body: 'A refund, return or cancellation, or anything it can’t answer, becomes a ticket.', screen: 'shop-escalate' },
+      { title: 'Human in the loop', body: 'Staff pick up the ticket in the portal, add a remark and close it.', screen: 'shop-ticket' },
+      { title: 'Close the gap', body: 'Add the missing guide or policy, and the assistant uses it once indexed.', screen: 'shop-knowledge-add' },
     ],
-    detail: [
-      'Storefront chat has a credibility problem. Generic bots answer the questions a shopper could have answered from the page, and fail on the ones that actually decide a purchase: is this in stock in my size, when will it arrive, what happens if I return it. A wrong answer is worse than no answer, because a confident invention about delivery or returns becomes a complaint.',
-      'Shopmgr grounds every reply in the merchant\'s own data. The catalogue is indexed for semantic search, so a shopper asking in their own words is matched to real products rather than keyword hits, and the merchant adds their own knowledge — policies, FAQs, product detail — as a second source. The assistant also sees what the shopper has been browsing, so a question about "the second one" resolves to a product instead of a clarifying question. Where a merchant publishes on social channels, that content is indexed too, so the assistant knows what the brand has actually said in public.',
-      'The difference between a chatbot and an assistant is whether it can act. This one calls tools: searching products, checking current discounts, looking up the status of a customer\'s order, querying a shop policy, and — when it cannot resolve something — raising a support ticket typed by what the customer needs, whether refund, return, cancellation, or general. That last one matters most. The assistant is built to escalate rather than improvise, so the failure mode is a ticket a human picks up, not a confident wrong answer the merchant hears about later.',
-      'Operators get a portal rather than a black box: conversations are reviewable, every answer can be rated, and the knowledge base is editable, so a gap found on Monday is closed by Tuesday without a release. Model selection follows the plan tier, which keeps the economics sane for smaller stores. Scope is deliberately bounded — it reads orders but never modifies them, and it does not touch inventory, payments, or fulfilment. It is a front-of-house assistant, not a back-office system.',
-    ],
-    screens: ['chat', 'shop-knowledge', 'shop-tickets'],
-    // The home hero already draws the chat thread. See cardScreen above.
-    cardScreen: 'shop-tickets',
+    detail: [],
+    // The hero and the card show the human step, as on Accounting.
+    screens: ['shop-ticket'],
     cta: 'Book a demo',
     category: 'Commerce',
   },
   {
     slug: 'kyc',
     name: 'KYC',
-    oneLiner: 'Hold identity documents once, share them on purpose, verified by a person.',
+    // 2026-09-24: rebuilt from the shipped generation. See
+    // local_pm/research/2026-09-24-kyc-ui-walkthrough.md. It has no reviewer,
+    // no one-time code, no expiry and no event log, and it sets its "verified"
+    // flag without a check, so the page makes no verification claim at all.
+    oneLiner: 'Hold identity documents once, and share them only when asked.',
     problem:
-      'The same passport and proof of address get emailed to a dozen counterparties. Everyone keeps a copy. Nobody can show who checked what, or when.',
+      'The same passport and proof of address get emailed to a dozen counterparties, and every one of them keeps a copy.',
+    solution:
+      'A holder keeps their documents in one app. A counterparty asks for exactly what it needs with a QR code, and nothing is shared until the holder accepts.',
     steps: [
-      { title: 'Register documents once', body: 'A holder registers their documents — passport, ID card, proof of address, contact details — in one place.' },
-      { title: 'Verify contact details directly', body: 'Phone and email are confirmed by one-time code, without anyone having to check them.' },
-      { title: 'A reviewer checks the rest', body: 'A service provider verifies a document, and their name and the date are stamped onto the record.' },
-      { title: 'Share on purpose', body: 'A counterparty asks for what they need, or the holder pushes it across — either way it is scoped and it expires.' },
+      { title: 'Keep your documents in one place', body: 'Passport, ID card, address and phone number, kept by the holder in the phone app.', screen: 'kyc-home' },
+      { title: 'Add a document', body: 'Type in the details and photograph the front and back.', screen: 'kyc-add' },
+      { title: 'A counterparty asks', body: 'On the web it ticks exactly the documents it needs, and gets a QR code for the holder to scan.', screen: 'kyc-request' },
+      { title: 'Human in the loop', body: 'The holder sees the request and accepts or declines it. Nothing is shared until they accept.', screen: 'kyc-consent' },
+      { title: 'The counterparty sees the answer', body: 'The shared details appear in its portal, request by request.', screen: 'kyc-portal' },
     ],
-    detail: [
-      'Onboarding a customer normally means asking them to email their identity documents, then storing those documents forever in whatever system received them. Every counterparty repeats the exercise, every one keeps a copy, and none of them can tell you who checked the document or when. The risk sits in the copies, and the copies exist because there was no better way to move the information.',
-      'This product treats identity documents as something a person holds and lends, rather than something every counterparty collects. A holder registers their documents once — passport, identity card, proof of address, phone, email. Contact details verify themselves by one-time code. The rest are verified by a person at a service provider, and that verification is stamped onto the record with the reviewer\'s name and the date, so the provenance of a check travels with the document instead of living in the verifier\'s inbox.',
-      'Sharing runs in both directions, which is the part that makes it work in practice. A counterparty can raise a request for specific documents with conditions attached — verified or not, issued within a period, not expiring before a date — and the holder fills it. Or the holder can push documents out to a provider who never asked. The two have deliberately different lifetimes: a request stands for months because onboarding takes time, while a share link lasts minutes because it is handed over in person, often as a scanned code. Every action lands in an event log.',
-      'We are precise about what this is not, because the category invites exaggeration. There is no liveness check, no facial matching, no document text recognition, and no connection to a government or bureau database. Decisions are made by people; the system\'s job is to make sure they are made against the right document, recorded when made, and not left scattered across a dozen mailboxes afterwards. Everything available in the interface is available over the API, so onboarding elsewhere can continue automatically once a decision exists.',
-    ],
-    screens: ['identity', 'kyc-share', 'kyc-review'],
+    detail: [],
+    screens: ['kyc-consent'],
     cta: 'Talk to us',
     category: 'Identity',
   },

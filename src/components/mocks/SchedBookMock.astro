@@ -1,0 +1,62 @@
+---
+import MockFrame from './MockFrame.astro';
+// One provider's own calendar, reached by a direct link — there is no
+// provider list or search behind it (research note, claim #2 and the
+// "Screens vs. reality" table: the search endpoint is dead code, and the one
+// customer-facing provider page shows that provider's own services, not a
+// list to browse). What blocks a slot is real: working hours and public
+// holidays block the calendar automatically (the app,
+// room-table.js:32-81,210-243; holidays.js:1-22, called from
+// booking-table.js:401), and the conflict check spans a booking plus its
+// cooldown, not just the appointment, which is what the reserved gap after
+// the first booking below stands for (booking-table.js:758-778,977-979).
+// Times are HH:mm, per the app's own format (booking_list.dart:24). The
+// picked time continues the consultation defined in SchedServiceMock.
+// Source: research note "Real flow", step 4, and "Recommended steps", step 2;
+// copy-batch-b.md, Scheduling systems, step 2.
+const days = [
+  { label: 'Mon' },
+  { label: 'Tue' },
+  { label: 'Wed', holiday: true },
+  { label: 'Thu', active: true },
+  { label: 'Fri' },
+];
+---
+<MockFrame chrome="panel" title="Consultation — 45 min" meta="Thu">
+  <div class="space-y-2.5">
+    <div class="mock-step flex gap-1.5" style="--step: 0">
+      {days.map((d) => (
+        <span
+          class:list={[
+            'flex-1 rounded-full py-1 text-center font-head text-[9.5px] font-semibold uppercase tracking-[0.06em]',
+            d.active
+              ? 'bg-action text-on-action'
+              : d.holiday
+                ? 'border border-dashed border-line text-fg-subtle/60'
+                : 'border border-line text-fg-muted',
+          ]}
+        >
+          {d.label}
+        </span>
+      ))}
+    </div>
+    <p class="mock-step text-[10px] text-fg-subtle" style="--step: 1">Open 09:00–17:00 · Wed is a public holiday, so it's closed</p>
+
+    <div class="mock-step flex items-center gap-2 rounded-md border border-line bg-surface px-2.5 py-1.5" style="--step: 2">
+      <span class="text-[10.5px] tabular-nums text-fg-subtle">09:00–09:30 · Not available</span>
+    </div>
+    <div class="mock-step flex items-center gap-2 rounded-md border border-dashed border-line bg-fg-subtle/5 px-2.5 py-1.5" style="--step: 3">
+      <span class="shrink-0 rounded-full border border-line px-1.5 py-px font-head text-[9px] uppercase tracking-[0.06em] text-fg-subtle">Cooldown</span>
+      <span class="text-[10.5px] tabular-nums text-fg-subtle">09:30–09:45 · Reserved</span>
+    </div>
+
+    <div class="mock-step flex flex-wrap gap-1.5" style="--step: 4">
+      <span class="rounded-md border border-transparent bg-ok-soft px-2.5 py-1.5 text-[10.5px] font-medium tabular-nums text-ok">10:00</span>
+      <span class="grid">
+        <span class="mock-before col-start-1 row-start-1 rounded-md border border-transparent bg-ok-soft px-2.5 py-1.5 text-[10.5px] font-medium tabular-nums text-ok" style="--swap: 5">10:45</span>
+        <span class="mock-step col-start-1 row-start-1 rounded-md border border-transparent bg-action px-2.5 py-1.5 text-[10.5px] font-semibold tabular-nums text-on-action" style="--step: 5">10:45 · Selected</span>
+      </span>
+      <span class="rounded-md border border-transparent bg-ok-soft px-2.5 py-1.5 text-[10.5px] font-medium tabular-nums text-ok">12:00</span>
+    </div>
+  </div>
+</MockFrame>

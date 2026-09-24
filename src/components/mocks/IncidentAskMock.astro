@@ -1,0 +1,64 @@
+---
+import MockFrame from './MockFrame.astro';
+// Frame title is the widget's own header with the client prefix dropped — the
+// portal, chat-main.component.html:3 (its real string carries that prefix).
+// The wait state is real: a typing indicator shows while a reply is pending
+// (the portal, chat-main.component.html:52-58, `loadingBotReply`); shown here
+// as dots, matching how the same idiom is drawn elsewhere in these mocks.
+// Citation shape is the shipped format exactly — `{fileName} (P.{pageRange})`
+// (the API, DocumentService.cs:232-247) — and a real filename carries an
+// extension, since uploads are restricted to .docx/.pdf (the portal,
+// add-document-popup.component.ts:30). The name below is invented in that
+// shape, not a real document.
+// Thumbs up/down are real per-answer feedback (the portal,
+// chat-main.component.html:24-31). Left off: the "Tell us more" dislike
+// prompt (adds a second interaction this step doesn't need) and any
+// follow-up-question suggestions — that panel is wired but its template is
+// commented out, so it's never shown to a real user (claim #5).
+// Source: local_pm/projects/mock-rollout/specs/copy-batch-b.md, "Ops incident
+// support".
+---
+<MockFrame chrome="tabs" title="AI Chatbot" meta="Sourced">
+  <div class="space-y-2.5">
+    <div class="flex justify-end">
+      <p class="mock-step max-w-[80%] rounded-2xl rounded-br-sm bg-action px-3 py-2 text-[12px] leading-snug text-on-action" style="--step: 0">
+        What's the first step for an access fault at Site B?
+      </p>
+    </div>
+
+    <div class="mock-step flex justify-start" style="--step: 1">
+      <div class="max-w-[85%] space-y-1.5">
+        <div class="grid">
+          <p class="mock-before col-start-1 row-start-1 rounded-2xl rounded-bl-sm border border-line bg-surface px-3 py-2 text-[12px] text-fg-subtle" style="--swap: 2">
+            <span aria-hidden="true">• • •</span>
+          </p>
+          <p class="mock-step col-start-1 row-start-1 rounded-2xl rounded-bl-sm border border-line bg-surface px-3 py-2 text-[12px] leading-snug text-fg" style="--step: 2">
+            Notify the duty lead first, then log the time the incident started.
+          </p>
+        </div>
+
+        <div class="mock-step flex items-center gap-2" style="--step: 3">
+          <span class="inline-flex items-center gap-1 rounded-full border border-line px-2 py-0.5 font-head text-[9.5px] text-fg-subtle">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z" /><path d="M14 2v6h6" />
+            </svg>
+            Section 4 Handbook.pdf <span class="tabular-nums">(P.12-14)</span>
+          </span>
+        </div>
+
+        <div class="mock-step flex items-center gap-1.5" style="--step: 4">
+          <span class="grid h-6 w-6 place-items-center rounded-md border border-line text-fg-subtle" aria-hidden="true">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M7 10v12" /><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2h0a3.13 3.13 0 0 1 3 3.88Z" />
+            </svg>
+          </span>
+          <span class="grid h-6 w-6 place-items-center rounded-md border border-line text-fg-subtle" aria-hidden="true">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 14V2" /><path d="M9 18.12 10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L12 22h0a3.13 3.13 0 0 1-3-3.88Z" />
+            </svg>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</MockFrame>

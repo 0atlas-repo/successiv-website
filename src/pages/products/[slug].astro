@@ -30,7 +30,7 @@ const stepsCarryScreens = product.steps.every((s) => s.screen);
   <!-- Intro: claim on the left, the product screen on the right. -->
   <section class="hero-wash border-b border-line pb-20 pt-[88px]">
     <div class="mx-auto max-w-[1180px] px-6">
-      <div class="grid items-center gap-14 lg:grid-cols-[1fr_0.9fr]">
+      <div class="grid grid-cols-1 items-center gap-14 lg:grid-cols-[1fr_0.9fr]">
         <div>
           <p class="reveal mb-5 font-head text-[13px] font-semibold uppercase tracking-[0.14em] text-accent">
             {product.category}
@@ -65,7 +65,7 @@ const stepsCarryScreens = product.steps.every((s) => s.screen);
           </div>
         </div>
 
-        <div class="reveal relative max-lg:mx-auto max-lg:max-w-[420px]">
+        <div class="reveal relative w-full max-lg:mx-auto max-lg:max-w-[420px]">
           <div class="mock-wash pointer-events-none absolute -inset-10" aria-hidden="true"></div>
           <div class="relative lg:rotate-[1.2deg]"><ProductMock mock={product.screens[0]} /></div>
         </div>
@@ -162,7 +162,7 @@ const stepsCarryScreens = product.steps.every((s) => s.screen);
         {product.steps.map((step, i) => (
           // A step with its own screen: text and screen side by side, sides alternating.
           step.screen ? (
-            <article class="reveal grid items-center gap-8 border-b border-line py-[48px] lg:grid-cols-2 lg:gap-14">
+            <article class="reveal grid grid-cols-1 items-center gap-8 border-b border-line py-[48px] lg:grid-cols-2 lg:gap-14">
               <div class:list={['grid grid-cols-[40px_1fr] items-baseline gap-4 sm:grid-cols-[64px_1fr] sm:gap-6', i % 2 === 1 && 'lg:order-2']}>
                 <span class="font-head text-[15px] font-bold text-accent">
                   {String(i + 1).padStart(2, '0')}

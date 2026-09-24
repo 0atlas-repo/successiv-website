@@ -1,0 +1,54 @@
+---
+import MockFrame from './MockFrame.astro';
+// Same library, no screen of its own (see BundleAssembleMock's header). This
+// draws the last, independent call: the assembled file goes in, a
+// password-protected copy comes out. It is a separate call from assembly and
+// masking, not an automatic finish chained onto either — the caller invokes
+// it on its own once there's a file to protect.
+---
+<MockFrame chrome="panel" title="Lock">
+  <div class="space-y-2.5">
+    <div class="mock-step flex items-center gap-2.5 rounded-lg border border-line bg-surface px-2.5 py-2" style="--step: 0">
+      <div class="grid h-7 w-7 shrink-0 place-items-center rounded-md border border-line bg-surface-2 text-fg-subtle/60">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M14 3v4a1 1 0 0 0 1 1h4" /><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z" />
+        </svg>
+      </div>
+      <div class="min-w-0 flex-1">
+        <p class="truncate text-[12px] text-fg">release-file.pdf</p>
+        <p class="text-[10px] text-fg-subtle">2.4 MB</p>
+      </div>
+    </div>
+
+    <div class="mock-step flex items-center gap-2.5 rounded-lg border border-line bg-surface px-2.5 py-2" style="--step: 1">
+      <span class="grid h-5 w-5 shrink-0 place-items-center">
+        <span class="mock-before col-start-1 row-start-1 text-fg-subtle" style="--swap: 2">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 9.9-1" />
+          </svg>
+        </span>
+        <span class="mock-step col-start-1 row-start-1 text-fg" style="--step: 2">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
+          </svg>
+        </span>
+      </span>
+      <span class="text-[10.5px] text-fg-subtle">Password</span>
+      <span class="ml-auto grid shrink-0">
+        <span class="mock-before col-start-1 row-start-1 whitespace-nowrap rounded-full border border-line px-1.5 py-px font-head text-[9.5px] font-semibold uppercase tracking-[0.06em] text-fg-subtle" style="--swap: 3">
+          Not set
+        </span>
+        <span class="mock-step col-start-1 row-start-1 whitespace-nowrap rounded-full bg-ok-soft px-1.5 py-px font-head text-[9.5px] font-semibold uppercase tracking-[0.06em] text-ok" style="--step: 3">
+          Set
+        </span>
+      </span>
+    </div>
+
+    <div class="mock-step flex items-center gap-2 border-t border-line pt-2.5" style="--step: 4">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-ok" aria-hidden="true">
+        <path d="M20 6 9 17l-5-5" />
+      </svg>
+      <span class="text-[10.5px] text-fg-subtle">Locked — ready to release</span>
+    </div>
+  </div>
+</MockFrame>

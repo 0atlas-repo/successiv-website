@@ -1,0 +1,63 @@
+---
+import MockFrame from './MockFrame.astro';
+// The list page's own heading is "Your Checkout Reports", columns Job ID /
+// Created / Library — the extension,
+// CheckoutReportListView.tsx:108-144. Opening a job shows "Checkout Report
+// {id}", columns File Name / Checked Out Date / Checked Out By, and a "Back
+// to Report List" button — CheckoutReportDetailView.tsx:104-136 — which is
+// also where the real empty state lives, "No rows found, please try again in
+// a moment", shown here before the job's rows load in, since the report is
+// filled in by a background job, not instantly — the console app,
+// Program.cs:283-368. Report contents come from a SharePoint search
+// cross-referenced against the ingested audit log for the actual checkout
+// date — the console app, CheckedOutReport.cs:45-245. "Checked Out By" is a
+// role, never a name.
+// Source: local_pm/projects/mock-rollout/specs/copy-batch-b.md, "SharePoint
+// extensions".
+const rows = [
+  { file: 'Vendor terms.pdf', since: '2026-09-10', who: 'Project lead' },
+  { file: 'Budget summary.xlsx', since: '2026-09-15', who: 'Finance analyst' },
+  { file: 'Onboarding checklist.xlsx', since: '2026-09-18', who: 'Records manager' },
+];
+---
+<MockFrame chrome="panel" title="Your Checkout Reports" meta="1 job">
+  <div class="grid">
+    <div class="mock-before col-start-1 row-start-1 space-y-1.5" style="--swap: 1">
+      <div class="mock-step flex items-center justify-between rounded-lg border border-line bg-surface px-2.5 py-2" style="--step: 0">
+        <span class="text-[12px] text-fg">Shared Documents</span>
+        <span class="text-[10.5px] tabular-nums text-fg-subtle">2026-09-24</span>
+      </div>
+    </div>
+
+    <div class="mock-step col-start-1 row-start-1 space-y-2" style="--step: 1">
+      <p class="font-head text-[12px] font-semibold text-fg">Checkout Report 214</p>
+      <div class="flex items-center gap-3 border-b border-line pb-1 text-[9.5px] uppercase tracking-[0.06em] text-fg-subtle">
+        <span class="flex-1">File Name</span>
+        <span>Checked Out Date</span>
+        <span>Checked Out By</span>
+      </div>
+      <div class="grid">
+        {/* The report fills in once the queued job finishes, not on open. */}
+        <p class="mock-before col-start-1 row-start-1 py-1 text-[10.5px] italic text-fg-subtle" style="--swap: 2; --mock-lead-in: 1600ms">No rows found, please try again in a moment</p>
+        <div class="mock-step col-start-1 row-start-1 flex items-center gap-2 text-[10.5px]" style="--step: 2; --mock-lead-in: 1600ms">
+          <span class="min-w-0 flex-1 truncate text-fg">{rows[0].file}</span>
+          <span class="tabular-nums text-fg-subtle">{rows[0].since}</span>
+          <span class="text-fg-subtle">{rows[0].who}</span>
+        </div>
+      </div>
+      <div class="mock-step flex items-center gap-2 text-[10.5px]" style="--step: 3; --mock-lead-in: 1600ms">
+        <span class="min-w-0 flex-1 truncate text-fg">{rows[1].file}</span>
+        <span class="tabular-nums text-fg-subtle">{rows[1].since}</span>
+        <span class="text-fg-subtle">{rows[1].who}</span>
+      </div>
+      <div class="mock-step flex items-center gap-2 text-[10.5px]" style="--step: 4; --mock-lead-in: 1600ms">
+        <span class="min-w-0 flex-1 truncate text-fg">{rows[2].file}</span>
+        <span class="tabular-nums text-fg-subtle">{rows[2].since}</span>
+        <span class="text-fg-subtle">{rows[2].who}</span>
+      </div>
+      <div class="mock-step border-t border-line pt-2" style="--step: 5; --mock-lead-in: 1600ms">
+        <span class="rounded-full border border-line px-2.5 py-1 font-head text-[9.5px] font-medium text-fg-muted">Back to Report List</span>
+      </div>
+    </div>
+  </div>
+</MockFrame>

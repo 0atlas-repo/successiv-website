@@ -82,3 +82,24 @@ caught it.
 animating a screen, get the real UI's labels, states and order from the app's
 source, and record them in `local_pm/research/`. When more than one codebase
 could be "the product", ask which one ships before tracing to any of them.
+
+## 2026-09-24 — local_pm is public here
+
+**Mistake:** research notes with a product's security findings were committed to
+`local_pm/` in a public repo. Caught before push. Naming which anonymised entries
+share a client was the same mistake in another form.
+**Rule:** before committing research, check `gh repo view --json visibility`. In a
+public repo, security findings and client-identifying detail go to the founder
+directly or the scratchpad, never to `local_pm/`. If they were committed on an
+unpushed branch, squash at merge.
+
+## 2026-09-24 — a clipped layout hides from "no horizontal scroll"
+
+**Mistake:** the phone check was `scrollWidth > innerWidth`, and later `scrollX`
+after scrolling. A wrapper clips overflow, so the page never scrolls — while a
+wide mock silently pushes the step text past the screen edge. It was already
+live on Accounting.
+**Rule:** at 390px, measure what is cut: every `h1,h2,h3,p` outside a mock and
+every `.mock-frame` must end at or before the viewport's right edge. Grids that
+hold mocks use `grid-cols-1` below their breakpoint; an `mx-auto` wrapper around
+a mock also needs `w-full`.

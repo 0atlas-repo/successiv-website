@@ -1,0 +1,64 @@
+---
+import MockFrame from './MockFrame.astro';
+// The merchant's only screen in the embedded Shopify admin — Settings,
+// Support Ticket, Knowledge, Customize and the portal logins are all
+// commented out of this app's own nav; everything else genuinely lives in
+// the separate portal (see ShopTicketMock / ShopKnowledgeAddMock). Every
+// string below is quoted from that screen:
+// "Welcome to shopmgr.ai" — the widget, app/routes/app._index.jsx:77
+// "please read the Get Started guide before entering the portal." / "Go to
+//   Portal" — the widget, app/routes/app._index.jsx:93,96 (button opens an
+//   SSO hop into the portal)
+// "Get Started" / "How To Activate Your Assistant?" — the widget,
+//   app/routes/app._index.jsx:104,108
+// "You can access the Theme Editor by clicking HERE" — the widget,
+//   app/routes/app._index.jsx:112
+// "App embeds" / "shopmgr.ai Chatbot" — the widget,
+//   app/routes/app._index.jsx:126,129 (the toggle's real block name; the
+//   theme-embed block that defines it lives in a path that carries the
+//   connector's internal folder naming, so it isn't cited here — the
+//   instruction line above, which names the same block, is)
+// "Congratulations! Your assistant has been successfully activated." —
+//   the widget, app/routes/app._index.jsx:143
+// Source: local_pm/research/2026-09-24-shopmgr-ui-walkthrough.md, "1. Connect the store".
+---
+<MockFrame chrome="panel" title="Welcome to shopmgr.ai">
+  <div class="space-y-2.5">
+    <div class="mock-step rounded-lg border border-line bg-surface px-3 py-2.5" style="--step: 0">
+      <p class="font-head text-[11.5px] font-semibold text-fg">Portal</p>
+      <p class="mt-1 text-[10.5px] leading-snug text-fg-subtle">
+        If this is your first time using our app, please read the <span class="font-medium text-fg">Get Started</span> guide before entering the portal.
+      </p>
+      <span class="mt-2 inline-block rounded-full bg-action px-3 py-1 font-head text-[10.5px] font-semibold text-on-action">Go to Portal</span>
+    </div>
+
+    <div class="mock-step rounded-lg border border-line bg-surface px-3 py-2.5" style="--step: 1">
+      <p class="font-head text-[11.5px] font-semibold text-fg">Get Started</p>
+      <p class="mt-1 text-[10.5px] font-medium text-fg">How To Activate Your Assistant?</p>
+    </div>
+
+    <p class="mock-step text-[10.5px] leading-snug text-fg-subtle" style="--step: 2">
+      You can access the Theme Editor by clicking <span class="font-medium text-action">HERE</span>
+    </p>
+
+    <div class="mock-step flex items-center justify-between rounded-lg border border-line bg-surface px-3 py-2" style="--step: 3">
+      <div>
+        <p class="font-head text-[11px] font-medium text-fg">shopmgr.ai Chatbot</p>
+        <p class="text-[10px] text-fg-subtle">App embeds</p>
+      </div>
+      <span class="relative grid h-[18px] w-8 shrink-0 rounded-full border border-line">
+        <span class="mock-before col-start-1 row-start-1 flex h-full items-center rounded-full bg-surface-2 px-0.5" style="--swap: 4">
+          <span class="block h-3 w-3 rounded-full bg-fg-subtle/60"></span>
+        </span>
+        <span class="mock-step col-start-1 row-start-1 flex h-full items-center justify-end rounded-full bg-action px-0.5" style="--step: 4">
+          <span class="block h-3 w-3 rounded-full bg-on-action"></span>
+        </span>
+      </span>
+    </div>
+
+    <div class="mock-step flex items-center gap-1.5 rounded-lg border border-line bg-ok-soft px-3 py-2" style="--step: 5">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-ok" aria-hidden="true"><path d="m20 6-11 11-5-5" /></svg>
+      <p class="text-[10.5px] leading-snug text-ok">Congratulations! Your assistant has been successfully activated.</p>
+    </div>
+  </div>
+</MockFrame>

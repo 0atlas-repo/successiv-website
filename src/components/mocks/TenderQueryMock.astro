@@ -1,0 +1,55 @@
+---
+import MockFrame from './MockFrame.astro';
+// A query against one bidder is drafted from the unmet checklist item — the
+// portal's service API has a template-driven drafting step that references
+// the requirement reference, the checklist result and any remark. A reply
+// attaches to that same query as a file, under the column header
+// "Reply" — the portal, src/components/DocumentList.tsx:502-549. There is no
+// "Send" step: a bidder's reply arrives and is uploaded by staff, it is not
+// composed or sent from inside this system, and it lands on its own
+// schedule, not instantly — hence the lead-in on the reply below. Query
+// number and filenames are invented placeholders in the real shape.
+// Source: the research note for this page (tender-rfp-management.md), Claims
+// table #4 and "Recommended steps…" §3.
+---
+<MockFrame chrome="sidebar" title="Tender — Clarification" meta="Bidder B">
+  <div class="space-y-2.5">
+    <div class="mock-step flex items-center gap-1.5 text-[10.5px] text-fg-subtle" style="--step: 0">
+      <span class="rounded-full bg-danger-soft px-1.5 py-px font-head text-[9px] font-semibold uppercase tracking-[0.06em] text-danger">Missing</span>
+      <span>§4.3 · Compliance declaration</span>
+    </div>
+
+    <div class="mock-step space-y-2 rounded-lg border border-line bg-surface p-2.5" style="--step: 1">
+      <div class="flex items-center justify-between">
+        <span class="font-head text-[11px] font-medium text-fg">Query 3</span>
+        <span class="font-head text-[9px] uppercase tracking-[0.06em] text-fg-subtle">§4.3</span>
+      </div>
+
+      <p class="mock-step text-[10.5px] leading-snug text-fg" style="--step: 2">
+        Please provide the missing compliance declaration for your submission.
+      </p>
+
+      <div class="mock-step flex items-center gap-1.5 border-t border-line pt-2" style="--step: 3">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-fg-subtle" aria-hidden="true">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><path d="M14 2v6h6" />
+        </svg>
+        <span class="text-[10px] text-fg-subtle">Attachment · query-3-letter.pdf</span>
+      </div>
+
+      <div class="grid">
+        {/* A bidder's reply arrives on its own schedule, not instantly — the
+            extra lead-in lets the wait read as real before the file lands. */}
+        <div class="mock-before col-start-1 row-start-1 flex items-center gap-1.5 border-t border-line pt-2 text-[10px] text-fg-subtle" style="--swap: 4; --mock-lead-in: 1600ms">
+          <span class="h-[7px] w-[7px] rounded-full border border-line"></span>
+          No reply yet
+        </div>
+        <div class="mock-step col-start-1 row-start-1 flex items-center gap-1.5 border-t border-line pt-2 text-[10px] text-fg" style="--step: 4; --mock-lead-in: 1600ms">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-ok" aria-hidden="true">
+            <path d="m20 6-11 11-5-5" />
+          </svg>
+          Reply · bidder-b-reply.pdf
+        </div>
+      </div>
+    </div>
+  </div>
+</MockFrame>

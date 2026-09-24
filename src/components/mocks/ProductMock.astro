@@ -4,15 +4,21 @@
 //
 // Record<ProductMock, ...> means adding a name to the union without building
 // the screen is a build error, not a blank space someone notices in review.
-import CreatorMock from './CreatorMock.astro';
-import CreatorProofMock from './CreatorProofMock.astro';
-import CreatorInsightsMock from './CreatorInsightsMock.astro';
-import ChatMock from './ChatMock.astro';
-import ShopKnowledgeMock from './ShopKnowledgeMock.astro';
-import ShopTicketsMock from './ShopTicketsMock.astro';
-import IdentityMock from './IdentityMock.astro';
-import KycShareMock from './KycShareMock.astro';
-import KycReviewMock from './KycReviewMock.astro';
+import CreatorExploreMock from './CreatorExploreMock.astro';
+import CreatorApplyMock from './CreatorApplyMock.astro';
+import CreatorSubmitMock from './CreatorSubmitMock.astro';
+import CreatorCheckMock from './CreatorCheckMock.astro';
+import CreatorTrackMock from './CreatorTrackMock.astro';
+import ShopConnectMock from './ShopConnectMock.astro';
+import ShopAnswerMock from './ShopAnswerMock.astro';
+import ShopEscalateMock from './ShopEscalateMock.astro';
+import ShopTicketMock from './ShopTicketMock.astro';
+import ShopKnowledgeAddMock from './ShopKnowledgeAddMock.astro';
+import KycHomeMock from './KycHomeMock.astro';
+import KycAddMock from './KycAddMock.astro';
+import KycRequestMock from './KycRequestMock.astro';
+import KycConsentMock from './KycConsentMock.astro';
+import KycPortalMock from './KycPortalMock.astro';
 import CalendarMock from './CalendarMock.astro';
 import AcctUploadMock from './AcctUploadMock.astro';
 import AcctReadingMock from './AcctReadingMock.astro';
@@ -26,15 +32,21 @@ interface Props { mock: ProductMock }
 const { mock } = Astro.props;
 
 const screens: Record<ProductMock, any> = {
-  'creator': CreatorMock,
-  'creator-proof': CreatorProofMock,
-  'creator-insights': CreatorInsightsMock,
-  'chat': ChatMock,
-  'shop-knowledge': ShopKnowledgeMock,
-  'shop-tickets': ShopTicketsMock,
-  'identity': IdentityMock,
-  'kyc-share': KycShareMock,
-  'kyc-review': KycReviewMock,
+  'cs-explore': CreatorExploreMock,
+  'cs-apply': CreatorApplyMock,
+  'cs-submit': CreatorSubmitMock,
+  'cs-check': CreatorCheckMock,
+  'cs-track': CreatorTrackMock,
+  'shop-connect': ShopConnectMock,
+  'shop-answer': ShopAnswerMock,
+  'shop-escalate': ShopEscalateMock,
+  'shop-ticket': ShopTicketMock,
+  'shop-knowledge-add': ShopKnowledgeAddMock,
+  'kyc-home': KycHomeMock,
+  'kyc-add': KycAddMock,
+  'kyc-request': KycRequestMock,
+  'kyc-consent': KycConsentMock,
+  'kyc-portal': KycPortalMock,
   'calendar': CalendarMock,
   'acct-upload': AcctUploadMock,
   'acct-reading': AcctReadingMock,
