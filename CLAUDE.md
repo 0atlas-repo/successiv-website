@@ -57,8 +57,8 @@ If you add a claim, you must be able to point at the code that does it.
 
 Mocked screens can arrive in steps as their `.reveal` wrapper scrolls into
 view. The mechanics (`--step`, `.mock-before`, the timing vars, reduced
-motion) are documented where they live: `src/styles/global.css:213` onward —
-read that comment before adding a step.
+motion) are documented where they live: the `/* Mock steps … */` comment in
+`src/styles/global.css` — read that before adding a step.
 
 What isn't in that comment:
 
@@ -71,11 +71,13 @@ What isn't in that comment:
   file, the way the five `Acct*Mock.astro` files do. Section 10 of
   `scripts/verify.mjs` also greps the built Accounting page for a list of
   retired claims that must never come back.
-- A product step can carry a screen: `steps[].screen?: ProductMock` in
-  `src/content/products.ts`. When every step of a product has one,
-  `src/pages/products/[slug].astro` renders "Our solution" (`Product.solution`,
-  1–2 sentences, ≤45 words, never alongside the old long form) with a screen
-  beside each step, and drops the separate Screens gallery.
+- Two independent switches on `src/content/products.ts` control the product
+  page, in `src/pages/products/[slug].astro`: setting `Product.solution`
+  (1–2 sentences, ≤45 words) swaps the long-form "What it actually does" for
+  "Our solution", never both. Separately, giving every entry in `steps[]` a
+  `screen?: ProductMock` renders each step with that screen beside it and
+  drops the separate Screens gallery — a step with just some screens still
+  shows them, but the gallery only disappears once all of them do.
 
 Full spec: `local_pm/projects/mock-animation/specs/mock-animation.md`.
 
