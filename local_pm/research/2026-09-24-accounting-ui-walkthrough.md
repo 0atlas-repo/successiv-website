@@ -112,3 +112,96 @@ that nothing does. Each must be decided before new mocks are drawn:
 Which codebase does the page describe: **the shipped app**, **the engine**, or
 the shipped app with the engine named as "in progress"? This record cannot
 settle that. It decides the copy and all five screens.
+
+---
+
+## Pass 2 — the exact screen content (shipped app, commit `2a11969`)
+
+The founder chose "the shipped app only". This pass gathered the literal strings
+for each screen.
+
+### 1. Upload — phone `UploadBillsScreen`
+- **Header:** AppBar "Upload Bills", with a close (×) button.
+- **Pick buttons:** "Files" (folder_open) / "Photos" (photo_library) / "Scan"
+  (document_scanner).
+- **File count:** "N / 20 files". Thumbnails are 90×120, with the filename below
+  and a × to remove. No size is shown. The empty state reads "No files selected".
+- **Grouping:** "Group Files", hinted "Tap to select, then create a group".
+  Selecting shows "N selected" with "Create Group" (+) and "Clear".
+- **Groups section:** "Groups", then per group a chip "Group 1", the count
+  "1 file" / "2 files", "Remove", and a note toggle ("Add a note for this group…").
+- **Upload button:** "Upload 1 Group" / "Upload 2 Groups", pluralised properly.
+  With no files it reads "Add files to upload" and is disabled.
+- **Uploading:** a spinner, "Uploading…", and "Please wait, do not close this page."
+- **Done:** a green check, "1 Group Queued", "Group 1: Task #N",
+  "Your bills are being processed.", and "Done".
+- **The web equivalent** is the "Upload Bills" modal: "Local Files" / "Camera",
+  "+ Create Group", "Upload Groups".
+
+### 2. Reading — there is **no extracted-fields screen**
+- The "Extracted" card renders **empty for every normal bill task**, on both web
+  and phone. Its data is the arguments of the tool that paused the task, and all
+  of those are on the card's skip-list.
+- So nothing in the UI shows the fields being read. What shows is the **progress
+  strip**: "Upload" ✓ → "Processing" (queued / running) / "Pending" /
+  "Resubmit" / "Review" / "Failed" → "Completed" (or "New Submission").
+- The extraction result surfaces as the **drafted transaction group** (screen 3).
+
+### 3. The draft entry — the transaction group (web modal and phone card)
+- **Header:** "📋 Transaction Group #id".
+- **"🔍 Audit Confidence":** shown as "{pct}% — {label}" with a bar. The bands
+  are ≥90 High (green), ≥70 Medium (amber), ≥40 Low (orange), and below 40
+  Critical (red). Concerns follow, each prefixed "⚠ ".
+- **Disposition badge:** "Auto-confirmed" / "HITL-confirmed" / "Auto-rejected" /
+  "HITL-rejected" (see the open question below).
+- **Summary:** "• 1 Transaction", "• 2 Ledgers" (pluralised, and only counts that
+  are not zero).
+- **Transaction rows:** Date / Description / Currency / Exchange Rate / Status.
+  Status is the raw enum: `draft`, `confirmed` or `posted`.
+- **"Journal Entries":** Account Code | Debit | Credit, in the **document's
+  currency** (source amounts).
+- **Buttons:** "Approve" / "Reject". Phone has no Edit button.
+- **Example:** Group #4821, 91% — High, "Auto-confirmed", 1 Transaction, 2 Ledgers.
+  SGD, rate 0.76. The entries are 6100 Dr 104.00 and 2100 Cr 104.00.
+- **Dual-currency total** (only on the ledger list card view): "Total" |
+  **USD 76.76** with (SGD 104.00) on the line below, once per transaction.
+
+### 4. Question — web task page / phone `ReviewRequestContent`
+- **Header:** "Review Request", "Answer / approve agent request here".
+- **"Request Rationale":** a box above the question.
+- **The question:** text, then radio options, then "Additional comments or
+  explanation (optional)". With several questions it adds "Question 1 of N" and
+  "Please answer all N questions to continue:".
+- **Other controls:** "Remember my choice and do not ask similar questions
+  again", and "Continue →" (web) / "Continue" (phone). There is no Reject in
+  this mode.
+- **Real phrasing** (the prompt example the model imitates): *"This receipt has
+  several hard-to-read fields. Please confirm the correct values: (1) Receipt
+  date — A: '2021-07-16' or B: '2019-09-10' or Other? (2) Total amount — A:
+  '$30.0' or B: '$30.3' or Other?"*
+- **After Continue:** the strip goes "Pending" → "Processing".
+
+### 5. Bank lines — web task page only
+- **Summary:** "3 matched · 2 need action", with "Expand All".
+- **Per line:** a badge MATCH / MISSING / MISMATCH / ERROR, then the date, the
+  description, and the amount as "+$1,250.00 USD" / "−$1,250.00 USD".
+- **Radios:** "Create Transaction" / "Fix Existing" / "Ignore (Matched/Manual)".
+  The server pre-selects one: matched → Ignore, missing → Create,
+  discrepancy → Fix Existing.
+- **Expanded line:** "AI Rationale", "Matched Transactions" (#ids), "Ledger
+  Amount", and a note field.
+- **Submit:** through the task's "Approve".
+- **End Period:** "End Accounting Period", then "Period to close:", then "Cancel" /
+  "End Period". Next comes "Are you sure you want to end this period?" and
+  "Confirm Close". It is guarded by "This period contains N draft transaction(s)…".
+
+### Phone app status
+- **Distribution:** no evidence of it. There is no store, TestFlight or CI
+  release config, and the version is `1.0.0+1`. The bundle id is
+  production-shaped, which shows intent to ship.
+- **What it can draw:** screens 1–4 honestly. It has no bank-line or close screen.
+
+### Open: does "Auto-confirmed" skip the human approval?
+This pass's disposition badge suggests some groups confirm with no human click.
+Pass 1 said final approval is always required. A third, targeted question is out
+(pending).
