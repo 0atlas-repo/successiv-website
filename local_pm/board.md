@@ -8,6 +8,7 @@ One row per active plan. If it is not here, it does not exist.
 | [Capability depth](projects/capability-depth/specs/capability-depth.md) | shipped and live at cb92cd7 | Done. Two products hidden since, see loose tasks |
 | [Mock realism](projects/mock-realism/plans/rollout.md) | shipped and live at 36262da | Done. Three chrome flags open, see the log |
 | [Mock chrome variants](projects/mock-chrome-variants/plans/rollout.md) | shipped and live at c3a86f8 | Done. Founder to eyeball the five shells on the live site |
+| [Mock animation](projects/mock-animation/specs/mock-animation.md) | spec drafted, Accounting pilot | Founder to approve spec + two open questions; then plan |
 
 ## Loose tasks
 
