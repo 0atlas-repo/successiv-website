@@ -1,6 +1,6 @@
 # Spec — animate the mocked screens as they scroll into view
 
-**Status:** draft, awaiting founder approval
+**Status:** approved by founder 2026-09-24 (cards included), pilot built
 **Branch:** `mock-animation`
 **Date:** 2026-09-24
 **Pilot:** Accounting (`acct-extract`, `acct-journal`, `acct-close`)
