@@ -98,7 +98,7 @@ failure. Ten groups:
 | 7 | SEO | Every page has its own title and meta description, all unique |
 | 8 | Accessibility | Skip link, `lang`, labelled theme toggle, viewport meta |
 | 9 | Mock animation | Every `.mock-step`/`.mock-before` rule is gated by `.is-visible`, `.mock-before` starts hidden, reduced motion turns both off, each screen's steps are numbered 0..n with no gaps or repeats against a per-page step count (`expectedSteps`, keyed by page path), any `--swap: N` must name a step that exists, and every screen's steps must start in the order they're numbered, with each `--swap` timed to land on its own step |
-| 10 | Retired claims | Per page path (`retiredClaims`, every product and work page that has a "solution"): greps the built page for claims that don't match the shipped app (e.g. Accounting's "reversal", "bank lines unmatched") and checks the step count matches `expectedSteps` with the old Screens gallery gone |
+| 10 | Retired claims | Per page path, listed manually in `retiredClaims` (today all 4 products and all 8 work pages): greps the built page for claims that don't match the shipped app (e.g. Accounting's "reversal", "bank lines unmatched") and checks the step count matches `expectedSteps` with the old Screens gallery gone |
 
 Group 3 also asserts the two hidden products stay hidden: `/products/leave/` and
 `/products/1line-ai/` must not be built. Unhiding one by accident fails the

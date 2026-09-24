@@ -77,9 +77,11 @@ What isn't in that comment:
   file. A product cites `local_pm/research/2026-09-24-<product>-ui-walkthrough.md`,
   which ships in this repo; a work entry's walkthrough is kept out of this
   public repo, so its mock files cite it by name only. Section 10 of
-  `scripts/verify.mjs` greps every product and work page that has a
-  `solution` for a list of retired claims that must never come back —
-  `retiredClaims` in section 10, one entry per page path.
+  `scripts/verify.mjs` greps every page listed in its `retiredClaims` table —
+  a literal list, keyed by page path — for claims that must never come back.
+  Adding a page there is manual: it also needs an entry in section 9's
+  `expectedSteps` (section 10 reads `expectedSteps[slug].length`), or the
+  build throws instead of failing cleanly.
 - The same two switches work on both halves of the site: `src/content/products.ts`
   (rendered by `src/pages/products/[slug].astro`) and `src/content/work.ts`
   (rendered by `src/pages/work/[slug].astro`). Setting `solution` (1–2
@@ -87,9 +89,9 @@ What isn't in that comment:
   both — on a work entry this also drops the Problem/Approach/Outcome row.
   Separately, giving every entry in `steps[]` a `screen` renders each step
   with that screen beside it and drops the separate Screens gallery — on a
-  product, a step with just some screens still shows the rest in the gallery;
-  a work entry's `steps[].screen` is required once `steps` is set at all, so
-  a work page with steps never shows the gallery.
+  product, if only some steps have a screen the gallery still shows every
+  screen after the first; a work entry's `steps[].screen` is required once
+  `steps` is set at all, so a work page with steps never shows the gallery.
 
 Full spec: `local_pm/projects/mock-animation/specs/mock-animation.md` (the
 Accounting pilot) and `local_pm/projects/mock-rollout/specs/mock-rollout.md`
