@@ -160,6 +160,21 @@ for (const slug of slugs) {
     continue;
   }
   const html = readFileSync(join(dist, 'products', slug, 'index.html'), 'utf8');
+  // 2026-09-24: the founder asked for "our solution", shorter, in place of the
+  // long form. A page that has it is held to short instead of long: one or two
+  // sentences, 45 words at most, and never both sections at once.
+  const sol = html.indexOf('Our solution');
+  if (sol !== -1) {
+    const end = html.indexOf('</section>', sol);
+    const text = html.slice(sol, end).replace(/<[^>]+>/g, ' ').replace('Our solution', '').replace(/\s+/g, ' ').trim();
+    const words = text.split(' ').length;
+    const sentences = (text.match(/[.?!](\s|$)/g) || []).length;
+    const alsoLong = html.includes('What it actually does');
+    words <= 45 && sentences >= 1 && sentences <= 2 && !alsoLong
+      ? pass(`${slug}: solution, ${sentences} sentence(s), ${words} words`)
+      : fail(`${slug}: solution must be 1–2 sentences and ≤45 words, without the long form (got ${sentences}, ${words}${alsoLong ? ', long form present' : ''})`);
+    continue;
+  }
   const n = depthOf(html, 'What it actually does');
   n >= 3 ? pass(`${slug}: ${n} paragraphs`) : fail(`${slug}: ${n} paragraphs, needs 3`);
 }
@@ -259,43 +274,91 @@ for (const [label, ok] of Object.entries(a11y)) {
 
 // ---------------------------------------------------------------------------
 console.log('\n9. Mock animation — the settled frame is the claim, motion is extra');
-// A .mock-step starts hidden (fill-mode: both). If its animation ran without the
-// scroll trigger, a screen with no JavaScript, or outside a .reveal, would stay
-// blank. So every rule that animates a step must be gated by .is-visible.
+// A .mock-step starts hidden (fill-mode: both), and a .mock-before (an earlier
+// state stacked over the final one) starts shown. If either animation ran without
+// the scroll trigger, a screen with no JavaScript, or outside a .reveal, would be
+// stuck mid-story. So every rule that animates them must be gated by .is-visible.
 const cssRules = [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)];
+const animated = (sel) => sel.includes('.mock-step') || sel.includes('.mock-before');
 const ungated = cssRules.filter(
   ([, sel, body]) =>
-    sel.includes('.mock-step') &&
+    animated(sel) &&
     /animation(-name)?:/.test(body) &&
     !/animation:\s*none/.test(body) &&
     !sel.includes('.is-visible')
 );
-const stepRules = cssRules.filter(([, sel]) => sel.includes('.mock-step'));
+const stepRules = cssRules.filter(([, sel]) => animated(sel));
 stepRules.length > 0 && ungated.length === 0
-  ? pass(`${stepRules.length} .mock-step rule(s), every animation gated by .is-visible`)
-  : fail(stepRules.length === 0 ? 'no .mock-step rule in the CSS' : `ungated step animation: ${ungated[0][1].trim()}`);
+  ? pass(`${stepRules.length} mock animation rule(s), every animation gated by .is-visible`)
+  : fail(stepRules.length === 0 ? 'no .mock-step rule in the CSS' : `ungated mock animation: ${ungated[0][1].trim()}`);
+
+// Without the trigger, the settled frame must show: earlier states hidden.
+cssRules.some(([, sel, body]) => sel.trim().split(',').includes('.mock-before') && /opacity:\s*0\b/.test(body))
+  ? pass('.mock-before is hidden by default (the settled frame shows without the trigger)')
+  : fail('.mock-before is not hidden by default');
 
 // The global reduced-motion rule shortens durations but keeps delays, so a
-// staggered step would sit hidden for its delay and then pop. It must be off.
-/prefers-reduced-motion:\s*reduce\)\s*\{[^@]*\.mock-step\s*\{[^}]*animation:\s*none/.test(css)
-  ? pass('reduced motion turns step animation off')
-  : fail('reduced motion does not set animation: none on .mock-step');
+// staggered step would sit hidden for its delay and then pop. Both must be off.
+const rmAt = css.search(/prefers-reduced-motion:\s*reduce\)\s*\{/);
+let rmBlock = '';
+if (rmAt !== -1) {
+  let i = css.indexOf('{', rmAt), depth = 0, j = i;
+  for (; j < css.length; j++) {
+    if (css[j] === '{') depth++;
+    else if (css[j] === '}' && --depth === 0) break;
+  }
+  rmBlock = css.slice(i + 1, j);
+}
+const rmOff = [...rmBlock.matchAll(/([^{}]+)\{([^{}]*)\}/g)].filter(([, , body]) => /animation:\s*none/.test(body));
+['.mock-step', '.mock-before'].every((c) => rmOff.some(([, sel]) => sel.includes(c)))
+  ? pass('reduced motion turns step and swap animation off')
+  : fail('reduced motion does not set animation: none on both .mock-step and .mock-before');
 
 // Each sequence must be numbered 0..n, each number once, and its length must
 // match the spec's table — a missing step means a claimed stage vanished.
-// Page order: screens[0] in the hero, then the rest in the Screens grid.
-const expectedSteps = { accounting: [6, 8, 6] };
+// A swap (--swap: N) retires an earlier state as step N arrives, so every
+// swap must name a step that exists.
+// Page order: the hero, then the screens in step order.
+const expectedSteps = { accounting: [8, 6, 4, 7, 8, 6] };
 for (const [slug, expected] of Object.entries(expectedSteps)) {
   const html = readFileSync(join(dist, 'products', slug, 'index.html'), 'utf8');
   const frames = html.split(/class="mock-frame\b/).slice(1);
   const seqs = frames
-    .map((f) => [...f.matchAll(/--step:\s*(\d+)/g)].map((m) => Number(m[1])))
-    .filter((s) => s.length > 0);
-  const maxes = seqs.map((s) => Math.max(...s));
-  const exact = seqs.every((s) => new Set(s).size === s.length && s.length === Math.max(...s) + 1);
-  exact && JSON.stringify(maxes) === JSON.stringify(expected)
+    .map((f) => ({
+      steps: [...f.matchAll(/--step:\s*(\d+)/g)].map((m) => Number(m[1])),
+      swaps: [...f.matchAll(/--swap:\s*(\d+)/g)].map((m) => Number(m[1])),
+    }))
+    .filter((q) => q.steps.length > 0);
+  const maxes = seqs.map((q) => Math.max(...q.steps));
+  const exact = seqs.every(
+    (q) => new Set(q.steps).size === q.steps.length && q.steps.length === Math.max(...q.steps) + 1
+  );
+  const swapsOk = seqs.every((q) => q.swaps.every((n) => q.steps.includes(n)));
+  exact && swapsOk && JSON.stringify(maxes) === JSON.stringify(expected)
     ? pass(`${slug}: ${seqs.length} sequences, steps 0–${maxes.join(', 0–')}, none missing or repeated`)
-    : fail(`${slug}: expected step maxima ${JSON.stringify(expected)}, found ${JSON.stringify(maxes)}${exact ? '' : ' (gaps or repeats)'}`);
+    : fail(`${slug}: expected step maxima ${JSON.stringify(expected)}, found ${JSON.stringify(maxes)}${exact ? '' : ' (gaps or repeats)'}${swapsOk ? '' : ' (a swap names no step)'}`);
+}
+
+// ---------------------------------------------------------------------------
+console.log('\n10. Accounting — the shipped app only (research 2026-09-24)');
+{
+  const html = readFileSync(join(dist, 'products', 'accounting', 'index.html'), 'utf8');
+  const text = html.replace(/<[^>]+>/g, ' ');
+  // Each of these was on the page, and none of it is in the shipped app. See
+  // local_pm/research/2026-09-24-accounting-ui-walkthrough.md for each one.
+  const retired = [
+    /revers(al|ed)/i, /unreviewed rule/i, /which account/i, /\bTerms\b/, /bank lines unmatched/i,
+    /client on their phone/i, /Auto-confirmed/i, /Audit Confidence/i, /classif/i,
+  ];
+  const hits = retired.filter((re) => re.test(text));
+  hits.length === 0
+    ? pass('no retired claim on the Accounting page')
+    : fail(`retired claims still on the Accounting page: ${hits.map(String).join(', ')}`);
+  // One screen per step, plus the hero; and the gallery they replace is gone.
+  const frameCount = (html.match(/class="mock-frame\b/g) || []).length;
+  frameCount === 6 && !html.includes('Drawn, not screenshotted')
+    ? pass('5 steps each carry a screen, plus the hero; no gallery')
+    : fail(`expected 6 screens and no gallery, found ${frameCount}${html.includes('Drawn, not screenshotted') ? ' and the gallery' : ''}`);
 }
 
 // ---------------------------------------------------------------------------

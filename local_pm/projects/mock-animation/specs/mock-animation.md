@@ -1,6 +1,6 @@
 # Spec — animate the mocked screens as they scroll into view
 
-**Status:** revision 1 approved and built; **revision 2 (below) drafted, awaiting founder approval**
+**Status:** revision 1 approved and built; revision 2 approved 2026-09-24 and built, awaiting founder review
 **Branch:** `mock-animation`
 **Date:** 2026-09-24
 **Pilot:** Accounting (`acct-extract`, `acct-journal`, `acct-close`)
@@ -194,41 +194,30 @@ instead of "What it actually does". A product whose steps all carry a screen
 drops the gallery. The other products carry neither field, so their pages do not
 change. That is checked by diffing their built HTML against `main`.
 
-## Draft copy — the shipped app only (for approval)
+## Copy — approved by the founder 2026-09-24
 
-- **One-liner** (kept): *The system reads the document; a person still answers
-  the awkward question.*
-- **Problem:** *Keying bills into the books by hand is slow. Automation that
-  posts without a check only moves the work to fixing mistakes.*
-- **Our solution:** *It reads each bill, drafts the double entry, and stops to
-  ask when a figure is unclear. Nothing is confirmed until a person approves it.*
+The founder's framing: *"AI will do like 95% of things, and human does the last
+5%."* Steps 3 and 4 were switched at the founder's request. "95%" is **not**
+used: the only source is a target in the app's requirements doc, never measured
+(research, pass 3).
 
-| # | Title | Body | Traces to (research record) |
-|---|---|---|---|
-| 1 | Upload the bills | Files, photos or scans, from the web or the phone app. Related pages are grouped so that they post as one transaction. | Step 1: "Upload Bills", grouping, "Each group processes as one transaction." |
-| 2 | It reads them | The fields on each document are read, and the currency is detected from what is printed on it. | Step 2: the "Extracted" card and the currency-detection stage |
-| 3 | It asks when it can't tell | An unreadable figure, or a payment missing from a series, gets a specific question. Processing waits for the answer. | Step 3: the real triggers and the OCR A/B/Other example |
-| 4 | A person approves the entry | A balanced double entry is drafted in the document's currency and your books' currency. It is confirmed only when someone approves it. | Step 4: final approval, draft → confirmed, dual currency, the debit-XOR-credit validator |
-| 5 | Match the bank, close the period | Bank statement lines are checked against the books, and a person confirms each one. Ending a period makes everything up to that date read-only. | Step 5: bank-line review, "End Period" |
+The copy is in `src/content/products.ts`. There is one deviation from the approved
+text: step 2 dropped "from what is printed on it". The shipped currency detection
+is a plain model call; the evidence-only resolver lives in the unshipped engine.
 
-Removed as untrue for the shipped app: the client on a phone, classification
-by document type, "which account", the booking straight after an answer, the
-rule marker, reversals, and the list of periods.
+## The five screens (built)
 
-## The five screens
+| Step | Component | Chrome | Arrives, in order (max step) | Traces to |
+|---|---|---|---|---|
+| Hero, 4 | `AcctQuestionMock` | panel | subtitle → question → A, B, Other → A picked → comment box → remember → "Continue →" (8) | research pass 2 §4 |
+| 1 | `AcctUploadMock` | phone | Files/Photos/Scan → two thumbnails → "2 / 20 files" → "Group 1 · 2 files" → note → "Upload 1 Group" (6) | pass 2 §1 |
+| 2 | `AcctReadingMock` | panel | Upload ✓ → Processing → Completed node → **Processing swaps to Pending** → "Review Request" (4) | pass 2 §2 |
+| 3 | `AcctDraftMock` | panel | Date, Description, Currency, Exchange Rate → Status `draft` → "Journal Entries" → 6100 Dr → 2100 Cr (7) | pass 2 §3, pass 3 |
+| 5 | `AcctBankMock` | panel | "1 matched · 2 need action" → MATCH / MISMATCH / MISSING lines → each line's suggested action fills (6) | pass 2 §5 |
 
-| Step | Screen (the new component replaces the old) | Chrome | What animates, in order |
-|---|---|---|---|
-| 1 | `AcctUploadMock`, from the phone "Upload Bills" | `phone` (the copy now says "phone app") | files appear → grouped as "Group 1" with a note → the upload button → the queued state |
-| 2 | `AcctExtractMock` (redrawn): progress strip plus the "Extracted" card | `panel` | Upload ✓ → Processing → fields fill in → "N field(s) identified" |
-| 3 | `AcctQuestionMock` (new): the question card | `panel` | the card appears → options → one is picked → Continue |
-| 4 | `AcctApproveMock` (replaces Journal): the final-approval modal | `panel` | entries land → Total → confidence badge → Draft → Confirmed |
-| 5 | `AcctBankMock` (replaces Close): the bank-line review | `panel` | lines classified (MATCH / MISSING / …) → a suggested action per line → "N matched / N need action" |
-
-The exact labels, example values and layouts come from a second research pass
-(pending), and nothing on a screen is written from memory. The old
-`AcctJournalMock` and `AcctCloseMock` are deleted, not kept, because they draw
-things that do not exist.
+Not drawn, on purpose: the extracted-fields card (always empty), the Audit
+Confidence bar and the disposition badge (never populated), and any bank or
+close screen on the phone.
 
 ## Animation — the change from revision 1
 

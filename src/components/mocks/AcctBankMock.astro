@@ -1,0 +1,45 @@
+---
+import MockFrame from './MockFrame.astro';
+// Bank-line review on the web task page. Each statement line carries the AI's
+// status badge (MATCH / MISMATCH / MISSING) and one of three fixed actions,
+// pre-selected by the server as a suggestion: matched → "Ignore (Matched/Manual)",
+// discrepancy → "Fix Existing", missing → "Create Transaction". A person
+// confirms the batch; nothing posts silently. Amounts use the page's format,
+// "+$" in and "−$" (U+2212) out. There is no phone version of this screen.
+// Source: local_pm/research/2026-09-24-accounting-ui-walkthrough.md, pass 2 §5.
+const actions = ['Create Transaction', 'Fix Existing', 'Ignore (Matched/Manual)'];
+type Line = { badge: string; tone: string; date: string; desc: string; amount: string; pick: number };
+const lines: Line[] = [
+  { badge: 'MATCH', tone: 'bg-ok-soft text-ok', date: '2026-09-15', desc: 'Card payment — Vendor A', amount: '−$76.76 USD', pick: 2 },
+  { badge: 'MISMATCH', tone: 'bg-warn-soft text-warn', date: '2026-09-18', desc: 'Payment received — Customer B', amount: '+$1,250.00 USD', pick: 1 },
+  { badge: 'MISSING', tone: 'bg-danger-soft text-danger', date: '2026-09-19', desc: 'Transfer — Supplier C', amount: '−$420.00 USD', pick: 0 },
+];
+---
+<MockFrame chrome="panel" title="Task #4822" meta="Bank statement">
+  <div class="space-y-2">
+    <div class="mock-step flex items-center gap-2 text-[10.5px]" style="--step: 0">
+      <span class="text-fg">1 matched</span><span class="text-fg-subtle">·</span><span class="text-fg">2 need action</span>
+      <span class="ml-auto text-fg-subtle">Expand All</span>
+    </div>
+    {lines.map((l, i) => (
+      <div class="mock-step space-y-1.5 rounded-lg border border-line bg-surface px-2.5 py-2" style={`--step: ${i + 1}`}>
+        <div class="flex items-center gap-2">
+          <span class:list={['shrink-0 rounded-full px-1.5 py-px font-head text-[9px] font-semibold tracking-[0.06em]', l.tone]}>{l.badge}</span>
+          <span class="shrink-0 text-[10.5px] tabular-nums text-fg-subtle">{l.date}</span>
+          <span class="min-w-0 flex-1 truncate text-[12px] text-fg">{l.desc}</span>
+          <span class="shrink-0 text-[12px] tabular-nums text-fg">{l.amount}</span>
+        </div>
+        <div class="flex flex-wrap gap-x-3 gap-y-1">
+          {actions.map((a, j) => (
+            <span class="flex items-center gap-1 text-[10px] text-fg-muted">
+              <span class="grid h-2.5 w-2.5 place-items-center rounded-full border border-fg-subtle/60">
+                {j === l.pick && <span class="mock-step block h-1 w-1 rounded-full bg-action" style={`--step: ${lines.length + 1 + i}`}></span>}
+              </span>
+              {a}
+            </span>
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+</MockFrame>

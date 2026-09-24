@@ -1,0 +1,56 @@
+---
+import MockFrame from './MockFrame.astro';
+// The phone app's "Upload Bills" screen, in the editing state. Labels are its own:
+// "Files" / "Photos" / "Scan", "N / 20 files", the "Group 1" chip with its file
+// count, the note field, and "Upload 1 Group" (pluralised properly, never
+// "Group(s)"). No file sizes and no camera viewfinder: the app shows neither.
+// Phone chrome is a claim; the product copy names the phone app.
+// Source: local_pm/research/2026-09-24-accounting-ui-walkthrough.md, pass 2 §1.
+const pickers = [
+  { label: 'Files', icon: '<path d="M4 7a2 2 0 0 1 2-2h4l2 2h6a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/>' },
+  { label: 'Photos', icon: '<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m21 17-5-5-9 8"/>' },
+  { label: 'Scan', icon: '<path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3M7 12h10"/>' },
+];
+const files = [
+  { name: 'receipt_photo.jpg', kind: 'img' },
+  { name: 'delivery_note.pdf', kind: 'pdf' },
+];
+---
+<MockFrame chrome="phone" title="Upload Bills">
+  <div class="space-y-2.5">
+    <div class="mock-step grid grid-cols-3 gap-1.5" style="--step: 0">
+      {pickers.map((p) => (
+        <span class="flex items-center justify-center gap-1 rounded-full border border-line bg-surface py-1.5 text-[10.5px] font-medium text-fg">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><Fragment set:html={p.icon} /></svg>
+          {p.label}
+        </span>
+      ))}
+    </div>
+    <div class="flex gap-2">
+      {files.map((f, i) => (
+        <div class="mock-step w-[64px] space-y-1" style={`--step: ${i + 1}`}>
+          <div class="grid h-[80px] place-items-center rounded-md border border-line bg-surface-2 text-fg-subtle/70">
+            {f.kind === 'pdf' ? (
+              <span class="font-head text-[9.5px] font-semibold uppercase tracking-[0.08em]">PDF</span>
+            ) : (
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m21 17-5-5-9 8"/></svg>
+            )}
+          </div>
+          <p class="truncate text-[9px] text-fg-subtle">{f.name}</p>
+        </div>
+      ))}
+    </div>
+    <p class="mock-step text-[10.5px] tabular-nums text-fg-subtle" style={`--step: ${files.length + 1}`}>{files.length} / 20 files</p>
+    <div class="mock-step space-y-1.5 rounded-lg border border-line bg-surface p-2" style={`--step: ${files.length + 2}`}>
+      <div class="flex items-center gap-2">
+        <span class="rounded-full bg-surface-2 px-2 py-0.5 font-head text-[9.5px] font-semibold text-fg">Group 1</span>
+        <span class="text-[10.5px] text-fg-subtle">{files.length} files</span>
+        <span class="ml-auto text-[10.5px] text-danger">Remove</span>
+      </div>
+      <p class="mock-step rounded-md border border-line bg-bg px-2 py-1 text-[10.5px] text-fg" style={`--step: ${files.length + 3}`}>Bill and its delivery note</p>
+    </div>
+    <div class="mock-step rounded-full bg-action py-1.5 text-center font-head text-[11px] font-semibold text-bg" style={`--step: ${files.length + 4}`}>
+      Upload 1 Group
+    </div>
+  </div>
+</MockFrame>

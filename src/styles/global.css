@@ -212,20 +212,33 @@ h1, h2, h3 {
 
 /* Mock steps — a mocked screen's content arrives in order once its .reveal
    wrapper is visible, so the screen shows what the product does, not only what
-   it looks like. Opt in with class="mock-step" style="--step: N". The rule is
-   gated on .is-visible: without the trigger nothing is hidden, and the settled
-   frame is the static markup. Only opacity and transform move, so no layout shift. */
-.mock-step {
-  --mock-lead-in: 500ms;   /* lets the frame's own 700ms reveal land first */
-  --mock-interval: 180ms;
+   it looks like. Opt in with class="mock-step" style="--step: N".
+   A state that changes (a status, a label) stacks both states in one grid cell:
+   the earlier one is class="mock-before" style="--swap: N" and fades out as the
+   later one, a .mock-step with --step: N, fades in.
+   Everything is gated on .is-visible: without the trigger the settled frame shows,
+   which is the static markup with every .mock-before hidden. Only opacity and
+   transform move, so no layout shift. Timing is tunable per screen. */
+:root {
+  --mock-lead-in: 500ms;   /* lets the frame's own 700ms reveal mostly land */
+  --mock-interval: 260ms;
   --mock-duration: 400ms;
 }
+.mock-before { opacity: 0; }
 @keyframes mock-step-in {
   from { opacity: 0; transform: translateY(8px); }
+}
+@keyframes mock-before-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
 }
 .reveal.is-visible .mock-step {
   animation: mock-step-in var(--mock-duration) var(--ease-brand) both;
   animation-delay: calc(var(--mock-lead-in) + var(--step, 0) * var(--mock-interval));
+}
+.reveal.is-visible .mock-before {
+  animation: mock-before-out var(--mock-duration) var(--ease-brand) both;
+  animation-delay: calc(var(--mock-lead-in) + var(--swap, 0) * var(--mock-interval));
 }
 
 /* Gradient text. On light it runs navy→indigo, both clearing 7:1 on white.
@@ -266,7 +279,7 @@ h1, h2, h3 {
   .marquee-track { animation: none; }
   /* The rule below shortens durations but keeps delays, so a staggered step
      would sit hidden for its delay and then pop. Show the settled frame. */
-  .reveal.is-visible .mock-step { animation: none; }
+  .reveal.is-visible .mock-step, .reveal.is-visible .mock-before { animation: none; }
   *, *::before, *::after {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;

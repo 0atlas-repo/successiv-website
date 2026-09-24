@@ -14,9 +14,11 @@ import IdentityMock from './IdentityMock.astro';
 import KycShareMock from './KycShareMock.astro';
 import KycReviewMock from './KycReviewMock.astro';
 import CalendarMock from './CalendarMock.astro';
-import AcctExtractMock from './AcctExtractMock.astro';
-import AcctJournalMock from './AcctJournalMock.astro';
-import AcctCloseMock from './AcctCloseMock.astro';
+import AcctUploadMock from './AcctUploadMock.astro';
+import AcctReadingMock from './AcctReadingMock.astro';
+import AcctDraftMock from './AcctDraftMock.astro';
+import AcctQuestionMock from './AcctQuestionMock.astro';
+import AcctBankMock from './AcctBankMock.astro';
 import GenericMock from './GenericMock.astro';
 import type { ProductMock } from '../../content/products';
 
@@ -34,9 +36,11 @@ const screens: Record<ProductMock, any> = {
   'kyc-share': KycShareMock,
   'kyc-review': KycReviewMock,
   'calendar': CalendarMock,
-  'acct-extract': AcctExtractMock,
-  'acct-journal': AcctJournalMock,
-  'acct-close': AcctCloseMock,
+  'acct-upload': AcctUploadMock,
+  'acct-reading': AcctReadingMock,
+  'acct-draft': AcctDraftMock,
+  'acct-question': AcctQuestionMock,
+  'acct-bank': AcctBankMock,
   'generic': GenericMock,
 };
 

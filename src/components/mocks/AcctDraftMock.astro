@@ -1,0 +1,48 @@
+---
+import MockFrame from './MockFrame.astro';
+// The transaction group the AI drafts, as the approval view shows it: summary
+// counts, the transaction's fields (Status prints the raw enum, `draft`), and
+// "Journal Entries" with Account Code | Debit | Credit in the document's own
+// currency. Not drawn: the "Audit Confidence" bar and the disposition badge —
+// the UI exists but no code writes their data, so no user ever sees them.
+// The senior auditor's self-check and rework have no UI, so they are in the
+// step's copy, not on this screen.
+// Source: local_pm/research/2026-09-24-accounting-ui-walkthrough.md, pass 2 §3 and pass 3.
+const fields = [
+  { label: 'Date', value: '2026-09-18' },
+  { label: 'Description', value: 'Office supplies — Vendor A' },
+  { label: 'Currency', value: 'SGD' },
+  { label: 'Exchange Rate', value: '0.76' },
+];
+const entries = [
+  { code: '6100', dr: '104.00', cr: '' },
+  { code: '2100', dr: '', cr: '104.00' },
+];
+---
+<MockFrame chrome="panel" title="Transaction Group #4821" meta="1 Transaction · 2 Ledgers">
+  <div class="space-y-2.5">
+    <div class="space-y-1">
+      {fields.map((f, i) => (
+        <div class="mock-step flex items-center gap-2" style={`--step: ${i}`}>
+          <span class="w-[84px] shrink-0 font-head text-[9.5px] uppercase tracking-[0.08em] text-fg-subtle">{f.label}</span>
+          <span class="truncate text-[12px] tabular-nums text-fg">{f.value}</span>
+        </div>
+      ))}
+      <div class="mock-step flex items-center gap-2" style={`--step: ${fields.length}`}>
+        <span class="w-[84px] shrink-0 font-head text-[9.5px] uppercase tracking-[0.08em] text-fg-subtle">Status</span>
+        <span class="rounded-full border border-line px-1.5 py-px font-head text-[9.5px] font-semibold text-fg-muted">draft</span>
+      </div>
+    </div>
+    <div class="space-y-1 border-t border-line pt-2">
+      <p class="mock-step font-head text-[9.5px] font-semibold uppercase tracking-[0.1em] text-fg" style={`--step: ${fields.length + 1}`}>Journal Entries</p>
+      <div class="grid grid-cols-[1fr_64px_64px] gap-2 px-1.5 font-head text-[9.5px] uppercase tracking-[0.08em] text-fg-subtle">
+        <span>Account Code</span><span class="text-right">Debit</span><span class="text-right">Credit</span>
+      </div>
+      {entries.map((e, i) => (
+        <div class="mock-step grid grid-cols-[1fr_64px_64px] gap-2 rounded-md border border-line bg-surface px-1.5 py-1 text-[12px] tabular-nums text-fg" style={`--step: ${fields.length + 2 + i}`}>
+          <span>{e.code}</span><span class="text-right">{e.dr || '–'}</span><span class="text-right">{e.cr || '–'}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+</MockFrame>
