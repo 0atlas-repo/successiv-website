@@ -201,7 +201,27 @@ for each screen.
   production-shaped, which shows intent to ship.
 - **What it can draw:** screens 1–4 honestly. It has no bank-line or close screen.
 
-### Open: does "Auto-confirmed" skip the human approval?
-This pass's disposition badge suggests some groups confirm with no human click.
-Pass 1 said final approval is always required. A third, targeted question is out
-(pending).
+### Settled (pass 3): "Auto-confirmed" never shows, and final approval is always required
+
+- **The badge is never populated.** The disposition badge, **and the Audit
+  Confidence bar**, read `agent_tasks.audit_disposition`, `audit_confidence`,
+  `audit_rationale` and `audit_concerns`. No code path writes any of these four
+  columns. They are only SELECTed. So both render empty for every real task:
+  live UI with a dead write path. **Draw neither.**
+- **Auto-finalise is only for imports.** It exists, but only for JSON
+  platform-record imports (`_auto_approve`, with the thresholds
+  `auto_confirm_above` 0.92 and `auto_reject_below` 0.40 in `client_profile`).
+  An uploaded bill never takes that path.
+- **An uploaded document always pauses at final approval**, whatever the
+  confidence, setting or `accounting_level`.
+- **What does run unattended:** reading, the narrative, currency detection,
+  journal planning and account choice. There is also a senior-auditor check,
+  which **silently deletes a draft it rejects and redoes the extraction once**.
+  The plan auditor also re-plans once, silently, before it ever asks a person.
+- **How often a person is involved:** at least once (the final approval). A
+  bill can add a clarification (the model's own judgement), a story-confidence
+  pause (below 0.7), or a plan-fix pause (on the second mandatory failure).
+- **There is no measured rate.** The batch-test inputs and results are gitignored.
+  `docs/requirements.md` has targets only: "at least 95% for automatic
+  categorization" (l.45) and "at least 90% automatic matching rate" (l.159).
+  Neither has been measured. **These are targets, not results.**
