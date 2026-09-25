@@ -67,7 +67,7 @@ const tabItems = ['Overview', 'Activity', 'Settings'];
 const isPhone = chrome === 'phone';
 
 const shellClass = isPhone
-  ? 'mock-frame mx-auto w-[272px] max-w-full rounded-[30px] border border-line bg-surface-2 p-[5px]'
+  ? 'mock-frame mx-auto w-[272px] max-w-full rounded-t-[30px] border border-b-0 border-line bg-surface-2 p-[5px] pb-0 [mask-image:linear-gradient(to_bottom,#000_calc(100%-40px),transparent)]'
   : 'mock-frame surface-card overflow-hidden rounded-[14px] border border-line';
 ---
 
@@ -317,12 +317,13 @@ const shellClass = isPhone
   )}
 
   {isPhone && (
-    <div class="flex min-h-[560px] flex-col overflow-hidden rounded-[25px] bg-bg">
-      {/* Status bar, then a compact header, then a bottom tab bar: the three
-          things that make a screen read as a phone rather than a small window.
-          The min height keeps a real phone's proportions (about 9:19.5 at this
-          width); a short screen leaves empty space above the tab bar, as a real
-          app does, instead of squashing the device. */}
+    <div class="overflow-hidden rounded-t-[25px] bg-bg">
+      {/* Status bar and a compact header: what makes a screen read as a phone
+          rather than a small window. The screens are short, so the device is
+          drawn from the top and cut off below the content, fading out rather
+          than ending — a full-height phone left most of its screen empty, and
+          a whole phone squashed to the content read as a toy. No tab bar: it
+          would sit at the bottom of a device we are not showing. */}
       <div aria-hidden="true" class="flex items-center px-4 pb-1 pt-2 text-fg-subtle">
         <span class="font-head text-[9px] font-semibold tabular-nums">9:41</span>
         <span class="ml-auto flex items-center gap-1">
@@ -346,17 +347,9 @@ const shellClass = isPhone
           </span>
         )}
       </div>
-      <div class="flex-1 p-3" aria-hidden="true">
+      {/* The bottom padding is screen the fade eats, so the last row stays whole. */}
+      <div class="p-3 pb-12" aria-hidden="true">
         <slot />
-      </div>
-      <div aria-hidden="true" class="flex items-center justify-around border-t border-line bg-surface px-2 py-2">
-        {[glyph.grid, glyph.list, glyph.bell, glyph.user].map((g, i) => (
-          <span class:list={['grid place-items-center', i === 0 ? 'text-action' : 'text-fg-subtle/60']}>
-            <svg class="h-[13px] w-[13px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
-              <Fragment set:html={g} />
-            </svg>
-          </span>
-        ))}
       </div>
     </div>
   )}
