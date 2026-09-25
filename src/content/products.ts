@@ -68,8 +68,8 @@ export interface Product {
   /**
    * Which screen the product grid card shows — the home page and /products/
    * both render that grid — when screens[0] is better kept for the product's
-   * own page. Only Shopmgr needs it: its lead screen is the chat thread, which
-   * the home hero also draws, so the card would repeat it one scroll down.
+   * own page. No product sets it today; Shopmgr did while the home hero drew
+   * its chat, which the mock wall hero replaced on 2026-09-26.
    */
   cardScreen?: ProductMock;
   /** 6. call to action */

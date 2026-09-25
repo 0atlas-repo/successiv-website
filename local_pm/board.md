@@ -10,6 +10,7 @@ One row per active plan. If it is not here, it does not exist.
 | [Mock chrome variants](projects/mock-chrome-variants/plans/rollout.md) | shipped and live at c3a86f8 | Done. Founder to eyeball the five shells on the live site |
 | [Mock animation](projects/mock-animation/plans/pilot.md) | Accounting pilot shipped, pushed at a307cc0 | Done. Founder confirmed beta users have the phone app (2026-09-25), so step 1 stands. |
 | [Mock rollout](projects/mock-rollout/plans/rollout.md) | shipped 2026-09-24: 3 products + 8 work pages, squash-merged to main | Done. |
+| Mock wall hero (log: [2026-09-26](logs/2026-09-26.md)) | built on branch `mock-wall`, verified locally | Founder go to merge + push (deploys) |
 
 ## Loose tasks
 

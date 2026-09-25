@@ -93,6 +93,13 @@ What isn't in that comment:
   screen after the first; a work entry's `steps[].screen` is required once
   `steps` is set at all, so a work page with steps never shows the gallery.
 
+- The home hero is `src/components/MockWall.astro` (2026-09-26): 25 screens
+  pulled from `products.ts` and `work.ts` step screens, round-robin across
+  entries, each captioned with its entry and step title and linked to its
+  page. It adds nothing to either data file, so a new step or entry shows up
+  on the wall by itself. Its badge counts screens and entries from the data;
+  never hard-code either number.
+
 Full spec: `local_pm/projects/mock-animation/specs/mock-animation.md` (the
 Accounting pilot) and `local_pm/projects/mock-rollout/specs/mock-rollout.md`
 (2026-09-24: the same pattern on Creators Sphere, Shopmgr, KYC and the eight
@@ -144,9 +151,8 @@ place, and static output is a cleaner fit for Pages.
   the mock's auto-margined wrapper stays `w-full` — so a wide mock can't push
   its step text off a narrow phone screen (2026-09-24).
 - Product grid cards — on the home page and on `/products/` — show `cardScreen`
-  when a product sets it, otherwise `screens[0]`. Shopmgr sets it, because the
-  home hero already draws its chat. The product's own page still leads with
-  `screens[0]`.
+  when a product sets it, otherwise `screens[0]`. No product sets it today.
+  The product's own page still leads with `screens[0]`.
 - The mocked screens' title-bar dots use `bg-win-close`/`bg-win-min`/`bg-win-max`
   instead — constants, not semantic tokens, because a real title bar shows the
   same three colours on a light desktop and a dark one. Kept separate from the

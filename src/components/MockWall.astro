@@ -1,13 +1,12 @@
 ---
-// A wall of mocked screens behind the home headline. Every card is a screen
-// already drawn for a product or work page, captioned with that entry and the
-// step it shows, and linked to that page — so the wall shows how much we have
-// built without inventing anything. No screen appears twice.
+// The home hero: a wall of mocked screens behind the headline. Every card is a
+// screen already drawn for a product or work page, captioned with that entry
+// and the step it shows, and linked to that page — so the wall shows how much
+// we have built without inventing anything. No screen appears twice.
 //
-// `motion` picks one of three treatments while the founder chooses:
-//   drift     columns float up and down at different speeds
-//   parallax  drift, plus columns shift with the pointer on desktop
-//   steps     drift, plus each screen plays its own step animation, on a loop
+// Columns drift at different speeds. Each screen plays its own steps as it
+// fades in, then one on-screen card at a time replays, so the wall keeps moving
+// without every screen animating at once.
 import { withBase } from '../base';
 import { site } from '../content/site';
 import { products } from '../content/products';
@@ -15,9 +14,6 @@ import { work } from '../content/work';
 import Btn from './Btn.astro';
 import ProductMock from './mocks/ProductMock.astro';
 import WorkMock from './mocks/WorkMock.astro';
-
-interface Props { motion: 'drift' | 'parallax' | 'steps' }
-const { motion } = Astro.props;
 
 type Card = { entry: string; kind: string; caption: string; href: string; mock: string; isProduct: boolean };
 
@@ -54,17 +50,16 @@ const columns = Array.from({ length: COLS }, (_, c) => cards.filter((_, i) => i 
 const entryCount = perEntry.filter((l) => l.length).length;
 ---
 
-<section class={`wall wall--${motion} relative isolate overflow-hidden`} data-motion={motion}>
+<section class="wall relative isolate overflow-hidden">
   <div class="wall-stage" aria-label={`Screens from ${entryCount} things we have built`}>
     {columns.map((col, c) => (
       <div class="wall-col" style={`--c:${c}`}>
         <div class="wall-drift">
-          {col.map((card, i) => (
+          {col.map((card) => (
             <a
               href={withBase(card.href)}
-              class:list={['wall-card group', motion === 'steps' && 'reveal']}
-              style={`--i:${c + i * COLS}`}
-            >
+              class="wall-card reveal"
+                          >
               <div class="wall-shot" aria-hidden="true">
                 <div class="wall-zoom">
                   {card.isProduct ? <ProductMock mock={card.mock as any} /> : <WorkMock mock={card.mock as any} />}
@@ -125,8 +120,6 @@ const entryCount = perEntry.filter((l) => l.length).length;
     width: var(--card-w);
     /* Stagger the columns so no row of cards lines up. */
     margin-top: calc(-90px + mod(var(--c) * 137px, 260px));
-    transition: transform 600ms var(--ease-brand);
-    transform: translate(calc(var(--px, 0) * (var(--c) - 2) * -14px), calc(var(--py, 0) * (1 + mod(var(--c), 3)) * -10px));
   }
   .wall-drift {
     display: flex;
@@ -140,17 +133,8 @@ const entryCount = perEntry.filter((l) => l.length).length;
     to { transform: translateY(36px); }
   }
 
-  .wall-card {
-    display: block;
-    animation: wall-in 900ms var(--ease-brand) both;
-    animation-delay: calc(var(--i) * 70ms);
-  }
-  /* The steps variant fades in through .reveal instead, which also starts the
-     screen's own steps. */
-  .wall--steps .wall-card { animation: none; }
-  @keyframes wall-in {
-    from { opacity: 0; transform: translateY(24px) scale(0.97); }
-  }
+  /* Cards fade in through .reveal, which also starts each screen's steps. */
+  .wall-card { display: block; }
 
   .wall-shot {
     height: 220px;
@@ -186,46 +170,24 @@ const entryCount = perEntry.filter((l) => l.length).length;
     .wall-shot { height: 170px; }
     .wall-card:nth-child(3n + 2) .wall-shot { height: 210px; }
     .wall-card:nth-child(3n) .wall-shot { height: 140px; }
-    .wall-fade { background: linear-gradient(to top, var(--color-bg) 0%, var(--color-bg) 40%, transparent 75%), linear-gradient(to bottom, var(--color-bg) 0%, transparent 14%); }
+    .wall-fade { background: linear-gradient(to top, var(--color-bg) 0%, var(--color-bg) 52%, transparent 78%), linear-gradient(to bottom, var(--color-bg) 0%, transparent 14%); }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .wall-drift, .wall-card { animation: none; }
-    .wall-col { transform: none; }
+    .wall-drift { animation: none; }
   }
 </style>
 
 <script>
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  document.querySelectorAll<HTMLElement>('.wall').forEach((wall) => {
-    if (reduce) return;
-    const motion = wall.dataset.motion;
-
-    // Parallax: pointer position becomes --px/--py in [-1, 1]; each column
-    // reads it with its own depth in CSS.
-    if (motion === 'parallax' && matchMedia('(pointer: fine)').matches) {
-      let frame = 0;
-      wall.addEventListener('pointermove', (e) => {
-        cancelAnimationFrame(frame);
-        frame = requestAnimationFrame(() => {
-          const r = wall.getBoundingClientRect();
-          wall.style.setProperty('--px', (((e.clientX - r.left) / r.width) * 2 - 1).toFixed(3));
-          wall.style.setProperty('--py', (((e.clientY - r.top) / r.height) * 2 - 1).toFixed(3));
-        });
-      });
-      wall.addEventListener('pointerleave', () => {
-        wall.style.setProperty('--px', '0');
-        wall.style.setProperty('--py', '0');
-      });
-    }
-
-    // Steps: after the first play, replay one on-screen card's steps at a time
-    // so the wall keeps moving without every screen animating at once.
-    if (motion === 'steps') {
+  // Replay one on-screen card's steps at a time. Cards in the bottom third sit
+  // under the fade, so they are skipped.
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.querySelectorAll<HTMLElement>('.wall').forEach((wall) => {
       const cards = [...wall.querySelectorAll<HTMLElement>('.wall-card')];
       let last = -1;
       setInterval(() => {
         const h = wall.getBoundingClientRect();
+        if (document.hidden || h.bottom < 0) return;
         const visible = cards.filter((c, i) => {
           const r = c.getBoundingClientRect();
           return i !== last && r.bottom > h.top && r.top < h.bottom - h.height * 0.35 && r.right > 0 && r.left < innerWidth;
@@ -239,6 +201,6 @@ const entryCount = perEntry.filter((l) => l.length).length;
           el.style.animation = '';
         });
       }, 1800);
-    }
-  });
+    });
+  }
 </script>
