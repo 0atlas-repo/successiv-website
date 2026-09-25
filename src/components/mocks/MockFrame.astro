@@ -317,9 +317,12 @@ const shellClass = isPhone
   )}
 
   {isPhone && (
-    <div class="overflow-hidden rounded-[25px] bg-bg">
+    <div class="flex min-h-[560px] flex-col overflow-hidden rounded-[25px] bg-bg">
       {/* Status bar, then a compact header, then a bottom tab bar: the three
-          things that make a screen read as a phone rather than a small window. */}
+          things that make a screen read as a phone rather than a small window.
+          The min height keeps a real phone's proportions (about 9:19.5 at this
+          width); a short screen leaves empty space above the tab bar, as a real
+          app does, instead of squashing the device. */}
       <div aria-hidden="true" class="flex items-center px-4 pb-1 pt-2 text-fg-subtle">
         <span class="font-head text-[9px] font-semibold tabular-nums">9:41</span>
         <span class="ml-auto flex items-center gap-1">
@@ -343,7 +346,7 @@ const shellClass = isPhone
           </span>
         )}
       </div>
-      <div class="p-3" aria-hidden="true">
+      <div class="flex-1 p-3" aria-hidden="true">
         <slot />
       </div>
       <div aria-hidden="true" class="flex items-center justify-around border-t border-line bg-surface px-2 py-2">
