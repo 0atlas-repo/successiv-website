@@ -1,0 +1,244 @@
+---
+// A wall of mocked screens behind the home headline. Every card is a screen
+// already drawn for a product or work page, captioned with that entry and the
+// step it shows, and linked to that page — so the wall shows how much we have
+// built without inventing anything. No screen appears twice.
+//
+// `motion` picks one of three treatments while the founder chooses:
+//   drift     columns float up and down at different speeds
+//   parallax  drift, plus columns shift with the pointer on desktop
+//   steps     drift, plus each screen plays its own step animation, on a loop
+import { withBase } from '../base';
+import { site } from '../content/site';
+import { products } from '../content/products';
+import { work } from '../content/work';
+import Btn from './Btn.astro';
+import ProductMock from './mocks/ProductMock.astro';
+import WorkMock from './mocks/WorkMock.astro';
+
+interface Props { motion: 'drift' | 'parallax' | 'steps' }
+const { motion } = Astro.props;
+
+type Card = { entry: string; kind: string; caption: string; href: string; mock: string; isProduct: boolean };
+
+// Each entry's screens, step screens first so each carries its step title.
+const perEntry: Card[][] = [
+  ...products.map((p) => {
+    const seen = new Set<string>();
+    const fromSteps = p.steps.filter((s) => s.screen).map((s) => ({ mock: s.screen!, caption: s.title }));
+    const fromScreens = p.screens.map((m) => ({ mock: m, caption: p.category }));
+    return [...fromSteps, ...fromScreens]
+      .filter((c) => c.mock !== 'generic' && !seen.has(c.mock) && seen.add(c.mock))
+      .map((c) => ({ ...c, entry: p.name, kind: 'Product', href: `/products/${p.slug}/`, isProduct: true }));
+  }),
+  ...work.map((w) => {
+    const seen = new Set<string>();
+    const fromSteps = (w.steps ?? []).map((s) => ({ mock: s.screen, caption: s.title }));
+    const fromScreens = w.screens.map((m) => ({ mock: m, caption: w.angle }));
+    return [...fromSteps, ...fromScreens]
+      .filter((c) => !seen.has(c.mock) && seen.add(c.mock))
+      .map((c) => ({ ...c, entry: w.title, kind: 'Client build', href: `/work/${w.slug}/`, isProduct: false }));
+  }),
+];
+
+// Round-robin across entries so neighbouring cards come from different projects.
+const COLS = 5;
+const PER_COL = 5;
+const cards: Card[] = [];
+for (let round = 0; cards.length < COLS * PER_COL; round++) {
+  const before = cards.length;
+  for (const list of perEntry) if (list[round] && cards.length < COLS * PER_COL) cards.push(list[round]);
+  if (cards.length === before) break;
+}
+const columns = Array.from({ length: COLS }, (_, c) => cards.filter((_, i) => i % COLS === c));
+const entryCount = perEntry.filter((l) => l.length).length;
+---
+
+<section class={`wall wall--${motion} relative isolate overflow-hidden`} data-motion={motion}>
+  <div class="wall-stage" aria-label={`Screens from ${entryCount} things we have built`}>
+    {columns.map((col, c) => (
+      <div class="wall-col" style={`--c:${c}`}>
+        <div class="wall-drift">
+          {col.map((card, i) => (
+            <a
+              href={withBase(card.href)}
+              class:list={['wall-card group', motion === 'steps' && 'reveal']}
+              style={`--i:${c + i * COLS}`}
+            >
+              <div class="wall-shot" aria-hidden="true">
+                <div class="wall-zoom">
+                  {card.isProduct ? <ProductMock mock={card.mock as any} /> : <WorkMock mock={card.mock as any} />}
+                </div>
+              </div>
+              <span class="mt-2.5 block font-mono text-[12.5px] font-semibold text-fg">{card.entry}</span>
+              <span class="block font-mono text-[11.5px] text-fg-subtle">{card.kind} · {card.caption}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <div class="wall-fade pointer-events-none absolute inset-0 z-[1]" aria-hidden="true"></div>
+
+  <div class="absolute inset-x-0 bottom-0 z-[2] pb-14">
+    <div class="mx-auto grid max-w-[1180px] items-end gap-8 px-6 lg:grid-cols-[1.2fr_0.8fr]">
+      <div>
+        <p class="mb-5 inline-flex items-center gap-2 rounded-full border border-line bg-surface/80 px-3.5 py-1.5 text-[13px] text-fg-muted backdrop-blur">
+          <span class="h-1.5 w-1.5 rounded-full bg-accent"></span>
+          {cards.length} screens from {entryCount} things we have built
+        </p>
+        <h1 class="text-[clamp(38px,6vw,64px)] text-fg">
+          Software that runs<br />
+          <span class="grad-text">the work.</span>
+        </h1>
+      </div>
+      <div>
+        <p class="max-w-[440px] text-[16px] text-fg-muted">{site.description}</p>
+        <div class="mt-6 flex flex-wrap gap-3">
+          <Btn href={withBase('/products/')}>See products</Btn>
+          <Btn href={withBase('/work/')} variant="ghost">Browse the work</Btn>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .wall {
+    --card-w: 300px;
+    --gap: 34px;
+    /* Fill the first screen under the sticky header. */
+    height: max(680px, calc(100svh - 77px));
+    background: var(--color-bg);
+  }
+  .wall-stage {
+    position: absolute;
+    z-index: 0; /* contains mock chrome's own z-index under the fade */
+    inset: -4% 0 0 50%;
+    translate: -50% 0;
+    display: flex;
+    gap: var(--gap);
+    width: max-content;
+  }
+  .wall-col {
+    width: var(--card-w);
+    /* Stagger the columns so no row of cards lines up. */
+    margin-top: calc(-90px + mod(var(--c) * 137px, 260px));
+    transition: transform 600ms var(--ease-brand);
+    transform: translate(calc(var(--px, 0) * (var(--c) - 2) * -14px), calc(var(--py, 0) * (1 + mod(var(--c), 3)) * -10px));
+  }
+  .wall-drift {
+    display: flex;
+    flex-direction: column;
+    gap: 44px;
+    animation: wall-drift calc(22s + var(--c) * 3.7s) ease-in-out infinite alternate;
+    animation-delay: calc(var(--c) * -4s);
+  }
+  @keyframes wall-drift {
+    from { transform: translateY(-36px); }
+    to { transform: translateY(36px); }
+  }
+
+  .wall-card {
+    display: block;
+    animation: wall-in 900ms var(--ease-brand) both;
+    animation-delay: calc(var(--i) * 70ms);
+  }
+  /* The steps variant fades in through .reveal instead, which also starts the
+     screen's own steps. */
+  .wall--steps .wall-card { animation: none; }
+  @keyframes wall-in {
+    from { opacity: 0; transform: translateY(24px) scale(0.97); }
+  }
+
+  .wall-shot {
+    height: 220px;
+    overflow: hidden;
+    border-radius: 14px;
+    border: 1px solid var(--color-line);
+    background: var(--color-surface);
+    padding: 14px 14px 0;
+    transition: transform 400ms var(--ease-brand), border-color 300ms;
+    -webkit-mask-image: linear-gradient(to bottom, #000 78%, transparent);
+    mask-image: linear-gradient(to bottom, #000 78%, transparent);
+  }
+  .wall-card:nth-child(3n + 2) .wall-shot { height: 280px; }
+  .wall-card:nth-child(3n) .wall-shot { height: 180px; }
+  .wall-card:hover .wall-shot,
+  .wall-card:focus-visible .wall-shot {
+    transform: translateY(-4px);
+    border-color: color-mix(in srgb, var(--color-action) 45%, transparent);
+  }
+  /* Mocks are drawn for a ~440px column; shrink the whole screen, not its text. */
+  .wall-zoom { width: 440px; zoom: calc(270 / 440); }
+
+  .wall-fade {
+    background:
+      linear-gradient(to top, var(--color-bg) 0%, var(--color-bg) 30%, color-mix(in srgb, var(--color-bg) 80%, transparent) 42%, transparent 70%),
+      linear-gradient(to bottom, var(--color-bg) 0%, transparent 14%),
+      radial-gradient(ellipse at 50% 40%, transparent 55%, color-mix(in srgb, var(--color-bg) 70%, transparent) 100%);
+  }
+
+  @media (max-width: 767px) {
+    .wall { --card-w: 210px; --gap: 20px; }
+    .wall-zoom { zoom: calc(180 / 440); }
+    .wall-shot { height: 170px; }
+    .wall-card:nth-child(3n + 2) .wall-shot { height: 210px; }
+    .wall-card:nth-child(3n) .wall-shot { height: 140px; }
+    .wall-fade { background: linear-gradient(to top, var(--color-bg) 0%, var(--color-bg) 40%, transparent 75%), linear-gradient(to bottom, var(--color-bg) 0%, transparent 14%); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .wall-drift, .wall-card { animation: none; }
+    .wall-col { transform: none; }
+  }
+</style>
+
+<script>
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll<HTMLElement>('.wall').forEach((wall) => {
+    if (reduce) return;
+    const motion = wall.dataset.motion;
+
+    // Parallax: pointer position becomes --px/--py in [-1, 1]; each column
+    // reads it with its own depth in CSS.
+    if (motion === 'parallax' && matchMedia('(pointer: fine)').matches) {
+      let frame = 0;
+      wall.addEventListener('pointermove', (e) => {
+        cancelAnimationFrame(frame);
+        frame = requestAnimationFrame(() => {
+          const r = wall.getBoundingClientRect();
+          wall.style.setProperty('--px', (((e.clientX - r.left) / r.width) * 2 - 1).toFixed(3));
+          wall.style.setProperty('--py', (((e.clientY - r.top) / r.height) * 2 - 1).toFixed(3));
+        });
+      });
+      wall.addEventListener('pointerleave', () => {
+        wall.style.setProperty('--px', '0');
+        wall.style.setProperty('--py', '0');
+      });
+    }
+
+    // Steps: after the first play, replay one on-screen card's steps at a time
+    // so the wall keeps moving without every screen animating at once.
+    if (motion === 'steps') {
+      const cards = [...wall.querySelectorAll<HTMLElement>('.wall-card')];
+      let last = -1;
+      setInterval(() => {
+        const h = wall.getBoundingClientRect();
+        const visible = cards.filter((c, i) => {
+          const r = c.getBoundingClientRect();
+          return i !== last && r.bottom > h.top && r.top < h.bottom - h.height * 0.35 && r.right > 0 && r.left < innerWidth;
+        });
+        if (!visible.length) return;
+        const card = visible[Math.floor(Math.random() * visible.length)];
+        last = cards.indexOf(card);
+        card.querySelectorAll<HTMLElement>('.mock-step, .mock-before').forEach((el) => {
+          el.style.animation = 'none';
+          void el.offsetWidth;
+          el.style.animation = '';
+        });
+      }, 1800);
+    }
+  });
+</script>
