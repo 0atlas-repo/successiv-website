@@ -103,3 +103,12 @@ live on Accounting.
 every `.mock-frame` must end at or before the viewport's right edge. Grids that
 hold mocks use `grid-cols-1` below their breakpoint; an `mx-auto` wrapper around
 a mock also needs `w-full`.
+
+## 2026-09-25 — An either/or on a visual is two screenshots, not a pick
+
+**Mistake:** asked for "a real phone dimension, or if it is half size, don't add
+the menu", I built the first option, shipped it, and the founder came back the
+same day: too tall for such short copy. The second option was what fit.
+**Rule:** when the founder offers two visual options, render both and show the
+screenshots side by side before committing to either. Content height decides a
+frame's shape: a device frame much taller than what is in it reads as empty.
