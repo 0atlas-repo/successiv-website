@@ -10,7 +10,7 @@ One row per active plan. If it is not here, it does not exist.
 | [Mock chrome variants](projects/mock-chrome-variants/plans/rollout.md) | shipped and live at c3a86f8 | Done. Founder to eyeball the five shells on the live site |
 | [Mock animation](projects/mock-animation/plans/pilot.md) | Accounting pilot shipped, pushed at a307cc0 | Done. Founder confirmed beta users have the phone app (2026-09-25), so step 1 stands. |
 | [Mock rollout](projects/mock-rollout/plans/rollout.md) | shipped 2026-09-24: 3 products + 8 work pages, squash-merged to main | Done. |
-| Mock wall hero (log: [2026-09-26](logs/2026-09-26.md)) | shipped and live at 2216c9e | Done. Reduced-motion path not browser-checked |
+| Mock wall hero (log: [2026-09-26](logs/2026-09-26.md)) | shipped and live at 2216c9e | Done. Reduced-motion path browser-checked 2026-09-26 |
 
 ## Loose tasks
 
@@ -33,7 +33,6 @@ One row per active plan. If it is not here, it does not exist.
   of Creators Sphere, a separate build, or dead.
 - Tell the owner of the public marketing site about the possible open-redirect: its
   contact form forwards to a CRM using a URL taken from the request. Not our repo.
-- Fix docs/BRIEF.md: the product is "Creators Sphere", not "Creator Sphere".
 - Tell the Creators Sphere owner: creatorssphere.sg (double s) does not resolve, so the hello@ address in their footer is dead.
 - Decide whether the three principles get reframed toward buyer value.
 - DECIDE: hosting. Org is on the free plan so private Pages will not serve.

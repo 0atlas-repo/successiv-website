@@ -16,7 +16,7 @@ with `preRelease: true` so the page says so. No launch date is claimed because
 none has been given.
 
 The product brands itself "Creators Sphere" (plural) on its own site at
-creatorsphere.sg. `docs/BRIEF.md` calls it "Creator Sphere"; the live product wins.
+creatorsphere.sg. `docs/BRIEF.md` used to say "Creator Sphere"; the live product won and the brief was corrected 2026-09-26. Older docs (`COPY.md`, `DESIGNER_BRIEF.md`, `references/DESIGN_REFERENCES.md`) still use the singular.
 
 ## Hidden products (2026-09-17)
 

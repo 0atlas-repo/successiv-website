@@ -50,7 +50,7 @@
 
 | Product | Description (public) | Internal refs (do not expose client names) |
 |---------|----------------------|--------------------------------------------|
-| **Creator Sphere** | Own product — creator/platform product | `0atlas-repo/[redacted-slug]` |
+| **Creators Sphere** | Own product — creator/platform product | `0atlas-repo/[redacted-slug]` |
 | **Shopmgr** | Shopify AI chatbot & store assistant | `0atlas-repo/[redacted-slug]`, `[redacted-slug]`, `[redacted-slug]` |
 | **KYC** | KYC / identity verification (web + API) | `0atlas-repo/[redacted-slug]`, `[redacted-slug]`, `[redacted-slug]`, `[redacted-slug]` |
 | **Leave** | Employee leave management (SharePoint) | `0atlas-repo/[redacted-slug]` |
@@ -92,7 +92,7 @@ Card format: **Problem → Approach → Outcome** + one mocked screen.
 ```
 /                 Home
 /products         Product index
-/products/[slug]  Creator Sphere, Shopmgr, KYC, Leave
+/products/[slug]  Creators Sphere, Shopmgr, KYC, Leave
 /work             Anonymized case studies
 /capabilities     AI apps · Shopify · SharePoint/M365 · Documents · Identity
 /about            Successiv by 0atlas
