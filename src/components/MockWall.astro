@@ -4,10 +4,8 @@
 // and the step it shows, and linked to that page — so the wall shows how much
 // we have built without inventing anything. No screen appears twice.
 //
-// The column count follows the screen (--n below: 2 on a phone up to 5 on a
-// wide desktop) so every column is whole; a small inline script deals the same
-// 25 cards across that many columns. Columns scroll in a loop, odd columns down
-// and even columns up; hovering or focusing inside a column pauses it. Each column renders its cards twice so
+// Columns scroll in a loop, odd columns down and even columns up; hovering or
+// focusing inside a column pauses it. Each column renders its cards twice so
 // the loop is seamless; the copy is hidden from assistive tech and the tab
 // order. Each screen plays its own steps as it fades in, then one on-screen
 // card at a time replays, so the wall keeps moving without every screen
@@ -51,8 +49,7 @@ for (let round = 0; cards.length < COLS * PER_COL; round++) {
   for (const list of perEntry) if (list[round] && cards.length < COLS * PER_COL) cards.push(list[round]);
   if (cards.length === before) break;
 }
-// Server-rendered at five columns; the script re-deals by data-i for smaller screens.
-const columns = Array.from({ length: COLS }, (_, c) => cards.map((card, i) => ({ card, i })).filter(({ i }) => i % COLS === c));
+const columns = Array.from({ length: COLS }, (_, c) => cards.filter((_, i) => i % COLS === c));
 const entryCount = perEntry.filter((l) => l.length).length;
 ---
 
@@ -63,11 +60,10 @@ const entryCount = perEntry.filter((l) => l.length).length;
         <div class="wall-drift">
           {[false, true].map((copy) => (
           <div class="wall-set" aria-hidden={copy ? 'true' : undefined} inert={copy}>
-          {col.map(({ card, i }) => (
+          {col.map((card) => (
             <a
               href={withBase(card.href)}
               class="wall-card reveal"
-              data-i={i}
             >
               <div class="wall-shot" aria-hidden="true">
                 <div class="wall-zoom">
@@ -87,23 +83,23 @@ const entryCount = perEntry.filter((l) => l.length).length;
 
   <div class="wall-fade pointer-events-none absolute inset-0 z-[1]" aria-hidden="true"></div>
 
-  <div class="wall-copy absolute inset-x-0 bottom-0 z-[2] pb-8 sm:pb-14">
-    <div class="mx-auto grid max-w-[1180px] items-end gap-5 px-6 sm:gap-8 lg:grid-cols-[1.2fr_0.8fr]">
+  <div class="absolute inset-x-0 bottom-0 z-[2] pb-14">
+    <div class="mx-auto grid max-w-[1180px] items-end gap-8 px-6 lg:grid-cols-[1.2fr_0.8fr]">
       <div>
-        <p class="mb-4 sm:mb-5 inline-flex items-center gap-2 rounded-full border border-line bg-surface/80 px-3.5 py-1.5 text-[13px] text-fg-muted backdrop-blur">
+        <p class="mb-5 inline-flex items-center gap-2 rounded-full border border-line bg-surface/80 px-3.5 py-1.5 text-[13px] text-fg-muted backdrop-blur">
           <span class="h-1.5 w-1.5 rounded-full bg-accent"></span>
           {cards.length} screens from {entryCount} things we have built
         </p>
-        <h1 class="text-[clamp(32px,6vw,64px)] text-fg">
+        <h1 class="text-[clamp(38px,6vw,64px)] text-fg">
           Software that runs<br />
           <span class="grad-text">the work.</span>
         </h1>
       </div>
       <div>
         <p class="max-w-[440px] text-[16px] text-fg-muted">{site.description}</p>
-        <div class="mt-5 flex flex-wrap gap-3 sm:mt-6">
-          <Btn href={withBase('/products/')} class="max-sm:px-5">See products</Btn>
-          <Btn href={withBase('/work/')} variant="ghost" class="max-sm:px-5">Browse the work</Btn>
+        <div class="mt-6 flex flex-wrap gap-3">
+          <Btn href={withBase('/products/')}>See products</Btn>
+          <Btn href={withBase('/work/')} variant="ghost">Browse the work</Btn>
         </div>
       </div>
     </div>
@@ -111,44 +107,28 @@ const entryCount = perEntry.filter((l) => l.length).length;
 </section>
 
 <style>
-  /* Columns per screen width. The script reads --n, so change it here only. */
   .wall {
-    --n: 2;
-    --gap: 16px;
-    --pad: 16px;
-    /* Fill the first screen under the sticky header. The phone floor fits a
-       667px-tall screen, so both buttons show without scrolling. */
-    height: max(560px, calc(100svh - 77px));
+    --card-w: 300px;
+    --gap: 34px;
+    /* Fill the first screen under the sticky header. */
+    height: max(680px, calc(100svh - 77px));
     background: var(--color-bg);
   }
-  @media (min-width: 640px) { .wall { --n: 3; --gap: 24px; --pad: 24px; height: max(680px, calc(100svh - 77px)); } }
-  @media (min-width: 1024px) { .wall { --n: 4; --gap: 28px; } }
-  @media (min-width: 1440px) { .wall { --n: 5; --gap: 34px; } }
   .wall-stage {
     position: absolute;
     z-index: 0; /* contains mock chrome's own z-index under the fade */
-    inset: -4% 0 0 0;
-    margin-inline: auto;
-    /* Cap cards at 320px so a very wide screen centres the wall. */
-    max-width: calc(var(--n) * 320px + (var(--n) - 1) * var(--gap) + 2 * var(--pad));
-    padding-inline: var(--pad);
+    inset: -4% 0 0 50%;
+    translate: -50% 0;
     display: flex;
     gap: var(--gap);
+    width: max-content;
   }
-  .wall-col { flex: 1 1 0; min-width: 0; }
-  /* Before the script runs (or without it), show only as many columns as fit. */
-  .wall-col:nth-child(n + 3) { display: none; }
-  @media (min-width: 640px) { .wall-col:nth-child(n + 3) { display: block; } .wall-col:nth-child(n + 4) { display: none; } }
-  @media (min-width: 1024px) { .wall-col:nth-child(n + 4) { display: block; } .wall-col:nth-child(n + 5) { display: none; } }
-  @media (min-width: 1440px) { .wall-col:nth-child(n + 5) { display: block; } }
+  .wall-col { width: var(--card-w); }
   /* Two identical sets, each with its gap at the bottom, so -50% is exactly one
-     set and the loop has no seam. The script sets --len (one set's height in
-     px) and --v (the column's speed in px/s), so every width moves at the same
-     on-screen speed: about 15px/s on average, 30% slower than the first cut's
-     21px/s (founder, 2026-09-28). The negative delay staggers the columns so no
+     set and the loop has no seam. The negative delay staggers the columns so no
      row of cards lines up. */
   .wall-drift {
-    animation: wall-loop calc(var(--len, 1600) * 1s / var(--v, 15)) linear infinite;
+    animation: wall-loop calc(64s + var(--c) * 7s) linear infinite;
     animation-delay: calc(var(--c) * -13s);
   }
   .wall-col:nth-child(odd) .wall-drift { animation-direction: reverse; }
@@ -186,9 +166,8 @@ const entryCount = perEntry.filter((l) => l.length).length;
     transform: translateY(-4px);
     border-color: color-mix(in srgb, var(--color-action) 45%, transparent);
   }
-  /* Mocks are drawn for a ~440px column; shrink the whole screen, not its text.
-     The script sets --zoom from the card's real width. */
-  .wall-zoom { width: 440px; zoom: var(--zoom, 0.5); }
+  /* Mocks are drawn for a ~440px column; shrink the whole screen, not its text. */
+  .wall-zoom { width: 440px; zoom: calc(270 / 440); }
 
   .wall-fade {
     background:
@@ -197,23 +176,13 @@ const entryCount = perEntry.filter((l) => l.length).length;
       radial-gradient(ellipse at 50% 40%, transparent 55%, color-mix(in srgb, var(--color-bg) 70%, transparent) 100%);
   }
 
-  /* The copy carries its own backdrop, solid behind the text and fading out
-     140px above it, so no card caption shows through the paragraph at any
-     width. */
-  .wall-copy::before {
-    content: '';
-    position: absolute;
-    inset: -140px 0 0 0;
-    z-index: -1;
-    background: linear-gradient(to top, var(--color-bg) calc(100% - 140px), transparent);
-  }
-
   @media (max-width: 767px) {
+    .wall { --card-w: 210px; --gap: 20px; }
+    .wall-zoom { zoom: calc(180 / 440); }
     .wall-shot { height: 170px; }
     .wall-card:nth-child(3n + 2) .wall-shot { height: 210px; }
     .wall-card:nth-child(3n) .wall-shot { height: 140px; }
-    /* The copy's backdrop covers the bottom; only the top edge fades here. */
-    .wall-fade { background: linear-gradient(to bottom, var(--color-bg) 0%, transparent 14%); }
+    .wall-fade { background: linear-gradient(to top, var(--color-bg) 0%, var(--color-bg) 52%, transparent 78%), linear-gradient(to bottom, var(--color-bg) 0%, transparent 14%); }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -221,75 +190,23 @@ const entryCount = perEntry.filter((l) => l.length).length;
   }
 </style>
 
-<script is:inline>
-  // Deal the cards across as many columns as the screen fits (--n in the CSS
-  // above), keeping the server's round-robin order by data-i, and give each
-  // column a hidden, inert copy for the seamless loop. Inline, so the first
-  // paint already has the right columns and the reveal observer (bound later,
-  // in Layout) sees every card. New shells are blank clones of the server's, so
-  // they keep Astro's scoping attribute and with it their styles.
-  document.querySelectorAll('.wall').forEach((wall) => {
-    const stage = wall.querySelector('.wall-stage');
-    const blank = (sel) => stage.querySelector(sel).cloneNode(false);
-    const shells = { col: blank('.wall-col'), drift: blank('.wall-drift'), set: blank('.wall-set:not([inert])') };
-    const cards = [...stage.querySelectorAll('.wall-set:not([inert]) .wall-card')].sort((a, b) => a.dataset.i - b.dataset.i);
-    let n = 0;
-    let dealt = false;
-    const layout = () => {
-      const want = parseInt(getComputedStyle(wall).getPropertyValue('--n'), 10);
-      if (want && want !== n) {
-        n = want;
-        stage.replaceChildren(...Array.from({ length: n }, (_, c) => {
-          const col = shells.col.cloneNode(false);
-          const drift = shells.drift.cloneNode(false);
-          const set = shells.set.cloneNode(false);
-          const mine = cards.filter((_, i) => i % n === c);
-          col.style.setProperty('--c', c);
-          // Speeds step 13.8 / 15 / 16.2 px/s so neighbours drift apart.
-          col.style.setProperty('--v', 15 * (1 + ((c % 3) - 1) * 0.08));
-          set.append(...mine);
-          const copy = set.cloneNode(true);
-          copy.inert = true;
-          copy.setAttribute('aria-hidden', 'true');
-          drift.append(set, copy);
-          col.append(drift);
-          return col;
-        }));
-        // A moved card drops out of the reveal observer, so after first load
-        // show every card outright rather than leave some faded.
-        if (dealt) stage.querySelectorAll('.wall-card').forEach((el) => el.classList.add('is-visible'));
-        dealt = true;
-      }
-      const shot = stage.querySelector('.wall-shot');
-      if (shot) wall.style.setProperty('--zoom', ((shot.clientWidth - 28) / 440).toFixed(4));
-      // Zoom sets the card heights, so measure the loop length after it.
-      stage.querySelectorAll('.wall-col').forEach((col) => {
-        col.style.setProperty('--len', col.querySelector('.wall-set').offsetHeight);
-      });
-    };
-    layout();
-    addEventListener('resize', layout);
-  });
-</script>
-
 <script>
   // Replay one on-screen card's steps at a time. Cards in the bottom third sit
   // under the fade, so they are skipped.
   if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
     document.querySelectorAll<HTMLElement>('.wall').forEach((wall) => {
-      let last: HTMLElement | null = null;
+      const cards = [...wall.querySelectorAll<HTMLElement>('.wall-card')];
+      let last = -1;
       setInterval(() => {
-        // Looked up each tick: a resize re-deals the columns and replaces the copies.
-        const cards = [...wall.querySelectorAll<HTMLElement>('.wall-card')];
         const h = wall.getBoundingClientRect();
         if (document.hidden || h.bottom < 0) return;
-        const visible = cards.filter((c) => {
+        const visible = cards.filter((c, i) => {
           const r = c.getBoundingClientRect();
-          return c !== last && r.bottom > h.top && r.top < h.bottom - h.height * 0.35 && r.right > 0 && r.left < innerWidth;
+          return i !== last && r.bottom > h.top && r.top < h.bottom - h.height * 0.35 && r.right > 0 && r.left < innerWidth;
         });
         if (!visible.length) return;
         const card = visible[Math.floor(Math.random() * visible.length)];
-        last = card;
+        last = cards.indexOf(card);
         card.querySelectorAll<HTMLElement>('.mock-step, .mock-before').forEach((el) => {
           el.style.animation = 'none';
           void el.offsetWidth;
