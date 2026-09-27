@@ -4,8 +4,10 @@
 // and the step it shows, and linked to that page — so the wall shows how much
 // we have built without inventing anything. No screen appears twice.
 //
-// Columns scroll in a loop, odd columns down and even columns up; hovering or
-// focusing inside a column pauses it. Each column renders its cards twice so
+// The column count follows the screen (--n below: 2 on a phone up to 5 on a
+// wide desktop) so every column is whole; a small inline script deals the same
+// 25 cards across that many columns. Columns scroll in a loop, odd columns down
+// and even columns up; hovering or focusing inside a column pauses it. Each column renders its cards twice so
 // the loop is seamless; the copy is hidden from assistive tech and the tab
 // order. Each screen plays its own steps as it fades in, then one on-screen
 // card at a time replays, so the wall keeps moving without every screen
@@ -49,21 +51,23 @@ for (let round = 0; cards.length < COLS * PER_COL; round++) {
   for (const list of perEntry) if (list[round] && cards.length < COLS * PER_COL) cards.push(list[round]);
   if (cards.length === before) break;
 }
-const columns = Array.from({ length: COLS }, (_, c) => cards.filter((_, i) => i % COLS === c));
+// Server-rendered at five columns; the script re-deals by data-i for smaller screens.
+const columns = Array.from({ length: COLS }, (_, c) => cards.map((card, i) => ({ card, i })).filter(({ i }) => i % COLS === c));
 const entryCount = perEntry.filter((l) => l.length).length;
 ---
 
 <section class="wall relative isolate overflow-hidden">
   <div class="wall-stage" aria-label={`Screens from ${entryCount} things we have built`}>
     {columns.map((col, c) => (
-      <div class="wall-col" style={`--c:${c}`}>
+      <div class="wall-col" style={`--c:${c};--k:${col.length}`}>
         <div class="wall-drift">
           {[false, true].map((copy) => (
           <div class="wall-set" aria-hidden={copy ? 'true' : undefined} inert={copy}>
-          {col.map((card) => (
+          {col.map(({ card, i }) => (
             <a
               href={withBase(card.href)}
               class="wall-card reveal"
+              data-i={i}
             >
               <div class="wall-shot" aria-hidden="true">
                 <div class="wall-zoom">
@@ -107,28 +111,41 @@ const entryCount = perEntry.filter((l) => l.length).length;
 </section>
 
 <style>
+  /* Columns per screen width. The script reads --n, so change it here only. */
   .wall {
-    --card-w: 300px;
-    --gap: 34px;
+    --n: 2;
+    --gap: 16px;
+    --pad: 16px;
     /* Fill the first screen under the sticky header. */
     height: max(680px, calc(100svh - 77px));
     background: var(--color-bg);
   }
+  @media (min-width: 640px) { .wall { --n: 3; --gap: 24px; --pad: 24px; } }
+  @media (min-width: 1024px) { .wall { --n: 4; --gap: 28px; } }
+  @media (min-width: 1440px) { .wall { --n: 5; --gap: 34px; } }
   .wall-stage {
     position: absolute;
     z-index: 0; /* contains mock chrome's own z-index under the fade */
-    inset: -4% 0 0 50%;
-    translate: -50% 0;
+    inset: -4% 0 0 0;
+    margin-inline: auto;
+    /* Cap cards at 320px so a very wide screen centres the wall. */
+    max-width: calc(var(--n) * 320px + (var(--n) - 1) * var(--gap) + 2 * var(--pad));
+    padding-inline: var(--pad);
     display: flex;
     gap: var(--gap);
-    width: max-content;
   }
-  .wall-col { width: var(--card-w); }
+  .wall-col { flex: 1 1 0; min-width: 0; }
+  /* Before the script runs (or without it), show only as many columns as fit. */
+  .wall-col:nth-child(n + 3) { display: none; }
+  @media (min-width: 640px) { .wall-col:nth-child(n + 3) { display: block; } .wall-col:nth-child(n + 4) { display: none; } }
+  @media (min-width: 1024px) { .wall-col:nth-child(n + 4) { display: block; } .wall-col:nth-child(n + 5) { display: none; } }
+  @media (min-width: 1440px) { .wall-col:nth-child(n + 5) { display: block; } }
   /* Two identical sets, each with its gap at the bottom, so -50% is exactly one
-     set and the loop has no seam. The negative delay staggers the columns so no
-     row of cards lines up. */
+     set and the loop has no seam. The loop time scales with the column's card
+     count (--k), so a phone's longer columns move no faster. The negative delay
+     staggers the columns so no row of cards lines up. */
   .wall-drift {
-    animation: wall-loop calc(64s + var(--c) * 7s) linear infinite;
+    animation: wall-loop calc(var(--k) * 13s + var(--c) * 7s) linear infinite;
     animation-delay: calc(var(--c) * -13s);
   }
   .wall-col:nth-child(odd) .wall-drift { animation-direction: reverse; }
@@ -166,8 +183,9 @@ const entryCount = perEntry.filter((l) => l.length).length;
     transform: translateY(-4px);
     border-color: color-mix(in srgb, var(--color-action) 45%, transparent);
   }
-  /* Mocks are drawn for a ~440px column; shrink the whole screen, not its text. */
-  .wall-zoom { width: 440px; zoom: calc(270 / 440); }
+  /* Mocks are drawn for a ~440px column; shrink the whole screen, not its text.
+     The script sets --zoom from the card's real width. */
+  .wall-zoom { width: 440px; zoom: var(--zoom, 0.5); }
 
   .wall-fade {
     background:
@@ -177,8 +195,6 @@ const entryCount = perEntry.filter((l) => l.length).length;
   }
 
   @media (max-width: 767px) {
-    .wall { --card-w: 210px; --gap: 20px; }
-    .wall-zoom { zoom: calc(180 / 440); }
     .wall-shot { height: 170px; }
     .wall-card:nth-child(3n + 2) .wall-shot { height: 210px; }
     .wall-card:nth-child(3n) .wall-shot { height: 140px; }
@@ -190,23 +206,70 @@ const entryCount = perEntry.filter((l) => l.length).length;
   }
 </style>
 
+<script is:inline>
+  // Deal the cards across as many columns as the screen fits (--n in the CSS
+  // above), keeping the server's round-robin order by data-i, and give each
+  // column a hidden, inert copy for the seamless loop. Inline, so the first
+  // paint already has the right columns and the reveal observer (bound later,
+  // in Layout) sees every card. New shells are blank clones of the server's, so
+  // they keep Astro's scoping attribute and with it their styles.
+  document.querySelectorAll('.wall').forEach((wall) => {
+    const stage = wall.querySelector('.wall-stage');
+    const blank = (sel) => stage.querySelector(sel).cloneNode(false);
+    const shells = { col: blank('.wall-col'), drift: blank('.wall-drift'), set: blank('.wall-set:not([inert])') };
+    const cards = [...stage.querySelectorAll('.wall-set:not([inert]) .wall-card')].sort((a, b) => a.dataset.i - b.dataset.i);
+    let n = 0;
+    let dealt = false;
+    const layout = () => {
+      const want = parseInt(getComputedStyle(wall).getPropertyValue('--n'), 10);
+      if (want && want !== n) {
+        n = want;
+        stage.replaceChildren(...Array.from({ length: n }, (_, c) => {
+          const col = shells.col.cloneNode(false);
+          const drift = shells.drift.cloneNode(false);
+          const set = shells.set.cloneNode(false);
+          const mine = cards.filter((_, i) => i % n === c);
+          col.style.setProperty('--c', c);
+          col.style.setProperty('--k', mine.length);
+          set.append(...mine);
+          const copy = set.cloneNode(true);
+          copy.inert = true;
+          copy.setAttribute('aria-hidden', 'true');
+          drift.append(set, copy);
+          col.append(drift);
+          return col;
+        }));
+        // A moved card drops out of the reveal observer, so after first load
+        // show every card outright rather than leave some faded.
+        if (dealt) stage.querySelectorAll('.wall-card').forEach((el) => el.classList.add('is-visible'));
+        dealt = true;
+      }
+      const shot = stage.querySelector('.wall-shot');
+      if (shot) wall.style.setProperty('--zoom', ((shot.clientWidth - 28) / 440).toFixed(4));
+    };
+    layout();
+    addEventListener('resize', layout);
+  });
+</script>
+
 <script>
   // Replay one on-screen card's steps at a time. Cards in the bottom third sit
   // under the fade, so they are skipped.
   if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
     document.querySelectorAll<HTMLElement>('.wall').forEach((wall) => {
-      const cards = [...wall.querySelectorAll<HTMLElement>('.wall-card')];
-      let last = -1;
+      let last: HTMLElement | null = null;
       setInterval(() => {
+        // Looked up each tick: a resize re-deals the columns and replaces the copies.
+        const cards = [...wall.querySelectorAll<HTMLElement>('.wall-card')];
         const h = wall.getBoundingClientRect();
         if (document.hidden || h.bottom < 0) return;
-        const visible = cards.filter((c, i) => {
+        const visible = cards.filter((c) => {
           const r = c.getBoundingClientRect();
-          return i !== last && r.bottom > h.top && r.top < h.bottom - h.height * 0.35 && r.right > 0 && r.left < innerWidth;
+          return c !== last && r.bottom > h.top && r.top < h.bottom - h.height * 0.35 && r.right > 0 && r.left < innerWidth;
         });
         if (!visible.length) return;
         const card = visible[Math.floor(Math.random() * visible.length)];
-        last = cards.indexOf(card);
+        last = card;
         card.querySelectorAll<HTMLElement>('.mock-step, .mock-before').forEach((el) => {
           el.style.animation = 'none';
           void el.offsetWidth;
