@@ -4,9 +4,12 @@
 // and the step it shows, and linked to that page — so the wall shows how much
 // we have built without inventing anything. No screen appears twice.
 //
-// Columns drift at different speeds. Each screen plays its own steps as it
-// fades in, then one on-screen card at a time replays, so the wall keeps moving
-// without every screen animating at once.
+// Columns scroll in a loop, odd columns down and even columns up; hovering or
+// focusing inside a column pauses it. Each column renders its cards twice so
+// the loop is seamless; the copy is hidden from assistive tech and the tab
+// order. Each screen plays its own steps as it fades in, then one on-screen
+// card at a time replays, so the wall keeps moving without every screen
+// animating at once.
 import { withBase } from '../base';
 import { site } from '../content/site';
 import { products } from '../content/products';
@@ -55,11 +58,13 @@ const entryCount = perEntry.filter((l) => l.length).length;
     {columns.map((col, c) => (
       <div class="wall-col" style={`--c:${c}`}>
         <div class="wall-drift">
+          {[false, true].map((copy) => (
+          <div class="wall-set" aria-hidden={copy ? 'true' : undefined} inert={copy}>
           {col.map((card) => (
             <a
               href={withBase(card.href)}
               class="wall-card reveal"
-                          >
+            >
               <div class="wall-shot" aria-hidden="true">
                 <div class="wall-zoom">
                   {card.isProduct ? <ProductMock mock={card.mock as any} /> : <WorkMock mock={card.mock as any} />}
@@ -68,6 +73,8 @@ const entryCount = perEntry.filter((l) => l.length).length;
               <span class="mt-2.5 block font-mono text-[12.5px] font-semibold text-fg">{card.entry}</span>
               <span class="block font-mono text-[11.5px] text-fg-subtle">{card.kind} · {card.caption}</span>
             </a>
+          ))}
+          </div>
           ))}
         </div>
       </div>
@@ -116,21 +123,26 @@ const entryCount = perEntry.filter((l) => l.length).length;
     gap: var(--gap);
     width: max-content;
   }
-  .wall-col {
-    width: var(--card-w);
-    /* Stagger the columns so no row of cards lines up. */
-    margin-top: calc(-90px + mod(var(--c) * 137px, 260px));
-  }
+  .wall-col { width: var(--card-w); }
+  /* Two identical sets, each with its gap at the bottom, so -50% is exactly one
+     set and the loop has no seam. The negative delay staggers the columns so no
+     row of cards lines up. */
   .wall-drift {
+    animation: wall-loop calc(64s + var(--c) * 7s) linear infinite;
+    animation-delay: calc(var(--c) * -13s);
+  }
+  .wall-col:nth-child(odd) .wall-drift { animation-direction: reverse; }
+  .wall-col:hover .wall-drift,
+  .wall-col:focus-within .wall-drift { animation-play-state: paused; }
+  .wall-set {
     display: flex;
     flex-direction: column;
     gap: 44px;
-    animation: wall-drift calc(22s + var(--c) * 3.7s) ease-in-out infinite alternate;
-    animation-delay: calc(var(--c) * -4s);
+    padding-bottom: 44px;
   }
-  @keyframes wall-drift {
-    from { transform: translateY(-36px); }
-    to { transform: translateY(36px); }
+  @keyframes wall-loop {
+    from { transform: translateY(0); }
+    to { transform: translateY(-50%); }
   }
 
   /* Cards fade in through .reveal, which also starts each screen's steps. */
