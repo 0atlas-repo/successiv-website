@@ -33,7 +33,7 @@
     {
       "id": 5,
       "subject": "Verify and show the founder",
-      "status": "in_progress",
+      "status": "completed",
       "blockedBy": [
         2,
         3,
