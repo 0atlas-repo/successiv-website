@@ -200,6 +200,18 @@ mockCount >= 6
   ? pass(`${mockCount} labelled mockups on the home page`)
   : fail(`expected at least 6 mockups on home, found ${mockCount}`);
 
+// The home wall pairs two phone screens into one tile, chosen by the list in
+// src/components/mocks/phoneScreens.ts. That list is kept by hand, so check
+// each pair really is two phone frames (the phone shell's rounded top).
+const pairTiles = homeHtml.split('data-tile="pair"').slice(1)
+  .map((s) => s.split('class="wall-card')[0]);
+const badPairs = pairTiles.filter((s) =>
+  (s.match(/Illustrative mockup/g) || []).length !== 2 ||
+  (s.match(/rounded-t-\[30px\]/g) || []).length !== 2);
+pairTiles.length > 0 && badPairs.length === 0
+  ? pass(`${pairTiles.length} phone-pair tiles on the wall, each two phone frames`)
+  : fail(`wall phone pairs: ${pairTiles.length} found, ${badPairs.length} hold something other than two phone frames — check phoneScreens.ts`);
+
 const rasterInContent = allFiles.filter(
   (f) => /\.(png|jpe?g|webp)$/i.test(f) && !/favicon|og-placeholder|logo/i.test(f)
 );

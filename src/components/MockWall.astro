@@ -17,8 +17,12 @@ import { work } from '../content/work';
 import Btn from './Btn.astro';
 import ProductMock from './mocks/ProductMock.astro';
 import WorkMock from './mocks/WorkMock.astro';
+import { phoneScreens } from './mocks/phoneScreens';
 
 type Card = { entry: string; kind: string; caption: string; href: string; mock: string; isProduct: boolean };
+// A tile is one card, or two phone screens from the same app side by side, so
+// a phone does not sit alone in a tile drawn for a desktop window.
+type Tile = { entry: string; kind: string; href: string; isProduct: boolean; screens: Card[] };
 
 // Each entry's screens, step screens first so each carries its step title.
 const perEntry: Card[][] = [
@@ -40,16 +44,34 @@ const perEntry: Card[][] = [
   }),
 ];
 
-// Round-robin across entries so neighbouring cards come from different projects.
+// Consecutive phone screens of one entry pair up into a tile.
+const perEntryTiles: Tile[][] = perEntry.map((list) => {
+  const tiles: Tile[] = [];
+  for (let i = 0; i < list.length; i++) {
+    const a = list[i];
+    const b = list[i + 1];
+    const pair = b && phoneScreens.has(a.mock) && phoneScreens.has(b.mock);
+    tiles.push({ entry: a.entry, kind: a.kind, href: a.href, isProduct: a.isProduct, screens: pair ? [a, b] : [a] });
+    if (pair) i++;
+  }
+  return tiles;
+});
+
+// Round-robin across entries so neighbouring tiles come from different
+// projects, until the wall holds SCREENS screens (a pair counts as two).
 const COLS = 5;
-const PER_COL = 5;
-const cards: Card[] = [];
-for (let round = 0; cards.length < COLS * PER_COL; round++) {
-  const before = cards.length;
-  for (const list of perEntry) if (list[round] && cards.length < COLS * PER_COL) cards.push(list[round]);
-  if (cards.length === before) break;
+const SCREENS = 25;
+const tiles: Tile[] = [];
+let screenCount = 0;
+for (let round = 0; screenCount < SCREENS; round++) {
+  const before = tiles.length;
+  for (const list of perEntryTiles) {
+    const t = list[round];
+    if (t && screenCount < SCREENS) { tiles.push(t); screenCount += t.screens.length; }
+  }
+  if (tiles.length === before) break;
 }
-const columns = Array.from({ length: COLS }, (_, c) => cards.filter((_, i) => i % COLS === c));
+const columns = Array.from({ length: COLS }, (_, c) => tiles.filter((_, i) => i % COLS === c));
 const entryCount = perEntry.filter((l) => l.length).length;
 ---
 
@@ -60,18 +82,23 @@ const entryCount = perEntry.filter((l) => l.length).length;
         <div class="wall-drift">
           {[false, true].map((copy) => (
           <div class="wall-set" aria-hidden={copy ? 'true' : undefined} inert={copy}>
-          {col.map((card) => (
+          {col.map((tile) => (
             <a
-              href={withBase(card.href)}
+              href={withBase(tile.href)}
               class="wall-card reveal"
+              data-tile={tile.screens.length === 2 ? 'pair' : undefined}
             >
               <div class="wall-shot" aria-hidden="true">
-                <div class="wall-zoom">
-                  {card.isProduct ? <ProductMock mock={card.mock as any} /> : <WorkMock mock={card.mock as any} />}
+                <div class={tile.screens.length === 2 ? 'wall-pair' : undefined}>
+                  {tile.screens.map((s) => (
+                    <div class:list={['wall-zoom', tile.screens.length === 2 && 'wall-zoom-phone']}>
+                      {s.isProduct ? <ProductMock mock={s.mock as any} /> : <WorkMock mock={s.mock as any} />}
+                    </div>
+                  ))}
                 </div>
               </div>
-              <span class="mt-2.5 block font-mono text-[12.5px] font-semibold text-fg">{card.entry}</span>
-              <span class="block font-mono text-[11.5px] text-fg-subtle">{card.kind} · {card.caption}</span>
+              <span class="mt-2.5 block font-mono text-[12.5px] font-semibold text-fg">{tile.entry}</span>
+              <span class="block font-mono text-[11.5px] text-fg-subtle">{tile.kind} · {tile.screens.map((s) => s.caption).join(' · ')}</span>
             </a>
           ))}
           </div>
@@ -88,7 +115,7 @@ const entryCount = perEntry.filter((l) => l.length).length;
       <div>
         <p class="mb-5 inline-flex items-center gap-2 rounded-full border border-line bg-surface/80 px-3.5 py-1.5 text-[13px] text-fg-muted backdrop-blur">
           <span class="h-1.5 w-1.5 rounded-full bg-accent"></span>
-          {cards.length} screens from {entryCount} things we have built
+          {screenCount} screens from {entryCount} things we have built
         </p>
         <h1 class="text-[clamp(38px,6vw,64px)] text-fg">
           Software that runs<br />
@@ -108,7 +135,9 @@ const entryCount = perEntry.filter((l) => l.length).length;
 
 <style>
   .wall {
-    --card-w: 300px;
+    /* Tile width, unitless so the zooms below can divide by it. Wide enough
+       for a desktop window to read as one (founder, 2026-09-28). */
+    --card-n: 420;
     --gap: 34px;
     /* Fill the first screen under the sticky header. */
     height: max(680px, calc(100svh - 77px));
@@ -123,7 +152,7 @@ const entryCount = perEntry.filter((l) => l.length).length;
     gap: var(--gap);
     width: max-content;
   }
-  .wall-col { width: var(--card-w); }
+  .wall-col { width: calc(var(--card-n) * 1px); }
   /* Two identical sets, each with its gap at the bottom, so -50% is exactly one
      set and the loop has no seam. The negative delay staggers the columns so no
      row of cards lines up. Half the first cut's speed (founder, 2026-09-28). */
@@ -149,7 +178,7 @@ const entryCount = perEntry.filter((l) => l.length).length;
   .wall-card { display: block; }
 
   .wall-shot {
-    height: 220px;
+    height: 260px;
     overflow: hidden;
     border-radius: 14px;
     border: 1px solid var(--color-line);
@@ -159,15 +188,21 @@ const entryCount = perEntry.filter((l) => l.length).length;
     -webkit-mask-image: linear-gradient(to bottom, #000 78%, transparent);
     mask-image: linear-gradient(to bottom, #000 78%, transparent);
   }
-  .wall-card:nth-child(3n + 2) .wall-shot { height: 280px; }
-  .wall-card:nth-child(3n) .wall-shot { height: 180px; }
+  /* A desktop window shows whole, at its own landscape height; two phones side
+     by side get a taller tile. */
+  .wall-shot:has(.mock-desktop) { height: auto; max-height: 330px; padding-bottom: 14px; }
+  .wall-card[data-tile='pair'] .wall-shot { height: 300px; }
+  .wall-pair { display: flex; justify-content: center; gap: 12px; }
   .wall-card:hover .wall-shot,
   .wall-card:focus-visible .wall-shot {
     transform: translateY(-4px);
     border-color: color-mix(in srgb, var(--color-action) 45%, transparent);
   }
-  /* Mocks are drawn for a ~440px column; shrink the whole screen, not its text. */
-  .wall-zoom { width: 440px; zoom: calc(270 / 440); }
+  /* Mocks are drawn for a ~440px column; shrink the whole screen to the tile
+     (its width less 28px of padding), not its text. A paired phone is drawn
+     272px wide and gets half the tile, less the 12px between the two. */
+  .wall-zoom { width: 440px; zoom: calc((var(--card-n) - 28) / 440); }
+  .wall-zoom-phone { width: 272px; zoom: calc((var(--card-n) - 40) / 2 / 272); }
 
   .wall-fade {
     background:
@@ -177,11 +212,10 @@ const entryCount = perEntry.filter((l) => l.length).length;
   }
 
   @media (max-width: 767px) {
-    .wall { --card-w: 210px; --gap: 20px; }
-    .wall-zoom { zoom: calc(180 / 440); }
-    .wall-shot { height: 170px; }
-    .wall-card:nth-child(3n + 2) .wall-shot { height: 210px; }
-    .wall-card:nth-child(3n) .wall-shot { height: 140px; }
+    .wall { --card-n: 300; --gap: 20px; }
+    .wall-shot { height: 190px; }
+    .wall-shot:has(.mock-desktop) { max-height: 240px; }
+    .wall-card[data-tile='pair'] .wall-shot { height: 215px; }
     .wall-fade { background: linear-gradient(to top, var(--color-bg) 0%, var(--color-bg) 52%, transparent 78%), linear-gradient(to bottom, var(--color-bg) 0%, transparent 14%); }
   }
 
