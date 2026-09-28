@@ -313,3 +313,66 @@ h1, h2, h3 {
 .mock-wash {
   background: radial-gradient(60% 55% at 50% 40%, color-mix(in oklab, var(--color-cyan) 18%, transparent), transparent 70%);
 }
+
+/* ---------- App themes on mocked screens ----------
+   A mock drawn for an app that ships its own look wears that look, so the
+   screen reads as the real app rather than as this site. `MockFrame` sets
+   `data-app` on the screen (not the device bezel), and the rule below re-points
+   the semantic tokens inside it, so the screen bodies need no edits.
+
+   Creators Sphere: from the shipped mobile app's theme (`AppColors`, its
+   "Vibrant Magazine" system): coral #FF5226, coralDeep #E63E16, ink #2A1712,
+   ink70 #5C4A40, ink50 #8C7C71, ink30 #C4B8AE, hair #ECE5DE, peach #FFF1EB,
+   sun #FFF7EC, success #1F9D5B. White on coral is the app's own pairing
+   (3.24:1); the mock is a picture (role="img", contents aria-hidden), which
+   the contrast rule exempts — see the mock-colour spec. The app ships light
+   only; the dark values below are drawn from the same hues so a dark page
+   does not show a white slab. Contrast on #1c1411: fg 17.1 · muted 9.7 ·
+   subtle 5.7 · coral 5.6. */
+[data-app="creators-sphere"] {
+  --color-bg: #ffffff;
+  --color-surface: #fff7ec;
+  --color-surface-2: #fff1eb;
+  --color-fg: #2a1712;
+  --color-fg-muted: #5c4a40;
+  --color-fg-subtle: #8c7c71;
+  --color-line: #ece5de;
+  --color-line-strong: #c4b8ae;
+  --color-action: #ff5226;
+  --color-on-action: #ffffff;
+  --color-accent: #ff5226;
+  --color-ok: #1f9d5b;
+  --color-ok-soft: color-mix(in oklab, #1f9d5b 12%, transparent);
+  --color-danger: #e63e16;
+  --color-danger-soft: color-mix(in oklab, #e63e16 12%, transparent);
+}
+:root[data-theme="dark"] [data-app="creators-sphere"] {
+  --color-bg: #1c1411;
+  --color-surface: #251a16;
+  --color-surface-2: #2e211c;
+  --color-fg: #fff7ec;
+  --color-fg-muted: #c9bbb0;
+  --color-fg-subtle: #9e8d82;
+  --color-line: rgba(255, 241, 235, 0.1);
+  --color-line-strong: rgba(255, 241, 235, 0.2);
+  --color-ok: #5ee08f;
+  --color-ok-soft: color-mix(in oklab, #5ee08f 16%, transparent);
+  --color-danger: #ff8a80;
+  --color-danger-soft: color-mix(in oklab, #ff8a80 15%, transparent);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) [data-app="creators-sphere"] {
+    --color-bg: #1c1411;
+    --color-surface: #251a16;
+    --color-surface-2: #2e211c;
+    --color-fg: #fff7ec;
+    --color-fg-muted: #c9bbb0;
+    --color-fg-subtle: #9e8d82;
+    --color-line: rgba(255, 241, 235, 0.1);
+    --color-line-strong: rgba(255, 241, 235, 0.2);
+    --color-ok: #5ee08f;
+    --color-ok-soft: color-mix(in oklab, #5ee08f 16%, transparent);
+    --color-danger: #ff8a80;
+    --color-danger-soft: color-mix(in oklab, #ff8a80 15%, transparent);
+  }
+}

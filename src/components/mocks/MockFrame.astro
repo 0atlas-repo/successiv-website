@@ -24,15 +24,21 @@
 // product ships to a phone. Only use it where the product's own copy says so.
 export type MockChrome = 'window' | 'sidebar' | 'tabs' | 'panel' | 'phone';
 
+// `app` dresses the screen in an app's own theme (see "App themes on mocked
+// screens" in global.css). Unset, the screen uses this site's palette.
+export type MockApp = 'creators-sphere';
+
 interface Props {
   title: string;
   /** Small right-aligned label in the title bar, e.g. a count or status. */
   meta?: string;
   /** Which shell to draw around the screen. See the note above on `phone`. */
   chrome?: MockChrome;
+  /** Draw the screen in this app's own theme. Unset: this site's palette. */
+  app?: MockApp;
   class?: string;
 }
-const { title, meta, chrome = 'window', class: className = '' } = Astro.props;
+const { title, meta, chrome = 'window', app, class: className = '' } = Astro.props;
 
 const railIcon = 'h-[13px] w-[13px]';
 
@@ -73,6 +79,7 @@ const shellClass = isPhone
 
 <div
   class:list={[shellClass, className]}
+  data-app={isPhone ? undefined : app}
   role="img"
   aria-label={`Illustrative mockup: ${title}`}
 >
@@ -317,7 +324,7 @@ const shellClass = isPhone
   )}
 
   {isPhone && (
-    <div class="overflow-hidden rounded-t-[25px] bg-bg">
+    <div class="overflow-hidden rounded-t-[25px] bg-bg" data-app={app}>
       {/* Status bar and a compact header: what makes a screen read as a phone
           rather than a small window. The screens are short, so the device is
           drawn from the top and cut off below the content, fading out rather

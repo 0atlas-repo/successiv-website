@@ -1,9 +1,44 @@
 {
   "tasks": [
-    { "id": 1, "subject": "Baseline dist at 905d027", "status": "pending", "blockedBy": [] },
-    { "id": 2, "subject": "Part 1: Creators Sphere theme via scoped tokens", "status": "pending", "blockedBy": [1] },
-    { "id": 3, "subject": "Part 2: Accounting realism (toolbar opt-out, initials and file tokens, canvas tint)", "status": "pending", "blockedBy": [1] },
-    { "id": 4, "subject": "Part 3: Contract lifecycle landscape desktop screens", "status": "pending", "blockedBy": [1] },
-    { "id": 5, "subject": "Verify and show the founder", "status": "pending", "blockedBy": [2, 3, 4] }
+    {
+      "id": 1,
+      "subject": "Baseline dist at 905d027",
+      "status": "completed",
+      "blockedBy": []
+    },
+    {
+      "id": 2,
+      "subject": "Part 1: Creators Sphere theme via scoped tokens",
+      "status": "completed",
+      "blockedBy": [
+        1
+      ]
+    },
+    {
+      "id": 3,
+      "subject": "Part 2: Accounting realism (toolbar opt-out, initials and file tokens, canvas tint)",
+      "status": "pending",
+      "blockedBy": [
+        1
+      ]
+    },
+    {
+      "id": 4,
+      "subject": "Part 3: Contract lifecycle landscape desktop screens",
+      "status": "pending",
+      "blockedBy": [
+        1
+      ]
+    },
+    {
+      "id": 5,
+      "subject": "Verify and show the founder",
+      "status": "pending",
+      "blockedBy": [
+        2,
+        3,
+        4
+      ]
+    }
   ]
 }
