@@ -82,17 +82,24 @@ Real desktop screenshots are landscape.
 
 ### Rules kept
 
-- Tokens only. The Creators Sphere palette becomes scoped tokens (`--app-*`)
-  set on its mock frames, defined for light and dark. Avatar and file-type
-  fills are tokens too. No raw hex in a component.
+- Tokens only. The Creators Sphere palette is a scoped override of the
+  existing semantic tokens (`--color-action`, `--color-bg`, `--color-fg`, ...)
+  on its mock frames, defined for light and both dark blocks, so its screen
+  bodies stay unchanged. Avatar and file-type fills are tokens too. No raw hex
+  in a component. File-type marks get their own tokens (`--color-file-*`),
+  never the status set, so a PDF mark is not read as an error.
 - Client builds never take a client's brand colour: a recognisable colour can
   identify the client.
 - Status colours (ok / warn / danger) stay reserved for status.
-- Text on coral meets 4.5:1 contrast in both themes. Measured: white on coral
-  #FF5226 is 3.24:1 and white on coralDeep #E63E16 is 4.15:1, so neither passes
-  for normal text; ink #2A1712 on coral is 5.28:1. The app itself puts white on
-  coral. Coral as text on white is also 3.24:1, so coral links need coralDeep
-  or bold large text. Decide per element in the pilot, and record it.
+- Contrast (settled 2026-09-28, before the pilot). Each mock is a picture:
+  `MockFrame` renders `role="img"` with an `aria-label`, and every slot is
+  `aria-hidden`. WCAG 1.4.3 exempts text that is part of a picture with
+  significant other visual content, so the 4.5:1 text rule does not bind the
+  text inside a mock. The Creators Sphere mock therefore uses the app's own
+  pairing, white on coral, because looking like the real app is the point.
+  Measured for the record: white on coral #FF5226 3.24:1, white on coralDeep
+  #E63E16 4.15:1, ink #2A1712 on coral 5.28:1. Text outside the mocks (page
+  copy, captions) keeps the site's normal contrast rules.
 - No change to what any screen claims.
 
 ## Pilot, then rollout
