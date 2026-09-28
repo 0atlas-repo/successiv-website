@@ -36,6 +36,11 @@
   --color-win-close: #ff5f57;
   --color-win-min: #febc2e;
   --color-win-max: #28c840;
+  /* Paper inside a mocked file preview (a photographed receipt, a PDF's first
+     page). Constant for the same reason as the window controls: a photo of
+     white paper is white on a light screen and a dark one. Lines on it use
+     --color-ink, which is also constant. */
+  --color-paper: #ffffff;
 
   /* Semantic tokens — these flip per theme. Components use only these.
      Light is the base: docs/hiring/DESIGNER_BRIEF.md asks for a "light, sharp
@@ -63,6 +68,12 @@
   --color-ok-soft: color-mix(in oklab, #0f7a3d 12%, transparent);
   --color-warn-soft: color-mix(in oklab, #8a5300 12%, transparent);
   --color-danger-soft: color-mix(in oklab, #b3261e 12%, transparent);
+
+  /* File-type marks on the mocked screens, in the colours those formats
+     usually wear. Kept apart from the status set so a PDF is not read as an
+     error. White text on it: 5.6:1 here, 3.7:1 on the dark value (inside a
+     mock, which is a picture; see the mock-colour spec). */
+  --color-file-pdf: #c62828;
 
   --font-head: "Space Grotesk", "DM Sans", sans-serif;
   --font-body: "DM Sans", sans-serif;
@@ -100,6 +111,7 @@
   --color-ok-soft: color-mix(in oklab, #5ee08f 16%, transparent);
   --color-warn-soft: color-mix(in oklab, #f0b429 13%, transparent);
   --color-danger-soft: color-mix(in oklab, #ff8a80 15%, transparent);
+  --color-file-pdf: #e5534b;
   }
 }
 
@@ -127,6 +139,7 @@
   --color-ok-soft: color-mix(in oklab, #5ee08f 16%, transparent);
   --color-warn-soft: color-mix(in oklab, #f0b429 13%, transparent);
   --color-danger-soft: color-mix(in oklab, #ff8a80 15%, transparent);
+  --color-file-pdf: #e5534b;
 }
 
 html {
@@ -374,5 +387,26 @@ h1, h2, h3 {
     --color-ok-soft: color-mix(in oklab, #5ee08f 16%, transparent);
     --color-danger: #ff8a80;
     --color-danger-soft: color-mix(in oklab, #ff8a80 15%, transparent);
+  }
+}
+
+/* ---------- Canvas on mocked screens ----------
+   `MockFrame canvas` marks a screen whose real app draws white cards on a
+   tinted page. The light theme's semantic pair is the other way round (tinted
+   `surface` cards on a white `bg`), so inside the screen the two swap. Dark
+   already draws cards lighter than the page, so both dark blocks put the
+   values back. */
+[data-canvas] {
+  --color-bg: #f6f7f9;
+  --color-surface: #ffffff;
+}
+:root[data-theme="dark"] [data-canvas] {
+  --color-bg: #0e0d0f;
+  --color-surface: #17151a;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) [data-canvas] {
+    --color-bg: #0e0d0f;
+    --color-surface: #17151a;
   }
 }

@@ -36,9 +36,15 @@ interface Props {
   chrome?: MockChrome;
   /** Draw the screen in this app's own theme. Unset: this site's palette. */
   app?: MockApp;
+  /** The Search + Filter row. Set false where the real screen has none
+   *  (a task page, a modal). `panel` only for now. */
+  toolbar?: boolean;
+  /** White cards on a tinted page, as real admin apps draw them, instead of
+   *  tinted cards on a white page. `panel` only for now. */
+  canvas?: boolean;
   class?: string;
 }
-const { title, meta, chrome = 'window', app, class: className = '' } = Astro.props;
+const { title, meta, chrome = 'window', app, toolbar = true, canvas = false, class: className = '' } = Astro.props;
 
 const railIcon = 'h-[13px] w-[13px]';
 
@@ -286,7 +292,7 @@ const shellClass = isPhone
   )}
 
   {chrome === 'panel' && (
-    <div class="bg-bg">
+    <div class="bg-bg" data-canvas={canvas ? '' : undefined}>
       {/* No title bar at all: this shell is a section of a larger page, so the
           heading does the work the title bar does elsewhere. The toolbar stays
           — without it the frame reads as a list, not software. */}
@@ -303,6 +309,7 @@ const shellClass = isPhone
           </svg>
         </span>
       </div>
+      {toolbar ? (
       <div aria-hidden="true" class="mt-2.5 flex items-center gap-2 border-y border-line px-4 py-2">
         <span class="flex min-w-0 flex-1 items-center gap-1.5 rounded-md border border-line bg-surface px-2 py-[5px] text-fg-subtle">
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="shrink-0">
@@ -317,6 +324,9 @@ const shellClass = isPhone
           <span class="font-head text-[10px]">Filter</span>
         </span>
       </div>
+      ) : (
+        <div aria-hidden="true" class="mt-2.5 border-b border-line"></div>
+      )}
       <div class="p-4" aria-hidden="true">
         <slot />
       </div>
