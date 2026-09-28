@@ -125,7 +125,7 @@ const entryCount = perEntry.filter((l) => l.length).length;
 
   <div class="wall-fade pointer-events-none absolute inset-0 z-[1]" aria-hidden="true"></div>
 
-  <div class="absolute inset-x-0 bottom-0 z-[2] pb-14">
+  <div class="wall-copy absolute inset-x-0 bottom-0 z-[2] pb-14">
     <div class="mx-auto grid max-w-[1180px] items-end gap-8 px-6 lg:grid-cols-[1.2fr_0.8fr]">
       <div>
         <p class="mb-5 inline-flex items-center gap-2 rounded-full border border-line bg-surface/80 px-3.5 py-1.5 text-[13px] text-fg-muted backdrop-blur">
@@ -231,7 +231,21 @@ const entryCount = perEntry.filter((l) => l.length).length;
     .wall-shot { height: 190px; }
     .wall-shot:has(.mock-desktop) { max-height: 240px; }
     .wall-card[data-tile='pair'] .wall-shot { height: 215px; }
-    .wall-fade { background: linear-gradient(to top, var(--color-bg) 0%, var(--color-bg) 52%, transparent 78%), linear-gradient(to bottom, var(--color-bg) 0%, transparent 14%); }
+    /* On a phone the copy is taller than the faded part of a fixed-height
+       hero, so the headline rode up over the cards. Instead the hero grows to
+       its copy, the copy starts 280px down under a band of wall, and it
+       carries its own backdrop that fades in 80px above it (founder,
+       2026-09-28: "title should move a bit lower"). */
+    .wall { height: auto; }
+    .wall-copy { position: relative; padding-top: 280px; }
+    .wall-copy::before {
+      content: '';
+      position: absolute;
+      inset: 200px 0 0 0;
+      z-index: -1;
+      background: linear-gradient(to bottom, transparent, var(--color-bg) 80px);
+    }
+    .wall-fade { background: linear-gradient(to bottom, var(--color-bg) 0%, transparent 14%); }
   }
 
   @media (prefers-reduced-motion: reduce) {
