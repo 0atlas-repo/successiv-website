@@ -126,10 +126,10 @@ const entryCount = perEntry.filter((l) => l.length).length;
   .wall-col { width: var(--card-w); }
   /* Two identical sets, each with its gap at the bottom, so -50% is exactly one
      set and the loop has no seam. The negative delay staggers the columns so no
-     row of cards lines up. */
+     row of cards lines up. Half the first cut's speed (founder, 2026-09-28). */
   .wall-drift {
-    animation: wall-loop calc(64s + var(--c) * 7s) linear infinite;
-    animation-delay: calc(var(--c) * -13s);
+    animation: wall-loop calc(128s + var(--c) * 14s) linear infinite;
+    animation-delay: calc(var(--c) * -26s);
   }
   .wall-col:nth-child(odd) .wall-drift { animation-direction: reverse; }
   .wall-col:hover .wall-drift,
