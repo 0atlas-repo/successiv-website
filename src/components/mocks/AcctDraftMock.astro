@@ -24,12 +24,12 @@ const entries = [
     <div class="space-y-1">
       {fields.map((f, i) => (
         <div class="mock-step flex items-center gap-2" style={`--step: ${i}`}>
-          <span class="w-[84px] shrink-0 font-head text-[9.5px] uppercase tracking-[0.08em] text-fg-subtle">{f.label}</span>
+          <span class="min-w-[84px] shrink-0 whitespace-nowrap font-head text-[9.5px] uppercase tracking-[0.08em] text-fg-subtle">{f.label}</span>
           <span class="truncate text-[12px] tabular-nums text-fg">{f.value}</span>
         </div>
       ))}
       <div class="mock-step flex items-center gap-2" style={`--step: ${fields.length}`}>
-        <span class="w-[84px] shrink-0 font-head text-[9.5px] uppercase tracking-[0.08em] text-fg-subtle">Status</span>
+        <span class="min-w-[84px] shrink-0 whitespace-nowrap font-head text-[9.5px] uppercase tracking-[0.08em] text-fg-subtle">Status</span>
         <span class="rounded-full border border-line px-1.5 py-px font-head text-[9.5px] font-semibold text-fg-muted">draft</span>
       </div>
     </div>

@@ -17,7 +17,7 @@ const fields = [
   <div class="space-y-1.5">
     {fields.map((f, i) => (
       <div class="mock-step flex items-center gap-2 rounded-lg border border-line bg-surface px-2.5 py-1.5" style={`--step: ${i}`}>
-        <span class="w-[64px] shrink-0 font-head text-[9.5px] uppercase tracking-[0.06em] text-fg-subtle">{f.label}</span>
+        <span class="min-w-[8.5em] shrink-0 whitespace-nowrap font-head text-[9.5px] uppercase tracking-[0.06em] text-fg-subtle">{f.label}</span>
         <span class="grid min-w-0 flex-1">
           <span class="mock-before col-start-1 row-start-1 truncate font-mono text-[10.5px] text-fg-subtle/70" style={`--swap: ${i + 4}`}>
             {f.token}
