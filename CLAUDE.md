@@ -150,7 +150,11 @@ place, and static output is a cleaner fit for Pages.
   a claim** — a device frame says the product ships to a phone, so it is only
   used where the product's own copy says so. As of 2026-09-24 that covers
   every Creators Sphere step, three of KYC's screens, and Accounting's upload
-  step (`acct-upload`) — each backed by copy that names a phone app.
+  step (`acct-upload`) — each backed by copy that names a phone app. Since
+  2026-09-28 also `acct-question-phone`, the phone app's question screen,
+  backed by the Accounting walkthrough (pass 2 §4) and shown on the home wall
+  only. A phone screen must also be listed in
+  `src/components/mocks/phoneScreens.ts`, or the wall build check fails.
   Chrome words stay generic app furniture (Overview, Records, Search, Filter);
   never name a capability in chrome, and never `Sign`.
 - Page grids that hold a mock stay `grid-cols-1` below their breakpoint, and
