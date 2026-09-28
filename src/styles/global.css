@@ -71,8 +71,8 @@
 
   /* File-type marks on the mocked screens, in the colours those formats
      usually wear. Kept apart from the status set so a PDF is not read as an
-     error. White text on it: 5.6:1 here, 3.7:1 on the dark value (inside a
-     mock, which is a picture; see the mock-colour spec). */
+     error. Its label uses --color-bg, which flips: white on it here (5.6:1),
+     near-black on the dark value (5.2:1). */
   --color-file-pdf: #c62828;
 
   --font-head: "Space Grotesk", "DM Sans", sans-serif;
@@ -422,8 +422,16 @@ h1, h2, h3 {
   --mock-desktop-w: 640;
 }
 .mock-desktop-canvas {
+  display: flex;
+  flex-direction: column;
   width: calc(var(--mock-desktop-w) * 1px);
   aspect-ratio: 16 / 10;
   overflow: hidden;
   zoom: var(--mock-z, 0.72);
+}
+/* The canvas is a fixed 16:10 box, so the shell's main row (nav rail and
+   content pane) stretches to its foot; short content leaves the app's own
+   empty page, not the frame's tint showing through. */
+.mock-desktop-canvas > :last-child {
+  flex: 1 1 auto;
 }
