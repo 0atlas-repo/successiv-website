@@ -11,6 +11,7 @@ One row per active plan. If it is not here, it does not exist.
 | [Mock animation](projects/mock-animation/plans/pilot.md) | Accounting pilot shipped, pushed at a307cc0 | Done. Founder confirmed beta users have the phone app (2026-09-25), so step 1 stands. |
 | [Mock rollout](projects/mock-rollout/plans/rollout.md) | shipped 2026-09-24: 3 products + 8 work pages, squash-merged to main | Done. |
 | Mock wall hero (log: [2026-09-26](logs/2026-09-26.md)) | shipped and live at 2216c9e | Done. Reduced-motion path browser-checked 2026-09-26 |
+| [Mock colour](projects/mock-colour/specs/mock-colour.md) | spec drafted 2026-09-28 | Founder OK on the spec, then pilot on Creators Sphere + Accounting |
 
 ## Loose tasks
 
