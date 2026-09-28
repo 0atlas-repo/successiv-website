@@ -53,6 +53,25 @@ added shells, pills, selected rows and initials. What still gives them away:
 
 Every added label still traces to code, per the existing rule.
 
+### 3. Desktop screens are desktop-shaped (founder, 2026-09-28)
+
+Of 53 mocks, 25 are full desktop app windows (`sidebar` 11, `tabs` 5,
+`window` 9). They are drawn about 440px wide at whatever height the content
+needs, so most come out square or portrait, which reads as a cropped widget.
+Real desktop screenshots are landscape.
+
+- Full app windows move to a 16:10 canvas at a real desktop width (about
+  760px), scaled down as a whole to fit their slot, as a shrunk screenshot is.
+- The wider canvas is filled the way the app fills it (a list plus a detail
+  pane, or more table columns), and only with what the app's walkthrough shows.
+  Where the app has nothing more, the screen keeps the whitespace.
+- `panel` (19) stays compact: a panel is part of a screen, not a window.
+  `phone` (9) stays portrait.
+- Product and work pages may need to give the mock a wider share of the row,
+  since a 16:10 screen in the current column is only about 275px tall. Checked
+  in the pilot.
+- The home wall mixes landscape desktop cards with portrait phones.
+
 ### Rules kept
 
 - Tokens only. The Creators Sphere palette becomes scoped tokens (`--app-*`)
@@ -70,10 +89,11 @@ Every added label still traces to code, per the existing rule.
 
 ## Pilot, then rollout
 
-1. Pilot: Creators Sphere (section 1) and Accounting (section 2). Check both
-   themes, the product page and the home wall.
+1. Pilot: Creators Sphere (section 1, phone) and Accounting (sections 2 and 3,
+   one landscape sidebar screen). Check both themes, the product page and the
+   home wall.
 2. Founder looks at the pilot.
-3. Roll section 2 across Shopmgr, KYC and the eight work pages.
+3. Roll sections 2 and 3 across Shopmgr, KYC and the eight work pages.
 
 ## Verification
 
