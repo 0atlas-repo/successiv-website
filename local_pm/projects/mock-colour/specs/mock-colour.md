@@ -71,6 +71,8 @@ Real desktop screenshots are landscape.
   since a 16:10 screen in the current column is only about 275px tall. Checked
   in the pilot.
 - The home wall mixes landscape desktop cards with portrait phones.
+- Shopmgr keeps its screens at their current size and shape (founder,
+  2026-09-28). Section 2 still applies to it.
 
 ### Rules kept
 
@@ -93,7 +95,8 @@ Real desktop screenshots are landscape.
    one landscape sidebar screen). Check both themes, the product page and the
    home wall.
 2. Founder looks at the pilot.
-3. Roll sections 2 and 3 across Shopmgr, KYC and the eight work pages.
+3. Roll sections 2 and 3 across KYC and the eight work pages, and section 2
+   only across Shopmgr.
 
 ## Verification
 
