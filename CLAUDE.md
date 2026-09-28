@@ -101,7 +101,10 @@ What isn't in that comment:
   entries, each captioned with its entry and step title and linked to its
   page. It adds nothing to either data file, so a new step or entry shows up
   on the wall by itself. Its badge counts screens and entries from the data;
-  never hard-code either number.
+  never hard-code either number. Since 2026-09-28 tiles are 420px wide, and
+  phone screens never stand alone: two of one entry share a tile, in order,
+  and an entry's odd last phone screen stays off the wall (it still shows on
+  its page). `scripts/verify.mjs` checks every wall phone is in a pair.
 
 Full spec: `local_pm/projects/mock-animation/specs/mock-animation.md` (the
 Accounting pilot) and `local_pm/projects/mock-rollout/specs/mock-rollout.md`

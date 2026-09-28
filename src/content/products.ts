@@ -44,6 +44,7 @@ export type ProductMock =
   | 'acct-reading'
   | 'acct-draft'
   | 'acct-question'
+  | 'acct-question-phone'
   | 'acct-bank'
   | 'generic';
 
@@ -206,7 +207,9 @@ const allProducts: Product[] = [
     // The hero and the product card lead with the question: the exception the
     // product hands to a person. Every draft still needs a person's approval too
     // (research, pass 3); the copy says so in `solution` and step 4.
-    screens: ['acct-question'],
+    // The second is the phone app's version of the question, shown on the home
+    // wall beside the phone upload screen; this page leads with the first.
+    screens: ['acct-question', 'acct-question-phone'],
     cta: 'Talk to us',
     category: 'Finance',
     preRelease: true,

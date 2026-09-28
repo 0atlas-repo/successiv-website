@@ -19,7 +19,8 @@ import ProductMock from './mocks/ProductMock.astro';
 import WorkMock from './mocks/WorkMock.astro';
 import { phoneScreens } from './mocks/phoneScreens';
 
-type Card = { entry: string; kind: string; caption: string; href: string; mock: string; isProduct: boolean };
+// `isStep`: the caption is a step title, not the entry's fallback category.
+type Card = { entry: string; kind: string; caption: string; isStep: boolean; href: string; mock: string; isProduct: boolean };
 // A tile is one card, or two phone screens from the same app side by side, so
 // a phone does not sit alone in a tile drawn for a desktop window.
 type Tile = { entry: string; kind: string; href: string; isProduct: boolean; screens: Card[] };
@@ -28,31 +29,39 @@ type Tile = { entry: string; kind: string; href: string; isProduct: boolean; scr
 const perEntry: Card[][] = [
   ...products.map((p) => {
     const seen = new Set<string>();
-    const fromSteps = p.steps.filter((s) => s.screen).map((s) => ({ mock: s.screen!, caption: s.title }));
-    const fromScreens = p.screens.map((m) => ({ mock: m, caption: p.category }));
+    const fromSteps = p.steps.filter((s) => s.screen).map((s) => ({ mock: s.screen!, caption: s.title, isStep: true }));
+    const fromScreens = p.screens.map((m) => ({ mock: m, caption: p.category, isStep: false }));
     return [...fromSteps, ...fromScreens]
       .filter((c) => c.mock !== 'generic' && !seen.has(c.mock) && seen.add(c.mock))
       .map((c) => ({ ...c, entry: p.name, kind: 'Product', href: `/products/${p.slug}/`, isProduct: true }));
   }),
   ...work.map((w) => {
     const seen = new Set<string>();
-    const fromSteps = (w.steps ?? []).map((s) => ({ mock: s.screen, caption: s.title }));
-    const fromScreens = w.screens.map((m) => ({ mock: m, caption: w.angle }));
+    const fromSteps = (w.steps ?? []).map((s) => ({ mock: s.screen, caption: s.title, isStep: true }));
+    const fromScreens = w.screens.map((m) => ({ mock: m, caption: w.angle, isStep: false }));
     return [...fromSteps, ...fromScreens]
       .filter((c) => !seen.has(c.mock) && seen.add(c.mock))
       .map((c) => ({ ...c, entry: w.title, kind: 'Client build', href: `/work/${w.slug}/`, isProduct: false }));
   }),
 ];
 
-// Consecutive phone screens of one entry pair up into a tile.
+// Every phone tile holds two phone screens of one entry, in that entry's order,
+// placed where the first of the two stood (founder, 2026-09-28). An entry with
+// an odd number leaves its last phone screen off the wall: pairing it with
+// another app's would mislabel the tile, and a lone phone is what the pairs
+// replace. It still shows on its own page.
 const perEntryTiles: Tile[][] = perEntry.map((list) => {
+  const phones = list.filter((c) => phoneScreens.has(c.mock));
+  const partner = new Map<Card, Card | null>();
+  for (let i = 0; i < phones.length; i += 2) {
+    partner.set(phones[i], phones[i + 1] ?? null);
+    if (phones[i + 1]) partner.set(phones[i + 1], null);
+  }
   const tiles: Tile[] = [];
-  for (let i = 0; i < list.length; i++) {
-    const a = list[i];
-    const b = list[i + 1];
-    const pair = b && phoneScreens.has(a.mock) && phoneScreens.has(b.mock);
-    tiles.push({ entry: a.entry, kind: a.kind, href: a.href, isProduct: a.isProduct, screens: pair ? [a, b] : [a] });
-    if (pair) i++;
+  for (const c of list) {
+    const tile = { entry: c.entry, kind: c.kind, href: c.href, isProduct: c.isProduct };
+    if (!phoneScreens.has(c.mock)) tiles.push({ ...tile, screens: [c] });
+    else if (partner.get(c)) tiles.push({ ...tile, screens: [c, partner.get(c)!] });
   }
   return tiles;
 });
@@ -71,6 +80,12 @@ for (let round = 0; screenCount < SCREENS; round++) {
   }
   if (tiles.length === before) break;
 }
+// A pair's caption lists its step titles; the entry's fallback category only
+// shows when neither screen is a step.
+const captionFor = (t: Tile) => {
+  const steps = t.screens.filter((s) => s.isStep).map((s) => s.caption);
+  return steps.length ? steps.join(' · ') : t.screens[0].caption;
+};
 const columns = Array.from({ length: COLS }, (_, c) => tiles.filter((_, i) => i % COLS === c));
 const entryCount = perEntry.filter((l) => l.length).length;
 ---
@@ -98,7 +113,7 @@ const entryCount = perEntry.filter((l) => l.length).length;
                 </div>
               </div>
               <span class="mt-2.5 block font-mono text-[12.5px] font-semibold text-fg">{tile.entry}</span>
-              <span class="block font-mono text-[11.5px] text-fg-subtle">{tile.kind} · {tile.screens.map((s) => s.caption).join(' · ')}</span>
+              <span class="block font-mono text-[11.5px] text-fg-subtle">{tile.kind} · {captionFor(tile)}</span>
             </a>
           ))}
           </div>

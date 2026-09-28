@@ -12,4 +12,5 @@ export const phoneScreens: ReadonlySet<string> = new Set([
   'kyc-add',
   'kyc-consent',
   'acct-upload',
+  'acct-question-phone',
 ]);

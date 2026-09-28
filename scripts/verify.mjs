@@ -211,6 +211,12 @@ const badPairs = pairTiles.filter((s) =>
 pairTiles.length > 0 && badPairs.length === 0
   ? pass(`${pairTiles.length} phone-pair tiles on the wall, each two phone frames`)
   : fail(`wall phone pairs: ${pairTiles.length} found, ${badPairs.length} hold something other than two phone frames — check phoneScreens.ts`);
+// And no phone stands alone on the wall: every phone frame in it is in a pair.
+const wallHtml = homeHtml.split('<section class="wall')[1]?.split('</section>')[0] ?? '';
+const wallPhones = (wallHtml.match(/rounded-t-\[30px\]/g) || []).length;
+wallPhones === pairTiles.length * 2
+  ? pass(`all ${wallPhones} phone screens on the wall are paired`)
+  : fail(`${wallPhones - pairTiles.length * 2} phone screen(s) stand alone on the wall — check phoneScreens.ts`);
 
 const rasterInContent = allFiles.filter(
   (f) => /\.(png|jpe?g|webp)$/i.test(f) && !/favicon|og-placeholder|logo/i.test(f)
