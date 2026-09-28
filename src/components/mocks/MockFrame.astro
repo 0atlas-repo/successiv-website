@@ -37,14 +37,22 @@ interface Props {
   /** Draw the screen in this app's own theme. Unset: this site's palette. */
   app?: MockApp;
   /** The Search + Filter row. Set false where the real screen has none
-   *  (a task page, a modal). `panel` only for now. */
+   *  (a task page, a modal). `window` and `panel` only for now. */
   toolbar?: boolean;
   /** White cards on a tinted page, as real admin apps draw them, instead of
    *  tinted cards on a white page. `panel` only for now. */
   canvas?: boolean;
+  /** A full desktop app window: drawn on a landscape 16:10 canvas at a desktop
+   *  width (`--mock-desktop-w` in global.css) and scaled as a whole to fit its
+   *  slot, the way a real screenshot is shrunk. Not for `phone` or `panel`. */
+  desktop?: boolean;
   class?: string;
 }
-const { title, meta, chrome = 'window', app, toolbar = true, canvas = false, class: className = '' } = Astro.props;
+const { title, meta, chrome = 'window', app, toolbar = true, canvas = false, desktop = false, class: className = '' } = Astro.props;
+// Off, the canvas is a bare fragment, so a screen that does not ask for it
+// renders exactly as before.
+const Canvas = desktop ? 'div' : Fragment;
+const canvasProps = desktop ? { class: 'mock-desktop-canvas' } : {};
 
 const railIcon = 'h-[13px] w-[13px]';
 
@@ -84,11 +92,12 @@ const shellClass = isPhone
 ---
 
 <div
-  class:list={[shellClass, className]}
+  class:list={[shellClass, desktop && 'mock-desktop', className]}
   data-app={isPhone ? undefined : app}
   role="img"
   aria-label={`Illustrative mockup: ${title}`}
 >
+  <Canvas {...canvasProps}>
   {chrome === 'window' && (
     <>
       {/* Title bar */}
@@ -151,6 +160,7 @@ const shellClass = isPhone
 
         {/* Content pane: its own ground, so the frame has an inner edge too */}
         <div class="min-w-0 flex-1 bg-bg">
+          {toolbar && (
           <div aria-hidden="true" class="flex items-center gap-2 border-b border-line px-3 py-2">
             <span class="flex min-w-0 flex-1 items-center gap-1.5 rounded-md border border-line bg-surface px-2 py-[5px] text-fg-subtle">
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="shrink-0">
@@ -165,6 +175,7 @@ const shellClass = isPhone
               <span class="font-head text-[10px]">Filter</span>
             </span>
           </div>
+          )}
           <div class="p-4" aria-hidden="true">
             <slot />
           </div>
@@ -370,4 +381,25 @@ const shellClass = isPhone
       </div>
     </div>
   )}
+  </Canvas>
 </div>
+
+{desktop && (
+  <script is:inline>
+    // Scale each desktop canvas to its slot: zoom = slot width / canvas width.
+    // Inline and only on desktop screens, so pages without one carry nothing;
+    // the guard keeps it to one observer per page. Without it the canvas
+    // falls back to the --mock-z default in global.css.
+    if (!window.__mockDesktopFit) {
+      window.__mockDesktopFit = true;
+      const fit = (el) => {
+        const w = parseFloat(getComputedStyle(el).getPropertyValue('--mock-desktop-w'));
+        if (w && el.clientWidth) el.style.setProperty('--mock-z', (el.clientWidth / w).toFixed(4));
+      };
+      const ro = new ResizeObserver((entries) => entries.forEach((e) => fit(e.target)));
+      const start = () => document.querySelectorAll('.mock-desktop').forEach((el) => { fit(el); ro.observe(el); });
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
+      else start();
+    }
+  </script>
+)}

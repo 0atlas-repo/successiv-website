@@ -410,3 +410,20 @@ h1, h2, h3 {
     --color-surface: #17151a;
   }
 }
+
+/* ---------- Desktop canvas on mocked screens ----------
+   `MockFrame desktop`: a full app window drawn at a desktop width on a 16:10
+   canvas, then zoomed as a whole to its slot. MockFrame's inline script sets
+   --mock-z from the slot's width; the default here fits the common 460px slot
+   when the script has not run. 640 rather than a true 1280: at this site's
+   mock slots (460px, 342px on a phone) a wider canvas shrinks the body text
+   below reading size. */
+.mock-desktop {
+  --mock-desktop-w: 640;
+}
+.mock-desktop-canvas {
+  width: calc(var(--mock-desktop-w) * 1px);
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  zoom: var(--mock-z, 0.72);
+}

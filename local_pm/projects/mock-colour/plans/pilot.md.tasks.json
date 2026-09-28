@@ -25,7 +25,7 @@
     {
       "id": 4,
       "subject": "Part 3: Contract lifecycle landscape desktop screens",
-      "status": "pending",
+      "status": "completed",
       "blockedBy": [
         1
       ]
@@ -33,7 +33,7 @@
     {
       "id": 5,
       "subject": "Verify and show the founder",
-      "status": "pending",
+      "status": "in_progress",
       "blockedBy": [
         2,
         3,

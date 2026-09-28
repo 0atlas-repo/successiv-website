@@ -2,8 +2,9 @@
 import MockFrame from './MockFrame.astro';
 // The register grid, genericised: the app's own columns are Contract,
 // Entry, Revision, Handler, Report, Type, Subtype, Progress, Approval
-// Status, Date (the app, pages/Submission/View.tsx:503-590) — trimmed here
-// to Entry, Revision, Type and Progress, the four the copy's step is about.
+// Status, Date (the app, pages/Submission/View.tsx:503-590) — shown here as
+// Entry, Revision, Handler, Type, Progress, Date and Report. Contract is the
+// meta label instead, since every row is filed against the one contract.
 // "Approval Status" is left off: in the app it's a free-text field, not the
 // fixed set the UI defines but never uses, so a clean status chip would be
 // aspirational, not a thing the app does today.
@@ -21,36 +22,53 @@ import MockFrame from './MockFrame.astro';
 // that depends on it both carry the long lead-in, same as the check step's
 // job result. The Report icon only appears once an entry reaches 100% (the
 // app, pages/Submission/View.tsx:528-544).
+// Landscape (mock-colour pilot, 2026-09-28): the page's own tabs, "All",
+// "Processed", "In Process", and its search box (the app, View.tsx:879-887),
+// with the site's word "Entry" where the app says "Submission", as the copy
+// does. Handlers are placeholder labels; dates are fictional.
 // Entry titles and Type values are fictional examples in the copy's own
 // three categories (variation, claim, certificate).
 // Source: research note "contract-lifecycle", "4. Submissions" and
 // "Recommended steps" step 2.
 const filed = [
-  { entry: 'Certificate 05', rev: 'A', type: 'Certificate' },
-  { entry: 'Claim 02', rev: 'B', type: 'Claim' },
+  { entry: 'Certificate 05', rev: 'A', handler: 'Handler A', type: 'Certificate', date: '12 Sep 2026' },
+  { entry: 'Claim 02', rev: 'B', handler: 'Handler B', type: 'Claim', date: '16 Sep 2026' },
 ];
 const reportIcon = '<path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><path d="M14 2v6h6"/><path d="M9 15h6M9 11h6"/>';
+const tabs = ['All', 'Processed', 'In Process'];
+const cols = 'grid grid-cols-[1.5fr_32px_74px_76px_1.3fr_72px_52px] items-center gap-3';
 ---
-<MockFrame title="Contracts — Entries" meta="CN-104">
-  <div class="space-y-2">
-    <div class="grid grid-cols-[1fr_28px_74px] gap-2 border-b border-line pb-1.5 font-head text-[9.5px] font-semibold uppercase tracking-[0.1em] text-fg-subtle">
-      <span>Entry</span><span>Rev</span><span>Type</span>
+<MockFrame title="Contracts — Entries" meta="CN-104" desktop toolbar={false}>
+  <div class="space-y-2.5">
+    <div class="flex items-center gap-3 border-b border-line">
+      {tabs.map((t, i) => (
+        <span class:list={['-mb-px border-b-2 pb-1.5 font-head text-[10.5px] font-medium', i === 0 ? 'border-action text-fg' : 'border-transparent text-fg-subtle/70']}>{t}</span>
+      ))}
+      <span class="mb-1.5 ml-auto flex w-[150px] items-center gap-1.5 rounded-md border border-line bg-surface px-2 py-[4px] text-fg-subtle">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m21 21-4.3-4.3" /></svg>
+        <span class="text-[10px]">Search</span>
+      </span>
+    </div>
+
+    <div class:list={[cols, 'px-2.5 font-head text-[9.5px] font-semibold uppercase tracking-[0.1em] text-fg-subtle']}>
+      <span>Entry</span><span>Rev</span><span>Handler</span><span>Type</span><span>Progress</span><span>Date</span><span>Report</span>
     </div>
 
     {filed.map((f, i) => (
-      <div class="mock-step space-y-1.5 rounded-lg border border-line bg-surface px-2.5 py-2" style={`--step: ${i}`}>
-        <div class="grid grid-cols-[1fr_28px_74px] items-center gap-2 text-[12px] text-fg">
-          <span class="truncate">{f.entry}</span>
-          <span class="tabular-nums text-fg-subtle">{f.rev}</span>
-          <span class="truncate text-fg-subtle">{f.type}</span>
-        </div>
-        <div class="flex items-center justify-between gap-2">
-          <div class="h-1 flex-1 overflow-hidden rounded-full bg-surface-2"><div class="h-full w-full rounded-full bg-ok"></div></div>
-          <span class="flex shrink-0 items-center gap-1 text-[9.5px] text-ok">
-            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><Fragment set:html={reportIcon} /></svg>
-            Report
-          </span>
-        </div>
+      <div class:list={[cols, 'mock-step rounded-lg border border-line bg-surface px-2.5 py-2 text-[12px] text-fg']} style={`--step: ${i}`}>
+        <span class="truncate">{f.entry}</span>
+        <span class="tabular-nums text-fg-subtle">{f.rev}</span>
+        <span class="truncate text-fg-subtle">{f.handler}</span>
+        <span class="truncate text-fg-subtle">{f.type}</span>
+        <span class="flex items-center gap-2">
+          <span class="h-1.5 flex-1 overflow-hidden rounded-full bg-surface-2"><span class="block h-full w-full rounded-full bg-ok"></span></span>
+          <span class="shrink-0 tabular-nums text-[9.5px] text-ok">100%</span>
+        </span>
+        <span class="tabular-nums text-[10.5px] text-fg-subtle">{f.date}</span>
+        <span class="flex items-center gap-1 text-[9.5px] text-ok">
+          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><Fragment set:html={reportIcon} /></svg>
+          Report
+        </span>
       </div>
     ))}
 
@@ -58,26 +76,26 @@ const reportIcon = '<path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0
         out the batch job's own long lead-in before its progress swaps to
         100%; the Report icon shares that lead-in too, so it can't arrive
         before the swap that unlocks it. */}
-    <div class="mock-step space-y-1.5 rounded-lg border border-action/35 bg-surface-2 px-2.5 py-2" style="--step: 2">
-      <div class="grid grid-cols-[1fr_28px_74px] items-center gap-2 text-[12px] text-fg">
-        <span class="truncate">Variation 04</span>
-        <span class="tabular-nums text-fg-subtle">A</span>
-        <span class="truncate text-fg-subtle">Variation</span>
-      </div>
-      <div class="grid">
-        <div class="mock-before col-start-1 row-start-1 flex items-center justify-between gap-2" style="--swap: 3; --mock-lead-in: 1600ms">
-          <div class="h-1 flex-1 overflow-hidden rounded-full bg-surface-2"><div class="h-full w-0 rounded-full bg-action"></div></div>
+    <div class:list={[cols, 'mock-step rounded-lg border border-action/35 bg-surface-2 px-2.5 py-2 text-[12px] text-fg']} style="--step: 2">
+      <span class="truncate">Variation 04</span>
+      <span class="tabular-nums text-fg-subtle">A</span>
+      <span class="truncate text-fg-subtle">Handler D</span>
+      <span class="truncate text-fg-subtle">Variation</span>
+      <span class="grid">
+        <span class="mock-before col-start-1 row-start-1 flex items-center gap-2" style="--swap: 3; --mock-lead-in: 1600ms">
+          <span class="h-1.5 flex-1 overflow-hidden rounded-full bg-surface"><span class="block h-full w-0 rounded-full bg-action"></span></span>
           <span class="shrink-0 tabular-nums text-[9.5px] text-fg-subtle">0%</span>
-        </div>
-        <div class="mock-step col-start-1 row-start-1 flex items-center justify-between gap-2" style="--step: 3; --mock-lead-in: 1600ms">
-          <div class="h-1 flex-1 overflow-hidden rounded-full bg-surface-2"><div class="h-full w-full rounded-full bg-ok"></div></div>
+        </span>
+        <span class="mock-step col-start-1 row-start-1 flex items-center gap-2" style="--step: 3; --mock-lead-in: 1600ms">
+          <span class="h-1.5 flex-1 overflow-hidden rounded-full bg-surface"><span class="block h-full w-full rounded-full bg-ok"></span></span>
           <span class="shrink-0 tabular-nums text-[9.5px] text-ok">100%</span>
-        </div>
-      </div>
-      <div class="mock-step flex items-center gap-1 text-[9.5px] text-ok" style="--step: 4; --mock-lead-in: 1600ms">
+        </span>
+      </span>
+      <span class="tabular-nums text-[10.5px] text-fg-subtle">19 Sep 2026</span>
+      <span class="mock-step flex items-center gap-1 text-[9.5px] text-ok" style="--step: 4; --mock-lead-in: 1600ms">
         <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><Fragment set:html={reportIcon} /></svg>
         Report
-      </div>
+      </span>
     </div>
   </div>
 </MockFrame>

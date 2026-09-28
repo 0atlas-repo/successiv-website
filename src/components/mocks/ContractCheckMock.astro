@@ -20,6 +20,8 @@ import MockFrame from './MockFrame.astro';
 // format; reasons and confidence values are fictional examples in the
 // report's real column shape (contract section, entry section, reason,
 // confidence level), not quoted values.
+// Landscape (mock-colour pilot, 2026-09-28): the rows are laid out in the
+// report's own four columns, as a table, rather than as stacked cards.
 // Source: research note "contract-lifecycle", Claims table #9 and
 // "Recommended steps" step 3.
 const flags = [
@@ -29,7 +31,7 @@ const flags = [
 ];
 const flagIcon = '<path d="M12 9v4M12 17h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/>';
 ---
-<MockFrame title="Contracts — Compliance check" meta="CN-104">
+<MockFrame title="Contracts — Compliance check" meta="CN-104" desktop toolbar={false}>
   <div class="space-y-2.5">
     <div class="grid">
       {/* A background job, not an inline check — the status line and every
@@ -45,14 +47,18 @@ const flagIcon = '<path d="M12 9v4M12 17h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3
       </div>
     </div>
 
-    {flags.map((f, i) => (
-      <div class="mock-step space-y-1 rounded-lg border border-line bg-surface px-2.5 py-2" style={`--step: ${i}; --mock-lead-in: 1600ms`}>
-        <div class="flex items-center justify-between gap-2">
-          <span class="font-head text-[9.5px] uppercase tabular-nums tracking-[0.08em] text-fg-subtle">Contract {f.contract} · Entry {f.entry}</span>
-          <span class="shrink-0 font-head text-[10px] font-semibold tabular-nums text-fg-subtle">{f.confidence.toFixed(2)}</span>
-        </div>
-        <p class="text-[11px] leading-snug text-fg">{f.reason}</p>
+    <div class="overflow-hidden rounded-lg border border-line">
+      <div class="grid grid-cols-[96px_84px_1fr_80px] gap-3 border-b border-line bg-surface px-3 py-1.5 font-head text-[9.5px] font-semibold uppercase tracking-[0.1em] text-fg-subtle">
+        <span>Contract</span><span>Entry</span><span>Reason</span><span class="text-right">Confidence</span>
       </div>
-    ))}
+      {flags.map((f, i) => (
+        <div class="mock-step grid grid-cols-[96px_84px_1fr_80px] items-center gap-3 border-b border-line px-3 py-2 last:border-b-0" style={`--step: ${i}; --mock-lead-in: 1600ms`}>
+          <span class="font-head text-[10.5px] tabular-nums text-fg-subtle">{f.contract}</span>
+          <span class="font-head text-[10.5px] tabular-nums text-fg-subtle">{f.entry}</span>
+          <span class="truncate text-[12px] text-fg">{f.reason}</span>
+          <span class="text-right font-head text-[10.5px] font-semibold tabular-nums text-fg-subtle">{f.confidence.toFixed(2)}</span>
+        </div>
+      ))}
+    </div>
   </div>
 </MockFrame>

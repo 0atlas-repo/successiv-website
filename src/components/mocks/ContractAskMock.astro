@@ -13,11 +13,29 @@ import MockFrame from './MockFrame.astro';
 // Question and answer text are fictional examples in the app's own
 // plain-question format, continuing the CN-104 example from the earlier
 // steps on this page.
+// Landscape (mock-colour pilot, 2026-09-28): the chat page's conversation-
+// history side panel beside the thread (research note, "5. Chatbot"). The
+// open conversation is titled from the question it shows; the earlier ones
+// are neutral placeholders with fictional dates, not invented topics.
 // Source: research note "contract-lifecycle", "5. Chatbot" and
 // "Recommended steps" step 4.
+const history = [
+  { title: 'Variation approval before certificate', when: 'Today', active: true },
+  { title: 'Earlier conversation', when: '16 Sep', active: false },
+  { title: 'Earlier conversation', when: '11 Sep', active: false },
+];
 ---
-<MockFrame title="Contracts — Ask" meta="CN-104">
-  <div class="space-y-2.5">
+<MockFrame title="Contracts — Ask" meta="CN-104" desktop toolbar={false}>
+  <div class="flex gap-4">
+  <div class="w-[150px] shrink-0 space-y-1 border-r border-line pr-3">
+    {history.map((h) => (
+      <div class:list={['rounded-md px-2 py-1.5', h.active ? 'bg-surface-2' : '']}>
+        <p class:list={['truncate text-[10.5px]', h.active ? 'text-fg' : 'text-fg-subtle']}>{h.title}</p>
+        <p class="text-[9px] text-fg-subtle/80">{h.when}</p>
+      </div>
+    ))}
+  </div>
+  <div class="min-w-0 flex-1 space-y-2.5">
     <div class="flex justify-end">
       <p class="mock-step max-w-[85%] rounded-2xl rounded-br-sm bg-action px-3 py-2 text-[12px] leading-snug text-on-action" style="--step: 0">
         Does the current variation need approval before the certificate is raised?
@@ -55,5 +73,6 @@ import MockFrame from './MockFrame.astro';
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4z" /><path d="M22 2 11 13" /></svg>
       </span>
     </div>
+  </div>
   </div>
 </MockFrame>
