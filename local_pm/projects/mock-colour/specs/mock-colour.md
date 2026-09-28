@@ -76,7 +76,7 @@ Real desktop screenshots are landscape.
 - Which screens this reaches (counted 2026-09-28): no product other than
   Shopmgr has a full-window screen. Creators Sphere is 5 phone; KYC is a phone
   app plus a web request portal, drawn as 3 phone and 2 panel; Accounting is
-  4 panel and 1 phone. So section 3 is 21 screens across six work pages:
+  4 panel and 1 phone. So section 3 is 21 screens across seven of the eight work pages (Document bundling is all panels):
   CMS (4), Contract lifecycle (4), Tender (5), Incident support (3), the audit
   and link-check work (3), Awards announce (1), Scheduling calendar (1).
 
