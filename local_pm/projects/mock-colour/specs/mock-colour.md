@@ -73,6 +73,12 @@ Real desktop screenshots are landscape.
 - The home wall mixes landscape desktop cards with portrait phones.
 - Shopmgr keeps its screens at their current size and shape (founder,
   2026-09-28). Section 2 still applies to it.
+- Which screens this reaches (counted 2026-09-28): no product other than
+  Shopmgr has a full-window screen. Creators Sphere is 5 phone; KYC is a phone
+  app plus a web request portal, drawn as 3 phone and 2 panel; Accounting is
+  4 panel and 1 phone. So section 3 is 21 screens across six work pages:
+  CMS (4), Contract lifecycle (4), Tender (5), Incident support (3), the audit
+  and link-check work (3), Awards announce (1), Scheduling calendar (1).
 
 ### Rules kept
 
@@ -91,12 +97,14 @@ Real desktop screenshots are landscape.
 
 ## Pilot, then rollout
 
-1. Pilot: Creators Sphere (section 1, phone) and Accounting (sections 2 and 3,
-   one landscape sidebar screen). Check both themes, the product page and the
-   home wall.
+1. Pilot: Creators Sphere (section 1, phone), Accounting (section 2; its
+   screens are panels and one phone, so section 3 does not reach it), and
+   Contract lifecycle management (section 3: four full-window screens,
+   including a register list). Check both themes, the pages and the home
+   wall.
 2. Founder looks at the pilot.
-3. Roll sections 2 and 3 across KYC and the eight work pages, and section 2
-   only across Shopmgr.
+3. Roll section 2 across Shopmgr, KYC and the other work pages, and section 3
+   across the other work pages with full-window screens.
 
 ## Verification
 
