@@ -96,7 +96,9 @@ What isn't in that comment:
   screen after the first; a work entry's `steps[].screen` is required once
   `steps` is set at all, so a work page with steps never shows the gallery.
 
-- The home hero is `src/components/MockWall.astro` (2026-09-26): 25 screens
+- The home hero is `src/components/MockWall.astro` (2026-09-26): 40 screens
+  in 7 columns since 2026-09-29 (was 25 in 5; the outer two run off both
+  edges on purpose, so the wall fills any screen up to ~3,100px),
   pulled from `products.ts` and `work.ts` step screens, round-robin across
   entries, each captioned with its entry and step title and linked to its
   page. It adds nothing to either data file, so a new step or entry shows up
