@@ -68,8 +68,11 @@ const perEntryTiles: Tile[][] = perEntry.map((list) => {
 
 // Round-robin across entries so neighbouring tiles come from different
 // projects, until the wall holds SCREENS screens (a pair counts as two).
-const COLS = 5;
-const SCREENS = 25;
+// Seven columns: the middle five plus one more on each side, which a normal
+// screen crops, so the wall runs off both edges at any width up to ~3,100px
+// (founder, 2026-09-29). SCREENS keeps about five tiles in each column.
+const COLS = 7;
+const SCREENS = 40;
 const tiles: Tile[] = [];
 let screenCount = 0;
 for (let round = 0; screenCount < SCREENS; round++) {
