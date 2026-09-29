@@ -85,9 +85,11 @@ for (let round = 0; screenCount < SCREENS; round++) {
 }
 // A pair's caption lists its step titles; the entry's fallback category only
 // shows when neither screen is a step.
+// Each part keeps its screen's index, so a phone can hide the second screen of
+// a pair together with its title.
 const captionFor = (t: Tile) => {
-  const steps = t.screens.filter((s) => s.isStep).map((s) => s.caption);
-  return steps.length ? steps.join(' · ') : t.screens[0].caption;
+  const steps = t.screens.map((s, i) => ({ i, text: s.caption, isStep: s.isStep })).filter((s) => s.isStep);
+  return steps.length ? steps : [{ i: 0, text: t.screens[0].caption }];
 };
 const columns = Array.from({ length: COLS }, (_, c) => tiles.filter((_, i) => i % COLS === c));
 const entryCount = perEntry.filter((l) => l.length).length;
@@ -116,7 +118,9 @@ const entryCount = perEntry.filter((l) => l.length).length;
                 </div>
               </div>
               <span class="mt-2.5 block font-mono text-[12.5px] font-semibold text-fg">{tile.entry}</span>
-              <span class="block font-mono text-[11.5px] text-fg-subtle">{tile.kind} · {captionFor(tile)}</span>
+              <span class="block font-mono text-[11.5px] text-fg-subtle">{tile.kind} · {captionFor(tile).map((c, n) => (
+                <span class:list={[c.i > 0 && 'wall-cap-2']}>{n > 0 ? ' · ' : ''}{c.text}</span>
+              ))}</span>
             </a>
           ))}
           </div>
@@ -226,10 +230,17 @@ const entryCount = perEntry.filter((l) => l.length).length;
   }
 
   @media (max-width: 767px) {
-    .wall { --card-n: 300; --gap: 20px; }
-    .wall-shot { height: 190px; }
-    .wall-shot:has(.mock-desktop) { max-height: 240px; }
-    .wall-card[data-tile='pair'] .wall-shot { height: 215px; }
+    /* A phone gets 340px tiles, near its full width, so a desktop window
+       still reads as one; and a phone tile shows one phone, not a pair, at
+       its drawn size. The second screen's title hides with it (founder,
+       2026-09-29). */
+    .wall { --card-n: 340; --gap: 20px; }
+    .wall-shot { height: 200px; }
+    .wall-shot:has(.mock-desktop) { max-height: 260px; }
+    .wall-card[data-tile='pair'] .wall-shot { height: 250px; }
+    .wall-card[data-tile='pair'] .wall-zoom-phone:nth-child(n + 2),
+    .wall-cap-2 { display: none; }
+    .wall-zoom-phone { zoom: 1; }
     /* On a phone the copy is taller than the faded part of a fixed-height
        hero, so the headline rode up over the cards. Instead the hero grows to
        its copy, the copy starts 280px down under a band of wall, and it
