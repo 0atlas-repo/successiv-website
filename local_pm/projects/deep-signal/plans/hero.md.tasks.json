@@ -1,0 +1,7 @@
+[
+ {"id":1,"subject":"Scoped hero tokens, light + dark","status":"completed","blockedBy":[]},
+ {"id":2,"subject":"Tilted runway stage","status":"completed","blockedBy":[1]},
+ {"id":3,"subject":"Glow, grain, fade","status":"completed","blockedBy":[1]},
+ {"id":4,"subject":"Copy layout desktop + phone","status":"completed","blockedBy":[2]},
+ {"id":5,"subject":"Verify + screenshots","status":"completed","blockedBy":[2,3,4]}
+]

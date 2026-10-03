@@ -12,6 +12,7 @@ One row per active plan. If it is not here, it does not exist.
 | [Mock rollout](projects/mock-rollout/plans/rollout.md) | shipped 2026-09-24: 3 products + 8 work pages, squash-merged to main | Done. |
 | Mock wall hero (log: [2026-09-26](logs/2026-09-26.md)) | shipped and live at 2216c9e | Done. Reduced-motion path browser-checked 2026-09-26 |
 | [Mock colour](projects/mock-colour/plans/pilot.md) | shipped and live at 93b069e (2026-09-29) | Done for the pilot pages, the wall and landscape desktop screens. Open: fill the 17 newly widened screens with more of each real app; enlarged-text check on them; Safari untested |
+| [Deep signal hero](projects/deep-signal/plans/hero.md) | built on branch `deep-signal`, awaiting founder review | Founder reviews light/dark screenshots; then merge + deploy |
 
 ## Loose tasks
 

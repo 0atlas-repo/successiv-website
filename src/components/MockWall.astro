@@ -131,17 +131,16 @@ const entryCount = perEntry.filter((l) => l.length).length;
   </div>
 
   <div class="wall-fade pointer-events-none absolute inset-0 z-[1]" aria-hidden="true"></div>
+  <div class="wall-grain pointer-events-none absolute inset-0 z-[1]" aria-hidden="true"></div>
 
-  <div class="wall-copy absolute inset-x-0 bottom-0 z-[2] pb-14">
-    <div class="mx-auto grid max-w-[1180px] items-end gap-8 px-6 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
-      <div>
-        <h1 class="text-[clamp(38px,6vw,64px)] text-fg">
+  <div class="wall-copy pointer-events-none absolute inset-0 z-[2] flex items-center">
+    <div class="mx-auto w-full max-w-[1180px] px-6">
+      <div class="pointer-events-auto max-w-[800px]">
+        <h1 class="wall-h1 text-fg">
           Software that runs<br />
           <span class="grad-text">the work.</span>
         </h1>
-      </div>
-      <div>
-        <p class="max-w-[440px] text-[16px] text-fg-muted">{site.description}</p>
+        <p class="mt-6 max-w-[460px] text-[17px] text-fg-muted">{site.description}</p>
         <div class="mt-6 flex flex-wrap gap-3">
           <Btn href={withBase('/products/')}>See products</Btn>
           <Btn href={withBase('/work/')} variant="ghost">Browse the work</Btn>
@@ -159,13 +158,51 @@ const entryCount = perEntry.filter((l) => l.length).length;
     --gap: 34px;
     /* Fill the first screen under the sticky header. */
     height: max(680px, calc(100svh - 77px));
-    background: var(--color-bg);
+    /* Deep signal (founder, 2026-10-03): the wall is a runway tilted into the
+       page, lit by two signal glows. Light is the default; dark is the deep-navy
+       original. The ground is scoped to the hero, which fades into the page
+       background at its foot. */
+    --sig-ground: color-mix(in oklab, var(--color-cyan) 5%, var(--color-bg));
+    --sig-glow-a: color-mix(in oklab, var(--color-cyan) 30%, transparent);
+    --sig-glow-b: color-mix(in oklab, var(--color-indigo) 16%, transparent);
+    --sig-grain: 0.05;
+    --sig-rim: 0 30px 60px -34px color-mix(in oklab, var(--color-navy) 45%, transparent);
+    background:
+      radial-gradient(900px 560px at 72% -8%, var(--sig-glow-a), transparent 62%),
+      radial-gradient(760px 520px at -4% 104%, var(--sig-glow-b), transparent 62%),
+      var(--sig-ground);
+  }
+  @media (prefers-color-scheme: dark) {
+    :global(:root:not([data-theme='light'])) .wall {
+      --sig-ground: color-mix(in oklab, var(--color-navy-deep) 72%, black);
+      --sig-glow-a: color-mix(in oklab, var(--color-cyan) 26%, transparent);
+      --sig-glow-b: color-mix(in oklab, var(--color-indigo) 50%, transparent);
+      --sig-grain: 0.12;
+      --sig-rim: 0 0 0 1px color-mix(in oklab, var(--color-cyan) 28%, transparent), 0 40px 80px -30px color-mix(in oklab, var(--color-cyan) 40%, transparent);
+    }
+  }
+  :global(:root[data-theme='dark']) .wall {
+    --sig-ground: color-mix(in oklab, var(--color-navy-deep) 72%, black);
+    --sig-glow-a: color-mix(in oklab, var(--color-cyan) 26%, transparent);
+    --sig-glow-b: color-mix(in oklab, var(--color-indigo) 50%, transparent);
+    --sig-grain: 0.12;
+    --sig-rim: 0 0 0 1px color-mix(in oklab, var(--color-cyan) 28%, transparent), 0 40px 80px -30px color-mix(in oklab, var(--color-cyan) 40%, transparent);
+  }
+  .wall-h1 {
+    font-size: clamp(42px, 6.6vw, 92px);
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    font-weight: 700;
+    text-wrap: balance;
   }
   .wall-stage {
     position: absolute;
     z-index: 0; /* contains mock chrome's own z-index under the fade */
-    inset: -4% 0 0 50%;
+    inset: -30% 0 0 68%;
     translate: -50% 0;
+    /* The runway: same columns and loop, tipped back and turned. */
+    transform: perspective(1600px) rotateX(46deg) rotateZ(-20deg);
+    transform-origin: 50% 30%;
     display: flex;
     gap: var(--gap);
     width: max-content;
@@ -201,6 +238,7 @@ const entryCount = perEntry.filter((l) => l.length).length;
     border-radius: 14px;
     border: 1px solid var(--color-line);
     background: var(--color-surface);
+    box-shadow: var(--sig-rim);
     padding: 14px 14px 0;
     transition: transform 400ms var(--ease-brand), border-color 300ms;
     -webkit-mask-image: linear-gradient(to bottom, #000 78%, transparent);
@@ -222,11 +260,17 @@ const entryCount = perEntry.filter((l) => l.length).length;
   .wall-zoom { width: 440px; zoom: calc((var(--card-n) - 28) / 440); }
   .wall-zoom-phone { width: 272px; zoom: calc((var(--card-n) - 40) / 2 / 272); }
 
+  /* A scrim behind the copy on the left, the runway's far end dissolving into
+     the ground, and a foot that hands over to the page background. */
   .wall-fade {
     background:
-      linear-gradient(to top, var(--color-bg) 0%, var(--color-bg) 30%, color-mix(in srgb, var(--color-bg) 80%, transparent) 42%, transparent 70%),
-      linear-gradient(to bottom, var(--color-bg) 0%, transparent 14%),
-      radial-gradient(ellipse at 50% 40%, transparent 55%, color-mix(in srgb, var(--color-bg) 70%, transparent) 100%);
+      linear-gradient(to right, var(--sig-ground) 0%, color-mix(in oklab, var(--sig-ground) 90%, transparent) 40%, transparent 68%),
+      linear-gradient(to bottom, var(--sig-ground) 0%, transparent 18%),
+      linear-gradient(to top, var(--color-bg) 0%, transparent 16%);
+  }
+  .wall-grain {
+    opacity: var(--sig-grain);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
   @media (max-width: 767px) {
@@ -247,15 +291,16 @@ const entryCount = perEntry.filter((l) => l.length).length;
        carries its own backdrop that fades in 80px above it (founder,
        2026-09-28: "title should move a bit lower"). */
     .wall { height: auto; }
-    .wall-copy { position: relative; padding-top: 280px; }
+    .wall-stage { inset: -18% 0 0 58%; transform: perspective(1100px) rotateX(42deg) rotateZ(-16deg); }
+    .wall-copy { position: relative; display: block; padding-top: 300px; padding-bottom: 56px; }
     .wall-copy::before {
       content: '';
       position: absolute;
-      inset: 200px 0 0 0;
+      inset: 220px 0 0 0;
       z-index: -1;
-      background: linear-gradient(to bottom, transparent, var(--color-bg) 80px);
+      background: linear-gradient(to bottom, transparent, var(--sig-ground) 80px);
     }
-    .wall-fade { background: linear-gradient(to bottom, var(--color-bg) 0%, transparent 14%); }
+    .wall-fade { background: linear-gradient(to bottom, var(--sig-ground) 0%, transparent 14%); }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -264,6 +309,24 @@ const entryCount = perEntry.filter((l) => l.length).length;
 </style>
 
 <script>
+  // The layout's IntersectionObserver misses about half the cards inside the
+  // tilted runway (measured 2026-10-03: 7 of 15 on-screen cards never revealed),
+  // so the wall checks its own cards' boxes until each one has shown.
+  document.querySelectorAll<HTMLElement>('.wall').forEach((wall) => {
+    const pending = new Set(wall.querySelectorAll<HTMLElement>('.wall-card'));
+    const tick = () => {
+      pending.forEach((c) => {
+        const r = c.getBoundingClientRect();
+        if (c.classList.contains('is-visible') || (r.bottom > 0 && r.top < innerHeight && r.right > 0 && r.left < innerWidth)) {
+          c.classList.add('is-visible');
+          pending.delete(c);
+        }
+      });
+      if (pending.size) setTimeout(tick, 300);
+    };
+    tick();
+  });
+
   // Replay one on-screen card's steps at a time. Cards in the bottom third sit
   // under the fade, so they are skipped.
   if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
