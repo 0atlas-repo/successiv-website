@@ -8,7 +8,7 @@ interface Props {
 const { href, variant = 'primary', size = 'md', class: className = '' } = Astro.props;
 
 const base =
-  'inline-flex cursor-pointer items-center justify-center gap-2 rounded-full font-head font-semibold transition-all duration-200 hover:-translate-y-0.5';
+  'inline-flex cursor-pointer items-center justify-center gap-2 rounded-full font-head font-semibold transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] active:duration-75';
 const variants = {
   primary: 'bg-action text-on-action',
   ghost: 'border border-line text-fg hover:border-action hover:text-accent',
