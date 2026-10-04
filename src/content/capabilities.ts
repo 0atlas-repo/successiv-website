@@ -17,14 +17,6 @@ export interface Capability {
   body: string;
 }
 
-export const capabilitiesPage = {
-  kicker: 'Capabilities',
-  title: 'Where we have shipped before.',
-  // No number, and no "more than once": some of these trace to a single
-  // shipped system. An entry can be added or withdrawn without the lede lying.
-  lede: 'These are areas we have put into production. If your problem looks like one of them, we already know the usual failure modes.',
-} as const;
-
 export const capabilities: Capability[] = [
   {
     num: '01',

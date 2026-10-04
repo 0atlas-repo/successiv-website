@@ -114,10 +114,13 @@ const ogImage = new URL('/img/og-placeholder.png', Astro.site ?? site.url).href;
         revealEls.forEach((el) => el.classList.add('is-visible'));
       }
 
-      // Theme toggle. The <head> script has already applied any saved choice;
-      // this only handles clicks and keeps the button's label honest.
+      // Theme controls. The <head> script has already applied any saved choice;
+      // this handles clicks and keeps labels and pressed states honest.
+      //   [data-theme-toggle]            flips light <-> dark
+      //   [data-theme-set=light|dark|auto]  sets that mode; auto forgets the
+      //                                  saved choice so CSS follows the OS again
       const root = document.documentElement;
-      const toggle = document.getElementById('themeToggle');
+      const KEY = 'successiv-theme';
 
       function currentTheme(): 'light' | 'dark' {
         const explicit = root.getAttribute('data-theme');
@@ -125,36 +128,77 @@ const ogImage = new URL('/img/og-placeholder.png', Astro.site ?? site.url).href;
         return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
       }
 
-      function syncLabel() {
-        if (!toggle) return;
-        const next = currentTheme() === 'dark' ? 'light' : 'dark';
-        toggle.setAttribute('aria-label', `Switch to ${next} theme`);
-        toggle.setAttribute('title', `Switch to ${next} theme`);
+      function saved(): string | null {
+        try {
+          return localStorage.getItem(KEY);
+        } catch (e) {
+          return null;
+        }
       }
 
-      toggle?.addEventListener('click', () => {
+      function syncControls() {
         const next = currentTheme() === 'dark' ? 'light' : 'dark';
-        root.setAttribute('data-theme', next);
+        document.querySelectorAll('[data-theme-toggle]').forEach((el) => {
+          el.setAttribute('aria-label', `Switch to ${next} theme`);
+          el.setAttribute('title', `Switch to ${next} theme`);
+        });
+        const mode = saved() === 'light' || saved() === 'dark' ? saved() : 'auto';
+        document.querySelectorAll('[data-theme-set]').forEach((el) => {
+          el.setAttribute('aria-pressed', String(el.getAttribute('data-theme-set') === mode));
+        });
+      }
+
+      function apply(mode: string) {
+        if (mode === 'auto') {
+          root.removeAttribute('data-theme');
+        } else {
+          root.setAttribute('data-theme', mode);
+        }
         try {
-          localStorage.setItem('successiv-theme', next);
+          if (mode === 'auto') localStorage.removeItem(KEY);
+          else localStorage.setItem(KEY, mode);
         } catch (e) {
           /* preference just will not persist; the page still switches */
         }
-        syncLabel();
+        syncControls();
+      }
+
+      // The new theme washes out from the clicked control as a growing circle.
+      // Without View Transitions, or under reduced motion, it just switches.
+      function change(mode: string, from: Element) {
+        const start = (document as any).startViewTransition;
+        if (!start || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          apply(mode);
+          return;
+        }
+        const r = from.getBoundingClientRect();
+        const x = r.left + r.width / 2;
+        const y = r.top + r.height / 2;
+        const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+        document
+          .startViewTransition(() => apply(mode))
+          .ready.then(() => {
+            root.animate(
+              { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
+              { duration: 650, easing: 'cubic-bezier(.65,0,.35,1)', pseudoElement: '::view-transition-new(root)' }
+            );
+          })
+          .catch(() => {});
+      }
+
+      document.querySelectorAll('[data-theme-toggle]').forEach((el) => {
+        el.addEventListener('click', () => change(currentTheme() === 'dark' ? 'light' : 'dark', el));
+      });
+      document.querySelectorAll('[data-theme-set]').forEach((el) => {
+        el.addEventListener('click', () => change(el.getAttribute('data-theme-set') ?? 'auto', el));
       });
 
       // If the visitor has never chosen, follow the system when it changes.
       window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-        let saved = null;
-        try {
-          saved = localStorage.getItem('successiv-theme');
-        } catch (e) {
-          /* ignore */
-        }
-        if (!saved) syncLabel();
+        if (!saved()) syncControls();
       });
 
-      syncLabel();
+      syncControls();
     </script>
   </body>
 </html>

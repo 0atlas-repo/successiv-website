@@ -19,6 +19,13 @@ export default defineConfig({
   base: SITE_BASE,
   trailingSlash: 'always',
   build: { format: 'directory' },
-  integrations: [sitemap()],
+  // Retired pages (menu spec, 2026-10-05). Astro does not add the base to a
+  // redirect target, so build it here or the project-page build points at a 404.
+  // Both pages ship as meta-refresh stubs, so keep them out of the sitemap.
+  redirects: {
+    '/about/': `${SITE_BASE.replace(/\/+$/, '')}/contact/#who`,
+    '/capabilities/': `${SITE_BASE.replace(/\/+$/, '')}/`,
+  },
+  integrations: [sitemap({ filter: (page) => !/\/(about|capabilities)\/$/.test(page) })],
   vite: { plugins: [tailwindcss()] },
 });

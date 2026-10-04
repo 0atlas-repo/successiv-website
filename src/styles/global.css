@@ -188,6 +188,15 @@ h1, h2, h3 {
 :root[data-theme="light"] [data-logo="dark"] { display: block; }
 :root[data-theme="light"] [data-logo="light"] { display: none; }
 
+/* Theme switch wash: the script animates the new view's clip-path from the
+   clicked control. The browser's default cross-fade is switched off so the
+   old theme stays put underneath the growing circle. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
 /* ---------- Hero wash ----------
    Cyan/navy bloom. Rebalanced in light mode or it turns muddy.
 */

@@ -130,9 +130,11 @@ checks are about content, not uptime:
 
 ```bash
 # every route answers
-for r in / /products/ /work/ /capabilities/ /about/ /contact/; do
+for r in / /products/ /work/ /contact/; do
   curl -s -o /dev/null -w "$r %{http_code}\n" "https://0atlas-repo.github.io/successiv-website$r"
 done
+
+# /about/ and /capabilities/ are redirect stubs (200, meta refresh to /contact/#who and /)
 
 # the two hidden products are still gone — both must be 404
 for p in leave 1line-ai; do

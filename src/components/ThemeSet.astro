@@ -1,0 +1,32 @@
+---
+// Light · Dark · Auto. Wired up by the theme script in Layout.astro, which
+// finds [data-theme-set] and keeps aria-pressed in sync. Auto forgets the saved
+// choice so the site follows the system again.
+interface Props {
+  /** "page" follows the theme; "navy" sits on the phone menu's always-navy panel. */
+  tone?: 'page' | 'navy';
+}
+const { tone = 'page' } = Astro.props;
+const modes = [
+  { mode: 'light', label: 'Light' },
+  { mode: 'dark', label: 'Dark' },
+  { mode: 'auto', label: 'Auto' },
+];
+const navy = tone === 'navy';
+const wrap = navy ? 'border-white/25' : 'border-line';
+const btn = navy
+  ? 'text-white/70 aria-pressed:bg-white aria-pressed:text-navy-deep'
+  : 'text-fg-muted aria-pressed:bg-fg aria-pressed:text-bg';
+---
+<div role="group" aria-label="Theme" class={`inline-flex rounded-full border p-0.5 ${wrap}`}>
+  {modes.map((m) => (
+    <button
+      type="button"
+      data-theme-set={m.mode}
+      aria-pressed="false"
+      class={`min-h-[32px] cursor-pointer rounded-full px-3.5 font-head text-[12px] font-medium transition-colors duration-200 ${btn}`}
+    >
+      {m.label}
+    </button>
+  ))}
+</div>

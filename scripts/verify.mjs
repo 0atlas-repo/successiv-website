@@ -79,7 +79,7 @@ if (leaks === 0) pass('no forbidden terms in ' + allFiles.length + ' built files
 // ---------------------------------------------------------------------------
 console.log('\n2. Routes — every route in the sitemap must exist');
 const routes = [
-  '', 'products', 'work', 'capabilities', 'about', 'contact',
+  '', 'products', 'work', 'contact',
   'products/creators-sphere', 'products/shopmgr', 'products/kyc',
   'products/accounting',
   'work/tender-rfp-management', 'work/contract-lifecycle',
@@ -90,6 +90,59 @@ const routes = [
 for (const r of routes) {
   const f = join(dist, r, 'index.html');
   existsSync(f) ? pass(`/${r}${r ? '/' : ''}`) : fail(`missing /${r}/`);
+}
+
+// Retired pages stay as redirects so old links and bookmarks keep working
+// (menu spec 2026-10-05). The base mirrors astro.config.mjs: custom-domain
+// builds set SITE_BASE=/, which must not turn "//contact/" into the target.
+const siteBase = (process.env.SITE_BASE ?? '/successiv-website').replace(/\/+$/, '');
+const redirects = { about: `${siteBase}/contact/#who`, capabilities: `${siteBase}/` };
+const redirectPages = new Set();
+for (const [from, to] of Object.entries(redirects)) {
+  const f = join(dist, from, 'index.html');
+  redirectPages.add(f);
+  if (!existsSync(f)) { fail(`/${from}/ is gone, not redirecting to ${to}`); continue; }
+  const html = readFileSync(f, 'utf8');
+  const target = html.match(/http-equiv="refresh"[^>]*content="0;\s*url=([^"]+)"/i)?.[1];
+  target === to
+    ? pass(`/${from}/ redirects to ${to}`)
+    : fail(`/${from}/ should redirect to ${to}, found ${target ?? 'no meta refresh'}`);
+}
+
+// The header carries exactly three items and no pill (menu spec 2026-10-05).
+// Everything before <main> is chrome (bar, phone menu), so "Talk to us" is
+// only banned there; product CTAs further down still use the words.
+let headerBad = 0;
+const contentPages = htmlFiles.filter((f) => !redirectPages.has(f));
+for (const file of contentPages) {
+  const html = readFileSync(file, 'utf8');
+  const nav = html.match(/<nav[^>]*aria-label="Primary"[^>]*>([\s\S]*?)<\/nav>/)?.[1] ?? '';
+  const labels = [...nav.matchAll(/<a\b[^>]*>([\s\S]*?)<\/a>/g)].map((m) => m[1].replace(/<[^>]+>/g, '').trim());
+  const chrome = html.slice(0, html.indexOf('<main'));
+  const name = relative(dist, file);
+  if (labels.join('|') !== 'Products|Work|Contact') {
+    fail(`${name}: primary nav is [${labels.join(', ')}], expected [Products, Work, Contact]`);
+    headerBad++;
+  }
+  if (/Talk to us/.test(chrome)) {
+    fail(`${name}: "Talk to us" is back in the header`);
+    headerBad++;
+  }
+}
+if (headerBad === 0) pass('primary nav is Products, Work, Contact and no "Talk to us" in the header, on every page');
+
+// The current-page dot hangs off aria-current. It never matched on the project
+// page until 2026-10-05 (the path carries the base, the nav hrefs do not), so
+// pin one section page and one child page per item.
+for (const [page, label] of [['products', 'Products'], ['products/accounting', 'Products'], ['work', 'Work'], ['work/tender-rfp-management', 'Work'], ['contact', 'Contact']]) {
+  const html = readFileSync(join(dist, page, 'index.html'), 'utf8');
+  const nav = html.match(/<nav[^>]*aria-label="Primary"[^>]*>([\s\S]*?)<\/nav>/)?.[1] ?? '';
+  const current = [...nav.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/g)]
+    .filter((m) => /aria-current="page"/.test(m[1]))
+    .map((m) => m[2].replace(/<[^>]+>/g, '').trim());
+  current.join('|') === label
+    ? pass(`/${page}/ marks ${label} as the current page`)
+    : fail(`/${page}/ marks [${current.join(', ')}] as current, expected ${label}`);
 }
 
 // ---------------------------------------------------------------------------
@@ -266,8 +319,9 @@ if (base) {
 
 // ---------------------------------------------------------------------------
 console.log('\n7. SEO — each page needs its own title and description');
+// Redirect stubs are noindex and carry no description, so they sit out.
 const titles = new Set();
-for (const file of htmlFiles) {
+for (const file of contentPages) {
   const html = readFileSync(file, 'utf8');
   const title = html.match(/<title>(.*?)<\/title>/)?.[1];
   const desc = html.match(/<meta name="description" content="(.*?)"/)?.[1];
@@ -279,9 +333,9 @@ for (const file of htmlFiles) {
     fail(`${rel}: still carries the old services-era title`);
   }
 }
-titles.size === htmlFiles.length
+titles.size === contentPages.length
   ? pass(`${titles.size} unique page titles`)
-  : fail(`${htmlFiles.length} pages but only ${titles.size} unique titles`);
+  : fail(`${contentPages.length} pages but only ${titles.size} unique titles`);
 
 // ---------------------------------------------------------------------------
 console.log('\n8. Accessibility basics');
