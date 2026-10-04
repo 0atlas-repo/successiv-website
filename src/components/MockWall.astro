@@ -4,8 +4,8 @@
 // and the step it shows, and linked to that page — so the wall shows how much
 // we have built without inventing anything. No screen appears twice.
 //
-// Columns scroll in a loop, all the same way along the runway; hovering or
-// focusing inside a column pauses it. Each column renders its cards twice so
+// Columns scroll in a loop, all the same way along the runway; focusing
+// inside a column pauses it. Each column renders its cards twice so
 // the loop is seamless; the copy is hidden from assistive tech and the tab
 // order. Each screen plays its own steps as it fades in, then one on-screen
 // card at a time replays, so the wall keeps moving without every screen
@@ -238,7 +238,9 @@ const entryCount = perEntry.filter((l) => l.length).length;
      its wide near end (founder, 2026-10-04). Alternating columns read as the
      angle changing. */
   .wall-drift { animation-direction: reverse; }
-  .wall-col:hover .wall-drift,
+  /* Only keyboard focus pauses a column, so a tabbed-to card holds still. A
+     hover pause froze one column against the rest and broke the single flow
+     (founder, 2026-10-04). */
   .wall-col:focus-within .wall-drift { animation-play-state: paused; }
   .wall-set {
     display: flex;
