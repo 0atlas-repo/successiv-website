@@ -4,7 +4,7 @@
 // and the step it shows, and linked to that page — so the wall shows how much
 // we have built without inventing anything. No screen appears twice.
 //
-// Columns scroll in a loop, odd columns down and even columns up; hovering or
+// Columns scroll in a loop, all the same way along the runway; hovering or
 // focusing inside a column pauses it. Each column renders its cards twice so
 // the loop is seamless; the copy is hidden from assistive tech and the tab
 // order. Each screen plays its own steps as it fades in, then one on-screen
@@ -207,7 +207,7 @@ const entryCount = perEntry.filter((l) => l.length).length;
     inset: -30% 0 0 68%;
     translate: -50% 0;
     /* The runway: same columns and loop, tipped back and turned. */
-    transform: perspective(1600px) rotateX(46deg) rotateZ(-20deg);
+    transform: perspective(3200px) rotateX(46deg) rotateZ(-40deg);
     transform-origin: 50% 30%;
     animation: runway-in 1600ms var(--ease-brand) both;
     display: flex;
@@ -222,7 +222,10 @@ const entryCount = perEntry.filter((l) => l.length).length;
     animation: wall-loop calc(128s + var(--c) * 14s) linear infinite;
     animation-delay: calc(var(--c) * -26s);
   }
-  .wall-col:nth-child(odd) .wall-drift { animation-direction: reverse; }
+  /* Every column flows the same way: from 10 o'clock toward 4–5 o'clock on
+     screen (founder, 2026-10-04). Alternating columns read as the angle
+     changing. */
+  .wall-drift { animation-direction: reverse; }
   .wall-col:hover .wall-drift,
   .wall-col:focus-within .wall-drift { animation-play-state: paused; }
   .wall-set {
@@ -308,7 +311,7 @@ const entryCount = perEntry.filter((l) => l.length).length;
        carries its own backdrop that fades in 80px above it (founder,
        2026-09-28: "title should move a bit lower"). */
     .wall { height: auto; }
-    .wall-stage { inset: -18% 0 0 58%; transform: perspective(1100px) rotateX(42deg) rotateZ(-16deg); }
+    .wall-stage { inset: -18% 0 0 58%; transform: perspective(2400px) rotateX(42deg) rotateZ(-36deg); }
     .wall-copy { position: relative; display: block; padding-top: 300px; padding-bottom: 56px; }
     .wall-copy::before {
       content: '';
