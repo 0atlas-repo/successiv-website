@@ -207,8 +207,10 @@ const entryCount = perEntry.filter((l) => l.length).length;
     inset: -30% 0 0 68%;
     translate: -50% 0;
     /* The runway: same columns and loop, tipped back and turned. */
-    transform: perspective(1600px) rotateX(46deg) rotateZ(-20deg);
+    /* --px/--py (-1..1) follow the pointer, so the runway leans toward it. */
+    transform: perspective(1600px) rotateX(calc(46deg - var(--py, 0) * 3deg)) rotateZ(calc(-20deg + var(--px, 0) * 3deg));
     transform-origin: 50% 30%;
+    transition: transform 900ms var(--ease-brand);
     animation: runway-in 1600ms var(--ease-brand) both;
     display: flex;
     gap: var(--gap);
@@ -343,6 +345,28 @@ const entryCount = perEntry.filter((l) => l.length).length;
     };
     tick();
   });
+
+  // The runway leans a few degrees toward the pointer. Eased in CSS; skipped
+  // for touch and for reduced motion.
+  if (matchMedia('(hover: hover) and (prefers-reduced-motion: no-preference)').matches) {
+    document.querySelectorAll<HTMLElement>('.wall').forEach((wall) => {
+      const stage = wall.querySelector<HTMLElement>('.wall-stage');
+      if (!stage) return;
+      let frame = 0;
+      wall.addEventListener('pointermove', (e) => {
+        cancelAnimationFrame(frame);
+        frame = requestAnimationFrame(() => {
+          const r = wall.getBoundingClientRect();
+          stage.style.setProperty('--px', (((e.clientX - r.left) / r.width) * 2 - 1).toFixed(3));
+          stage.style.setProperty('--py', (((e.clientY - r.top) / r.height) * 2 - 1).toFixed(3));
+        });
+      });
+      wall.addEventListener('pointerleave', () => {
+        stage.style.setProperty('--px', '0');
+        stage.style.setProperty('--py', '0');
+      });
+    });
+  }
 
   // Replay one on-screen card's steps at a time. Cards in the bottom third sit
   // under the fade, so they are skipped.
