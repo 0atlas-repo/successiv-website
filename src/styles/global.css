@@ -74,6 +74,9 @@
      error. Its label uses --color-bg, which flips: white on it here (5.6:1),
      near-black on the dark value (5.2:1). */
   --color-file-pdf: #c62828;
+  /* Deep signal hero ground (2026-10-03). The home header sits on it while the
+     hero is in view, so it lives here rather than in the hero component. */
+  --color-sig-ground: color-mix(in oklab, var(--color-cyan) 5%, var(--color-bg));
 
   --font-head: "Space Grotesk", "DM Sans", sans-serif;
   --font-body: "DM Sans", sans-serif;
@@ -112,6 +115,7 @@
   --color-warn-soft: color-mix(in oklab, #f0b429 13%, transparent);
   --color-danger-soft: color-mix(in oklab, #ff8a80 15%, transparent);
   --color-file-pdf: #e5534b;
+  --color-sig-ground: color-mix(in oklab, var(--color-navy-deep) 72%, black);
   }
 }
 
@@ -140,6 +144,7 @@
   --color-warn-soft: color-mix(in oklab, #f0b429 13%, transparent);
   --color-danger-soft: color-mix(in oklab, #ff8a80 15%, transparent);
   --color-file-pdf: #e5534b;
+  --color-sig-ground: color-mix(in oklab, var(--color-navy-deep) 72%, black);
 }
 
 html {

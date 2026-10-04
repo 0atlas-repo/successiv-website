@@ -4,11 +4,15 @@ import { site } from '../content/site';
 
 const path = Astro.url.pathname;
 const isActive = (href: string) => path === href || path.startsWith(href.replace(/\/$/, '') + '/');
+// On the home page the bar starts out sitting on the hero's ground, with no
+// border, and turns frosted once the hero scrolls away (founder, 2026-10-04).
+const onHome = path === withBase('/');
 ---
 
 <header
   id="site-header"
-  class="sticky top-0 z-[100] border-b border-line bg-bg/80 backdrop-blur-md"
+  class="site-header sticky top-0 z-[100] border-b"
+  data-over-hero={onHome ? '' : undefined}
 >
   <div class="mx-auto flex h-[76px] max-w-[1180px] items-center gap-3 px-6 sm:gap-5 lg:gap-7">
     <a href={withBase("/")} aria-label={`${site.name} home`} class="mr-auto flex items-center gap-2 sm:gap-2.5">
@@ -91,7 +95,41 @@ const isActive = (href: string) => path === href || path.startsWith(href.replace
   </div>
 </header>
 
+<style>
+  .site-header {
+    background: color-mix(in srgb, var(--color-bg) 80%, transparent);
+    border-bottom-color: var(--color-line);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    transition: background-color 300ms var(--ease-brand), border-color 300ms var(--ease-brand);
+  }
+  /* The home hero runs up under the bar (MockWall pulls itself up by the bar's
+     height), so over it the bar is fully see-through. */
+  .site-header[data-over-hero] {
+    background: transparent;
+    border-bottom-color: transparent;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  /* An open phone menu needs a solid bar, even over the hero. */
+  .site-header[data-over-hero][data-menu-open] { background: var(--color-sig-ground); }
+</style>
+
 <script>
+  // Home only: stay on the hero's ground until the hero has scrolled under
+  // the bar, then turn frosted. Other pages keep the frosted bar throughout.
+  const header = document.getElementById('site-header');
+  const hero = document.querySelector<HTMLElement>('.wall');
+  if (header && hero) {
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      header.toggleAttribute('data-over-hero', hero.getBoundingClientRect().bottom > header.offsetHeight + 40);
+    };
+    addEventListener('scroll', () => { if (!frame) frame = requestAnimationFrame(update); }, { passive: true });
+    update();
+  }
+
   const toggle = document.getElementById('navToggle');
   const mobileNav = document.getElementById('mobileNav');
 
@@ -100,6 +138,7 @@ const isActive = (href: string) => path === href || path.startsWith(href.replace
     mobileNav.classList.toggle('hidden', !open);
     mobileNav.classList.toggle('flex', open);
     toggle.setAttribute('aria-expanded', String(open));
+    document.getElementById('site-header')?.toggleAttribute('data-menu-open', open);
     toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
     const [a, b, c] = Array.from(toggle.querySelectorAll('span'));
     a.style.transform = open ? 'translateY(7px) rotate(45deg)' : '';

@@ -159,13 +159,15 @@ const entryCount = perEntry.filter((l) => l.length).length;
        for a desktop window to read as one (founder, 2026-09-28). */
     --card-n: 420;
     --gap: 34px;
-    /* Fill the first screen under the sticky header. */
-    height: max(680px, calc(100svh - 77px));
+    /* Fill the first screen, running up under the sticky header (76px + its
+       1px border), which is see-through while the hero is in view. */
+    margin-top: -77px;
+    height: max(757px, 100svh);
     /* Deep signal (founder, 2026-10-03): the wall is a runway tilted into the
        page, lit by two signal glows. Light is the default; dark is the deep-navy
        original. The ground is scoped to the hero, which fades into the page
        background at its foot. */
-    --sig-ground: color-mix(in oklab, var(--color-cyan) 5%, var(--color-bg));
+    --sig-ground: var(--color-sig-ground);
     --sig-glow-a: color-mix(in oklab, var(--color-cyan) 30%, transparent);
     --sig-glow-b: color-mix(in oklab, var(--color-indigo) 16%, transparent);
     --sig-grain: 0.05;
@@ -177,7 +179,6 @@ const entryCount = perEntry.filter((l) => l.length).length;
   }
   @media (prefers-color-scheme: dark) {
     :global(:root:not([data-theme='light'])) .wall {
-      --sig-ground: color-mix(in oklab, var(--color-navy-deep) 72%, black);
       --sig-glow-a: color-mix(in oklab, var(--color-cyan) 26%, transparent);
       --sig-glow-b: color-mix(in oklab, var(--color-indigo) 50%, transparent);
       --sig-grain: 0.12;
@@ -185,7 +186,6 @@ const entryCount = perEntry.filter((l) => l.length).length;
     }
   }
   :global(:root[data-theme='dark']) .wall {
-    --sig-ground: color-mix(in oklab, var(--color-navy-deep) 72%, black);
     --sig-glow-a: color-mix(in oklab, var(--color-cyan) 26%, transparent);
     --sig-glow-b: color-mix(in oklab, var(--color-indigo) 50%, transparent);
     --sig-grain: 0.12;
@@ -324,15 +324,16 @@ const entryCount = perEntry.filter((l) => l.length).length;
        2026-09-28: "title should move a bit lower"). */
     .wall { height: auto; }
     .wall-runway { right: -40%; top: -6%; width: 140%; height: 100%; }
-    .wall-copy { position: relative; display: block; padding-top: 300px; padding-bottom: 56px; }
+    .wall-copy { position: relative; display: block; padding-top: 377px; padding-bottom: 56px; }
     .wall-copy::before {
       content: '';
       position: absolute;
-      inset: 220px 0 0 0;
+      inset: 297px 0 0 0;
       z-index: -1;
       background: linear-gradient(to bottom, transparent, var(--sig-ground) 80px);
     }
-    .wall-fade { background: linear-gradient(to bottom, var(--sig-ground) 0%, transparent 14%); }
+    /* Keep the bar's logo and buttons clear of the runway on a phone. */
+    .wall-fade { background: linear-gradient(to bottom, var(--sig-ground) 0, var(--sig-ground) 77px, transparent 150px); }
   }
 
   @media (prefers-reduced-motion: reduce) {
