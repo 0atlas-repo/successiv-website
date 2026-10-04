@@ -96,6 +96,7 @@ const entryCount = perEntry.filter((l) => l.length).length;
 ---
 
 <section class="wall relative isolate overflow-hidden">
+  <div class="wall-runway">
   <div class="wall-stage" aria-label={`Screens from ${entryCount} things we have built`}>
     {columns.map((col, c) => (
       <div class="wall-col" style={`--c:${c}`}>
@@ -128,6 +129,8 @@ const entryCount = perEntry.filter((l) => l.length).length;
         </div>
       </div>
     ))}
+  </div>
+
   </div>
 
   <div class="wall-fade pointer-events-none absolute inset-0 z-[1]" aria-hidden="true"></div>
@@ -201,15 +204,24 @@ const entryCount = perEntry.filter((l) => l.length).length;
   /* Gradient text is clipped to its glyphs, so a shadow would paint over the
      gradient. The second line ends well short of the runway anyway. */
   .wall-h1 :global(.grad-text) { text-shadow: none; }
-  .wall-stage {
+  /* The runway, matched to the Deep signal sample (founder, 2026-10-04): the
+     same box, perspective and angles, so the far end is narrow and it widens
+     toward the viewer. The columns are centred in it and run past its sides. */
+  .wall-runway {
     position: absolute;
     z-index: 0; /* contains mock chrome's own z-index under the fade */
-    inset: -30% 0 0 68%;
-    translate: -50% 0;
-    /* The runway: same columns and loop, tipped back and turned. */
-    transform: perspective(3200px) rotateX(46deg) rotateZ(-40deg);
-    transform-origin: 50% 30%;
+    right: -12%;
+    top: 8%;
+    width: 78%;
+    height: 120%;
+    transform: perspective(1400px) rotateX(48deg) rotateZ(-22deg);
     animation: runway-in 1600ms var(--ease-brand) both;
+  }
+  .wall-stage {
+    position: absolute;
+    top: -40%;
+    left: 50%;
+    transform: translateX(-50%);
     display: flex;
     gap: var(--gap);
     width: max-content;
@@ -222,9 +234,9 @@ const entryCount = perEntry.filter((l) => l.length).length;
     animation: wall-loop calc(128s + var(--c) * 14s) linear infinite;
     animation-delay: calc(var(--c) * -26s);
   }
-  /* Every column flows the same way: from 10 o'clock toward 4–5 o'clock on
-     screen (founder, 2026-10-04). Alternating columns read as the angle
-     changing. */
+  /* Every column flows the same way, from the runway's narrow far end toward
+     its wide near end (founder, 2026-10-04). Alternating columns read as the
+     angle changing. */
   .wall-drift { animation-direction: reverse; }
   .wall-col:hover .wall-drift,
   .wall-col:focus-within .wall-drift { animation-play-state: paused; }
@@ -284,7 +296,7 @@ const entryCount = perEntry.filter((l) => l.length).length;
      the ground, and a foot that hands over to the page background. */
   .wall-fade {
     background:
-      linear-gradient(to right, var(--sig-ground) 0%, color-mix(in oklab, var(--sig-ground) 90%, transparent) 40%, transparent 68%),
+      linear-gradient(to right, var(--sig-ground) 0%, color-mix(in oklab, var(--sig-ground) 92%, transparent) 46%, transparent 74%),
       linear-gradient(to bottom, var(--sig-ground) 0%, transparent 18%),
       linear-gradient(to top, var(--color-bg) 0%, transparent 16%);
   }
@@ -311,7 +323,7 @@ const entryCount = perEntry.filter((l) => l.length).length;
        carries its own backdrop that fades in 80px above it (founder,
        2026-09-28: "title should move a bit lower"). */
     .wall { height: auto; }
-    .wall-stage { inset: -18% 0 0 58%; transform: perspective(2400px) rotateX(42deg) rotateZ(-36deg); }
+    .wall-runway { right: -40%; top: -6%; width: 140%; height: 100%; }
     .wall-copy { position: relative; display: block; padding-top: 300px; padding-bottom: 56px; }
     .wall-copy::before {
       content: '';
@@ -324,7 +336,7 @@ const entryCount = perEntry.filter((l) => l.length).length;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .wall-drift, .wall-stage, .wall-copy .pointer-events-auto > * { animation: none; }
+    .wall-drift, .wall-runway, .wall-copy .pointer-events-auto > * { animation: none; }
   }
 </style>
 
