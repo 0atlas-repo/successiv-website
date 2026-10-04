@@ -1,13 +1,13 @@
 ---
 // The home hero: a wall of mocked screens behind the headline. Every card is a
 // screen already drawn for a product or work page, captioned with that entry
-// and the step it shows, and linked to that page — so the wall shows how much
-// we have built without inventing anything. No screen appears twice.
+// and the step it shows — so the wall shows how much we have built without
+// inventing anything. No screen appears twice. The wall is a picture, not a
+// set of links (founder, 2026-10-05): the cards neither react to hover nor
+// navigate, and the stage is one image to assistive tech.
 //
-// Columns scroll in a loop, all the same way along the runway; focusing
-// inside a column pauses it. Each column renders its cards twice so
-// the loop is seamless; the copy is hidden from assistive tech and the tab
-// order. Each screen plays its own steps as it fades in, then one on-screen
+// Columns scroll in a loop, all the same way along the runway. Each column
+// renders its cards twice so the loop is seamless; the copy is inert. Each screen plays its own steps as it fades in, then one on-screen
 // card at a time replays, so the wall keeps moving without every screen
 // animating at once.
 import { withBase } from '../base';
@@ -20,10 +20,10 @@ import WorkMock from './mocks/WorkMock.astro';
 import { phoneScreens } from './mocks/phoneScreens';
 
 // `isStep`: the caption is a step title, not the entry's fallback category.
-type Card = { entry: string; kind: string; caption: string; isStep: boolean; href: string; mock: string; isProduct: boolean };
+type Card = { entry: string; kind: string; caption: string; isStep: boolean; mock: string; isProduct: boolean };
 // A tile is one card, or two phone screens from the same app side by side, so
 // a phone does not sit alone in a tile drawn for a desktop window.
-type Tile = { entry: string; kind: string; href: string; isProduct: boolean; screens: Card[] };
+type Tile = { entry: string; kind: string; isProduct: boolean; screens: Card[] };
 
 // Each entry's screens, step screens first so each carries its step title.
 const perEntry: Card[][] = [
@@ -33,7 +33,7 @@ const perEntry: Card[][] = [
     const fromScreens = p.screens.map((m) => ({ mock: m, caption: p.category, isStep: false }));
     return [...fromSteps, ...fromScreens]
       .filter((c) => c.mock !== 'generic' && !seen.has(c.mock) && seen.add(c.mock))
-      .map((c) => ({ ...c, entry: p.name, kind: 'Product', href: `/products/${p.slug}/`, isProduct: true }));
+      .map((c) => ({ ...c, entry: p.name, kind: 'Product', isProduct: true }));
   }),
   ...work.map((w) => {
     const seen = new Set<string>();
@@ -41,7 +41,7 @@ const perEntry: Card[][] = [
     const fromScreens = w.screens.map((m) => ({ mock: m, caption: w.angle, isStep: false }));
     return [...fromSteps, ...fromScreens]
       .filter((c) => !seen.has(c.mock) && seen.add(c.mock))
-      .map((c) => ({ ...c, entry: w.title, kind: 'Client build', href: `/work/${w.slug}/`, isProduct: false }));
+      .map((c) => ({ ...c, entry: w.title, kind: 'Client build', isProduct: false }));
   }),
 ];
 
@@ -59,7 +59,7 @@ const perEntryTiles: Tile[][] = perEntry.map((list) => {
   }
   const tiles: Tile[] = [];
   for (const c of list) {
-    const tile = { entry: c.entry, kind: c.kind, href: c.href, isProduct: c.isProduct };
+    const tile = { entry: c.entry, kind: c.kind, isProduct: c.isProduct };
     if (!phoneScreens.has(c.mock)) tiles.push({ ...tile, screens: [c] });
     else if (partner.get(c)) tiles.push({ ...tile, screens: [c, partner.get(c)!] });
   }
@@ -97,15 +97,14 @@ const entryCount = perEntry.filter((l) => l.length).length;
 
 <section class="wall relative isolate overflow-hidden">
   <div class="wall-runway">
-  <div class="wall-stage" aria-label={`Screens from ${entryCount} things we have built`}>
+  <div class="wall-stage" role="img" aria-label={`Screens from ${entryCount} things we have built`}>
     {columns.map((col, c) => (
       <div class="wall-col" style={`--c:${c}`}>
         <div class="wall-drift">
           {[false, true].map((copy) => (
           <div class="wall-set" aria-hidden={copy ? 'true' : undefined} inert={copy}>
           {col.map((tile) => (
-            <a
-              href={withBase(tile.href)}
+            <div
               class="wall-card reveal"
               data-tile={tile.screens.length === 2 ? 'pair' : undefined}
             >
@@ -122,7 +121,7 @@ const entryCount = perEntry.filter((l) => l.length).length;
               <span class="block font-mono text-[11.5px] text-fg-subtle">{tile.kind} · {captionFor(tile).map((c, n) => (
                 <span class:list={[c.i > 0 && 'wall-cap-2']}>{n > 0 ? ' · ' : ''}{c.text}</span>
               ))}</span>
-            </a>
+            </div>
           ))}
           </div>
           ))}
@@ -238,10 +237,6 @@ const entryCount = perEntry.filter((l) => l.length).length;
      its wide near end (founder, 2026-10-04). Alternating columns read as the
      angle changing. */
   .wall-drift { animation-direction: reverse; }
-  /* Only keyboard focus pauses a column, so a tabbed-to card holds still. A
-     hover pause froze one column against the rest and broke the single flow
-     (founder, 2026-10-04). */
-  .wall-col:focus-within .wall-drift { animation-play-state: paused; }
   .wall-set {
     display: flex;
     flex-direction: column;
@@ -274,7 +269,6 @@ const entryCount = perEntry.filter((l) => l.length).length;
     background: var(--color-surface);
     box-shadow: var(--sig-rim);
     padding: 14px 14px 0;
-    transition: transform 400ms var(--ease-brand), border-color 300ms;
     -webkit-mask-image: linear-gradient(to bottom, #000 78%, transparent);
     mask-image: linear-gradient(to bottom, #000 78%, transparent);
   }
@@ -283,11 +277,6 @@ const entryCount = perEntry.filter((l) => l.length).length;
   .wall-shot:has(.mock-desktop) { height: auto; max-height: 330px; padding-bottom: 14px; }
   .wall-card[data-tile='pair'] .wall-shot { height: 300px; }
   .wall-pair { display: flex; justify-content: center; gap: 12px; }
-  .wall-card:hover .wall-shot,
-  .wall-card:focus-visible .wall-shot {
-    transform: translateY(-4px);
-    border-color: color-mix(in srgb, var(--color-action) 45%, transparent);
-  }
   /* Mocks are drawn for a ~440px column; shrink the whole screen to the tile
      (its width less 28px of padding), not its text. A paired phone is drawn
      272px wide and gets half the tile, less the 12px between the two. */

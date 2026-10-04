@@ -100,8 +100,11 @@ What isn't in that comment:
   in 7 columns since 2026-09-29 (was 25 in 5; the outer two run off both
   edges on purpose, so the wall fills any screen up to ~3,100px),
   pulled from `products.ts` and `work.ts` step screens, round-robin across
-  entries, each captioned with its entry and step title and linked to its
-  page. It adds nothing to either data file, so a new step or entry shows up
+  entries, each captioned with its entry and step title. Since 2026-10-05 the
+  wall is a picture, not links: cards neither react to hover nor navigate.
+  Since 2026-10-03 it is the Deep signal runway — tilted in 3D, every column
+  flowing one way, light ground by default and deep navy in dark — and the
+  home header is see-through over it until it scrolls away. It adds nothing to either data file, so a new step or entry shows up
   on the wall by itself. The visible "N screens from N things" badge was
   removed at the founder's call (2026-09-28); the wall's aria-label still
   counts entries from the data — never hard-code that number. Since 2026-09-28 tiles are 420px wide, and
