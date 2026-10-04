@@ -188,18 +188,15 @@ h1, h2, h3 {
 :root[data-theme="light"] [data-logo="dark"] { display: block; }
 :root[data-theme="light"] [data-logo="light"] { display: none; }
 
-/* Theme switch wash: the script animates the new view's clip-path from the
-   clicked control. The browser's default cross-fade is switched off so the
-   old theme stays put underneath the growing circle. */
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation: none;
-  mix-blend-mode: normal;
-}
-/* The old view is a still image while the new one stays live, so anything
-   moving (the wall drift, the marquee) would show two positions and snap back
-   when the wash ends. Hold every animation still for the length of the wash. */
+/* Theme switch (founder, 2026-10-05): motion holds still, the page dips to its
+   background, the background fades to the new theme's colour, and the page
+   comes back in the new theme. Only the page's opacity and one background
+   colour animate: fading every element's colours stalled the wall's 5,500
+   elements for over a second. The script adds and removes the two classes. */
 :root.theme-switching * { animation-play-state: paused !important; }
+:root.theme-switching { transition: background-color 320ms var(--ease-brand); }
+:root.theme-switching body { transition: opacity 160ms var(--ease-brand); }
+:root.theme-dip body { opacity: 0; }
 
 /* ---------- Hero wash ----------
    Cyan/navy bloom. Rebalanced in light mode or it turns muddy.

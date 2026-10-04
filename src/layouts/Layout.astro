@@ -163,36 +163,30 @@ const ogImage = new URL('/img/og-placeholder.png', Astro.site ?? site.url).href;
         syncControls();
       }
 
-      // The new theme washes out from the clicked control as a growing circle.
-      // Without View Transitions, or under reduced motion, it just switches.
-      function change(mode: string, from: Element) {
-        const start = (document as any).startViewTransition;
-        if (!start || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      // Switching holds motion still, dips the page to its background, swaps
+      // the theme while it is hidden, then brings it back (founder,
+      // 2026-10-05). It replaced a circle wash whose page snapshot made the
+      // drifting wall jump and snap back. Timings match global.css.
+      let timers: number[] = [];
+      function change(mode: string) {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
           apply(mode);
           return;
         }
-        const r = from.getBoundingClientRect();
-        const x = r.left + r.width / 2;
-        const y = r.top + r.height / 2;
-        const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
-        root.classList.add('theme-switching');
-        const vt = document.startViewTransition(() => apply(mode));
-        vt.finished.finally(() => root.classList.remove('theme-switching'));
-        vt.ready
-          .then(() => {
-            root.animate(
-              { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
-              { duration: 650, easing: 'cubic-bezier(.65,0,.35,1)', pseudoElement: '::view-transition-new(root)' }
-            );
-          })
-          .catch(() => {});
+        timers.forEach(clearTimeout);
+        root.classList.add('theme-switching', 'theme-dip');
+        timers = [
+          window.setTimeout(() => apply(mode), 160),
+          window.setTimeout(() => root.classList.remove('theme-dip'), 300),
+          window.setTimeout(() => root.classList.remove('theme-switching'), 480),
+        ];
       }
 
       document.querySelectorAll('[data-theme-toggle]').forEach((el) => {
-        el.addEventListener('click', () => change(currentTheme() === 'dark' ? 'light' : 'dark', el));
+        el.addEventListener('click', () => change(currentTheme() === 'dark' ? 'light' : 'dark'));
       });
       document.querySelectorAll('[data-theme-set]').forEach((el) => {
-        el.addEventListener('click', () => change(el.getAttribute('data-theme-set') ?? 'auto', el));
+        el.addEventListener('click', () => change(el.getAttribute('data-theme-set') ?? 'auto'));
       });
 
       // If the visitor has never chosen, follow the system when it changes.
