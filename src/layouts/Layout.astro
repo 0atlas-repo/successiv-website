@@ -175,9 +175,11 @@ const ogImage = new URL('/img/og-placeholder.png', Astro.site ?? site.url).href;
         const x = r.left + r.width / 2;
         const y = r.top + r.height / 2;
         const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
-        document
-          .startViewTransition(() => apply(mode))
-          .ready.then(() => {
+        root.classList.add('theme-switching');
+        const vt = document.startViewTransition(() => apply(mode));
+        vt.finished.finally(() => root.classList.remove('theme-switching'));
+        vt.ready
+          .then(() => {
             root.animate(
               { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
               { duration: 650, easing: 'cubic-bezier(.65,0,.35,1)', pseudoElement: '::view-transition-new(root)' }

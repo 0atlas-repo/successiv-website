@@ -196,6 +196,10 @@ h1, h2, h3 {
   animation: none;
   mix-blend-mode: normal;
 }
+/* The old view is a still image while the new one stays live, so anything
+   moving (the wall drift, the marquee) would show two positions and snap back
+   when the wash ends. Hold every animation still for the length of the wash. */
+:root.theme-switching * { animation-play-state: paused !important; }
 
 /* ---------- Hero wash ----------
    Cyan/navy bloom. Rebalanced in light mode or it turns muddy.
