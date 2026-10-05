@@ -411,6 +411,11 @@ const entryCount = perEntry.filter((l) => l.length).length;
     // screens being added"). A column that shows little of itself (the right-
     // most, at 1440 about one card) arrives a third of the way in instead.
     const ARRIVE_AT = 1.2;
+    // An upright runway (a phone) has no far end to hide an arrival under:
+    // the only cover is the header's solid band (77px), so a card arrives as
+    // it clears that, or the band sat empty for ~25s (founder, 2026-10-06).
+    const ARRIVE_UPRIGHT = 100; // px past the entry edge
+    let upright = false;
     const reduce = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
     type Col = { drift: HTMLElement; lo: number; hi: number; dir: number; P: number };
     const cols = [...wall.querySelectorAll<HTMLElement>('.wall-drift')]
@@ -451,6 +456,7 @@ const entryCount = perEntry.filter((l) => l.length).length;
     };
     const calibrate = () => {
       const w = wall.getBoundingClientRect();
+      upright = getComputedStyle(wall.querySelector('.wall-runway')!).transform === 'none';
       cols.forEach((c) => {
         c.dir = getComputedStyle(c.drift).animationDirection === 'reverse' ? 1 : -1;
         c.P = c.drift.offsetHeight / 2; // one set: the loop's period
@@ -511,7 +517,7 @@ const entryCount = perEntry.filter((l) => l.length).length;
           if (now - Number(el.dataset.at) > LEAVE && done < 0) done = i;
         } else if (state === 'arriving') {
           if (now - Number(el.dataset.at) > ARRIVE) delete el.dataset.state;
-        } else if (state === 'waiting' && (c.dir > 0 ? y + h - c.lo : c.hi - y) > Math.min(h * ARRIVE_AT, (c.hi - c.lo) / 3)) {
+        } else if (state === 'waiting' && (c.dir > 0 ? y + h - c.lo : c.hi - y) > (upright ? ARRIVE_UPRIGHT : Math.min(h * ARRIVE_AT, (c.hi - c.lo) / 3))) {
           el.classList.add('is-visible');
           el.dataset.state = 'arriving';
           el.dataset.at = String(now);
