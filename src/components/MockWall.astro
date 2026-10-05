@@ -411,24 +411,14 @@ const entryCount = perEntry.filter((l) => l.length).length;
       .map((drift) => ({ drift, lo: Infinity, hi: -Infinity, dir: 1, P: 0 }) as Col)
       .filter((c) => c.drift.querySelector('.wall-card'));
     const cards = cols.flatMap((col) =>
-      [...col.drift.querySelectorAll<HTMLElement>('.wall-card')].map((el) => ({ el, col, els: el.querySelectorAll('*').length + 1 })),
+      [...col.drift.querySelectorAll<HTMLElement>('.wall-card')].map((el) => ({ el, col })),
     );
-    const total = wall.querySelectorAll('*').length;
     const ty = (c: Col) => new DOMMatrix(getComputedStyle(c.drift).transform).m42;
     // offsetTop ignores transforms; it is relative to the drift when the drift
     // is the offsetParent, otherwise to a shared ancestor the drift sits in.
     const top = (el: HTMLElement, c: Col) => (el.offsetParent === c.drift ? el.offsetTop : el.offsetTop - c.drift.offsetTop);
 
-    // Diagnostics for the benchmark: live counts and the park/wake log.
-    const log: { t: number; op: 'wake' | 'park'; card: number }[] = [];
-    const note = (op: 'wake' | 'park', i: number) => { log.push({ t: Math.round(performance.now()), op, card: i }); if (log.length > 500) log.shift(); };
     const isParked = (el: HTMLElement) => el.hasAttribute('data-parked');
-    (window as any).__wallCull = {
-      live: () => cards.filter((k) => !isParked(k.el)).length,
-      liveEls: () => total - cards.reduce((n, k) => n + (isParked(k.el) ? k.els : 0), 0),
-      log,
-      cols,
-    };
 
     // Mark what is on screen, which starts those screens' steps; done as the
     // runway fades in, so no step plays while the wall is held.
@@ -477,17 +467,15 @@ const entryCount = perEntry.filter((l) => l.length).length;
       return y + h > c.lo - a && y < c.hi + b;
     };
 
-    const park = (el: HTMLElement, i: number) => {
+    const park = (el: HTMLElement) => {
       el.style.containIntrinsicSize = `${el.offsetWidth}px ${el.offsetHeight}px`;
       delete el.dataset.state;
       el.dataset.parked = '';
-      note('park', i);
     };
-    const wake = (el: HTMLElement, i: number, direct: boolean) => {
+    const wake = (el: HTMLElement, direct: boolean) => {
       delete el.dataset.parked;
       if (direct) { delete el.dataset.state; el.classList.add('is-visible'); }
       else { el.dataset.state = 'waiting'; }
-      note('wake', i);
     };
 
     setInterval(() => {
@@ -529,12 +517,12 @@ const entryCount = perEntry.filter((l) => l.length).length;
       });
       // One change: wakes first, nearest the entry edge; then a finished fade;
       // then a park.
-      if (wk) wake(cards[wk.i].el, wk.i, wk.direct);
-      else if (done >= 0) park(cards[done].el, done);
+      if (wk) wake(cards[wk.i].el, wk.direct);
+      else if (done >= 0) park(cards[done].el);
       else if (pk >= 0) {
         const el = cards[pk].el;
         if (pkVisible && !rm) { el.dataset.state = 'leaving'; el.dataset.at = String(now); }
-        else park(el, pk);
+        else park(el);
       }
     }, TICK);
 
@@ -545,7 +533,7 @@ const entryCount = perEntry.filter((l) => l.length).length;
     const runway = wall.querySelector<HTMLElement>('.wall-runway');
     // Timing marks for diagnostics (wall-fade-in, wall-loop), read with
     // performance.getEntriesByType('mark').
-    const live = () => { wall.classList.remove('wall-hold', 'wall-fading'); calibrate(); revealOnScreen(); performance.mark('wall-loop'); };
+    const live = () => { wall.classList.remove('wall-hold', 'wall-fading'); calibrate(); revealOnScreen(); };
     const start = async () => {
       await document.fonts?.ready;
       // Fonts can change a caption's height: size the pre-parked duplicates
@@ -561,8 +549,8 @@ const entryCount = perEntry.filter((l) => l.length).length;
         // A pre-parked card that is not wanted is parked without ever being
         // rendered; one that is wanted renders now, while the wall is held.
         if (!want) {
-          if ('preparked' in el.dataset) { el.dataset.parked = ''; note('park', i); }
-          else park(el, i);
+          if ('preparked' in el.dataset) el.dataset.parked = '';
+          else park(el);
         }
         delete el.dataset.preparked;
       });
@@ -588,7 +576,6 @@ const entryCount = perEntry.filter((l) => l.length).length;
       });
       wall.classList.add('wall-fading');
       wall.classList.remove('wall-hold');
-      performance.mark('wall-fade-in');
       setTimeout(() => { cards.forEach(({ el }) => delete el.dataset.intro); live(); }, end);
     };
     if (document.readyState === 'complete') start(); else addEventListener('load', start);
