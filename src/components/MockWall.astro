@@ -347,11 +347,11 @@ const entryCount = perEntry.filter((l) => l.length).length;
   }
 
   @media (max-width: 767px) {
-    /* A phone gets 340px tiles, near its full width, so a desktop window
+    /* A phone gets 300px tiles, most of its width, so a desktop window
        still reads as one; and a phone tile shows one phone, not a pair, at
        its drawn size. The second screen's title hides with it (founder,
        2026-09-29). */
-    .wall { --card-n: 340; --gap: 20px; }
+    .wall { --card-n: 300; --gap: 16px; }
     .wall-shot { height: 200px; }
     .wall-shot:has(.mock-desktop) { max-height: 260px; }
     .wall-card[data-tile='pair'] .wall-shot { height: 250px; }
@@ -364,7 +364,13 @@ const entryCount = perEntry.filter((l) => l.length).length;
        carries its own backdrop that fades in 80px above it (founder,
        2026-09-28: "title should move a bit lower"). */
     .wall { height: auto; }
-    .wall-runway { right: -40%; top: -6%; width: 140%; height: 100%; }
+    /* Upright on a phone (founder, 2026-10-05): three columns, the middle
+       one whole and a sliver of its neighbours either side (about 10% of a
+       300px tile at 390px wide). The empty tracks go, so the middle filled
+       column is the centre one; the outer two sit off screen and stay
+       parked. */
+    .wall-runway { inset: 0 auto auto 0; width: 100%; height: 100%; transform: none; }
+    .wall-col:not(:has(.wall-card)) { display: none; }
     .wall-copy { position: relative; display: block; padding-top: 377px; padding-bottom: 56px; }
     .wall-copy::before {
       content: '';
@@ -531,8 +537,6 @@ const entryCount = perEntry.filter((l) => l.length).length;
     // runway is still at its entrance scale, so the stretch is re-measured once
     // the loop starts.
     const runway = wall.querySelector<HTMLElement>('.wall-runway');
-    // Timing marks for diagnostics (wall-fade-in, wall-loop), read with
-    // performance.getEntriesByType('mark').
     const live = () => { wall.classList.remove('wall-hold', 'wall-fading'); calibrate(); revealOnScreen(); };
     const start = async () => {
       await document.fonts?.ready;
