@@ -14,7 +14,7 @@ One row per active plan. If it is not here, it does not exist.
 | [Mock colour](projects/mock-colour/plans/pilot.md) | shipped and live at 93b069e (2026-09-29) | Done for the pilot pages, the wall and landscape desktop screens. Open: fill the 17 newly widened screens with more of each real app; enlarged-text check on them; Safari untested |
 | [Deep signal hero](projects/deep-signal/plans/hero.md) | shipped and live at e1cba2b (2026-10-05) | Next: carry Deep signal through the sections below the hero |
 | [Menu](projects/menu/plans/menu.md) | shipped and live at 76214aa (2026-10-05) | Done. Also shipped: theme switch (freeze, wall softens to 50%, colours morph), wall in 5 filled columns, home without the capability strip and How we work. Body sections follow ([board](https://claude.ai/artifact/24LAHAxg62vSuuMXHpHjuj)) |
-| [Wall culling](projects/wall-cull/specs/wall-cull.md) | built on `wall-cull` at 78afc2f, not merged (2026-10-05) | Founder reviews load/arrivals on localhost:4393; clean ABBA GPU benchmark when the Mac is idle; decide on window.__wallCull diagnostics; merge |
+| [Wall culling](projects/wall-cull/specs/wall-cull.md) | shipped and live (2026-10-05) | Done. Diagnostics stripped before merge. Open: GPU first-load benchmark (ABBA, idle Mac) never run. Next: body spec (Claims with receipts; Assembly on product and work pages) |
 
 ## Loose tasks
 
