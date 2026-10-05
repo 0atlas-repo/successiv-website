@@ -163,10 +163,10 @@ const ogImage = new URL('/img/og-placeholder.png', Astro.site ?? site.url).href;
         syncControls();
       }
 
-      // Switching holds motion still, dips the page to its background, swaps
-      // the theme while it is hidden, then brings it back (founder,
-      // 2026-10-05). It replaced a circle wash whose page snapshot made the
-      // drifting wall jump and snap back. Timings match global.css.
+      // Switching freezes motion, then fades colours to the new theme; the
+      // wall's runway dims across the change instead (founder, 2026-10-05).
+      // It replaced a circle wash whose page snapshot made the drifting wall
+      // jump and snap back. Timings match global.css.
       let timers: number[] = [];
       function change(mode: string) {
         if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -174,11 +174,11 @@ const ogImage = new URL('/img/og-placeholder.png', Astro.site ?? site.url).href;
           return;
         }
         timers.forEach(clearTimeout);
-        root.classList.add('theme-switching', 'theme-dip');
+        root.classList.add('theme-switching', 'theme-dim');
         timers = [
-          window.setTimeout(() => apply(mode), 160),
-          window.setTimeout(() => root.classList.remove('theme-dip'), 300),
-          window.setTimeout(() => root.classList.remove('theme-switching'), 480),
+          window.setTimeout(() => apply(mode), 180),
+          window.setTimeout(() => root.classList.remove('theme-dim'), 260),
+          window.setTimeout(() => root.classList.remove('theme-switching'), 700),
         ];
       }
 

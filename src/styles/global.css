@@ -188,15 +188,27 @@ h1, h2, h3 {
 :root[data-theme="light"] [data-logo="dark"] { display: block; }
 :root[data-theme="light"] [data-logo="light"] { display: none; }
 
-/* Theme switch (founder, 2026-10-05): motion holds still, the page dips to its
-   background, the background fades to the new theme's colour, and the page
-   comes back in the new theme. Only the page's opacity and one background
-   colour animate: fading every element's colours stalled the wall's 5,500
-   elements for over a second. The script adds and removes the two classes. */
+/* Theme switch (founder, 2026-10-05): motion freezes, then colours fade to the
+   new theme. The wall's runway is the exception: fading the colours of its
+   5,500 elements stalled the page for over a second, so it dims instead, takes
+   the new theme while dim, and comes back. The hero ground does fade: its three
+   colours are registered below so they can animate. The script adds and
+   removes the classes; its timings match these. */
+@property --sig-ground { syntax: '<color>'; inherits: true; initial-value: transparent; }
+@property --sig-glow-a { syntax: '<color>'; inherits: true; initial-value: transparent; }
+@property --sig-glow-b { syntax: '<color>'; inherits: true; initial-value: transparent; }
 :root.theme-switching * { animation-play-state: paused !important; }
-:root.theme-switching { transition: background-color 320ms var(--ease-brand); }
-:root.theme-switching body { transition: opacity 160ms var(--ease-brand); }
-:root.theme-dip body { opacity: 0; }
+:root.theme-switching,
+:root.theme-switching *:not(.wall-runway *),
+:root.theme-switching *:not(.wall-runway *)::before,
+:root.theme-switching *:not(.wall-runway *)::after {
+  transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, box-shadow, --sig-ground, --sig-glow-a, --sig-glow-b !important;
+  transition-duration: 400ms !important;
+  transition-timing-function: var(--ease-brand) !important;
+  transition-delay: 0s !important;
+}
+:root.theme-switching .wall-runway { transition: opacity 200ms var(--ease-brand) !important; }
+:root.theme-dim .wall-runway { opacity: 0.25; }
 
 /* ---------- Hero wash ----------
    Cyan/navy bloom. Rebalanced in light mode or it turns muddy.
