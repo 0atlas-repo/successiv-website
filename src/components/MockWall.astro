@@ -256,13 +256,19 @@ const entryCount = perEntry.filter((l) => l.length).length;
   }
   /* Load (founder, 2026-10-05): the wall is held, runway invisible and drift
      still, while the script pre-renders it (fonts, measuring, parking off-screen
-     cards); then the runway fades in, then the loop starts. */
+     cards); then each card fades in, same length, from its own random moment, then
+     the loop starts. */
   .wall-hold .wall-runway,
   .wall-hold .wall-drift,
   .wall-fading .wall-drift { animation-play-state: paused; }
-  /* Entrance: the runway rises out of the ground, then the copy follows. */
+  .wall-hold .wall-card { opacity: 0; }
+  /* Measured at full size while held, so the loop starts with nothing to wake. */
+  .wall-measure .wall-runway { animation: none !important; }
+  .wall-card[data-intro] { animation: wall-arrive 800ms var(--ease-brand) var(--fade-delay) both; }
+  /* Entrance: the runway rises out of the ground (its cards fade in on their
+     own, above), then the copy follows. */
   @keyframes runway-in {
-    from { opacity: 0; scale: 0.9; }
+    from { scale: 0.9; }
   }
   @keyframes copy-in {
     from { opacity: 0; transform: translateY(18px); }
@@ -285,7 +291,7 @@ const entryCount = perEntry.filter((l) => l.length).length;
      of these touch .wall-runway, whose opacity the theme switch owns. */
   .wall-card[data-parked] { content-visibility: hidden; }
   .wall-card[data-state='waiting'] { opacity: 0; transition: none; }
-  .wall-card[data-state='arriving'] { animation: wall-arrive 500ms var(--ease-brand) both; transition: none; }
+  .wall-card[data-state='arriving'] { animation: wall-arrive 600ms var(--ease-brand) both; transition: none; }
   .wall-card[data-state='leaving'] { opacity: 0; transition: opacity 400ms var(--ease-brand); }
   @keyframes wall-arrive {
     from { opacity: 0; }
@@ -375,7 +381,10 @@ const entryCount = perEntry.filter((l) => l.length).length;
   const wall = document.querySelector<HTMLElement>('.wall');
   if (wall) {
     const TICK = 100, TRAIL = 40, LEAD = 40; // LEAD is added to the card's own height
-    const LEAVE = 400, ARRIVE = 500, WRAP = 0.05; // ms; ms; share of a loop
+    const LEAVE = 400, ARRIVE = 600, WRAP = 0.05; // ms; ms; share of a loop
+    // Every fade is the same length; only when it starts varies (founder,
+    // 2026-10-05).
+    const rand = (lo: number, hi: number) => Math.round(lo + Math.random() * (hi - lo));
     // A woken card waits, invisible, until its leading edge is this many card
     // heights past the entry edge, so its arrival plays in view rather than
     // under the runway's far-end fade (founder, 2026-10-05: "couldn't see new
@@ -486,7 +495,9 @@ const entryCount = perEntry.filter((l) => l.length).length;
           if (here || after) {
             const e = here ? y : y - c.dir * c.P;
             const rem = c.dir > 0 ? c.lo - (e + h) : e - c.hi;
-            if (!wk || rem < wk.rem) wk = { i, direct: !here || inWin || rm, rem };
+            // Instant only for a twin woken ahead of the wrap (off screen) or
+            // under reduced motion; a card woken in view fades in like any other.
+            if (!wk || rem < wk.rem) wk = { i, direct: !here || rm, rem };
           }
         } else if (state === 'leaving') {
           if (now - Number(el.dataset.at) > LEAVE && done < 0) done = i;
@@ -521,17 +532,29 @@ const entryCount = perEntry.filter((l) => l.length).length;
     const live = () => { wall.classList.remove('wall-hold', 'wall-fading'); calibrate(); };
     const start = async () => {
       await document.fonts?.ready;
+      wall.classList.add('wall-measure');
       calibrate();
       cards.forEach(({ el, col: c }, i) => {
         if (!wanted(c, top(el, c) + ty(c), el.offsetHeight)) park(el, i);
       });
+      wall.classList.remove('wall-measure');
       await new Promise((ok) => requestAnimationFrame(() => requestAnimationFrame(ok)));
       revealOnScreen();
       if (reduce() || !runway) return live();
-      // Screens' step animations bubble up through the runway too.
-      runway.addEventListener('animationend', (e) => { if (e.target === runway && e.animationName === 'runway-in') live(); });
+      // Each live card fades in over the same 800ms from a random moment in
+      // the first 900ms; the loop starts once the last one and the runway's
+      // own rise (1.6s) are done.
+      let end = 1600;
+      cards.forEach(({ el }) => {
+        if (isParked(el)) return;
+        const delay = rand(0, 900);
+        el.style.setProperty('--fade-delay', `${delay}ms`);
+        el.dataset.intro = '';
+        end = Math.max(end, delay + 800);
+      });
       wall.classList.add('wall-fading');
       wall.classList.remove('wall-hold');
+      setTimeout(() => { cards.forEach(({ el }) => delete el.dataset.intro); live(); }, end);
     };
     if (document.readyState === 'complete') start(); else addEventListener('load', start);
     // Never leave the wall held if anything above fails.
