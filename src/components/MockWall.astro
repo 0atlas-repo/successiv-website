@@ -543,6 +543,32 @@ const entryCount = perEntry.filter((l) => l.length).length;
     // runway is still at its entrance scale, so the stretch is re-measured once
     // the loop starts.
     const runway = wall.querySelector<HTMLElement>('.wall-runway');
+    // On a phone the first thing seen is one whole screen, not two halves
+    // (founder, 2026-10-06): shift the middle column's drift so the nearest
+    // card whose shot fits sits just under the header, above where the copy's
+    // backdrop starts. The drift is paused, so moving its delay moves it.
+    const frameMiddle = () => {
+      const copy = wall.querySelector<HTMLElement>('.wall-copy');
+      const header = document.querySelector('header');
+      const mid = cols.find((c) => { const r = c.drift.getBoundingClientRect(); return r.left < innerWidth / 2 && r.right > innerWidth / 2; });
+      if (!copy || !header || !mid) return;
+      const target = header.getBoundingClientRect().bottom + 12;
+      const floor = copy.getBoundingClientRect().top + parseFloat(getComputedStyle(copy, '::before').top);
+      let best: number | null = null;
+      cards.filter((k) => k.col === mid).forEach(({ el }) => {
+        const shot = el.querySelector<HTMLElement>('.wall-shot')!;
+        if (target + shot.offsetHeight > floor) return;
+        const dy = target - el.getBoundingClientRect().top;
+        if (best === null || Math.abs(dy) < Math.abs(best)) best = dy;
+      });
+      if (best === null) return;
+      const cs = getComputedStyle(mid.drift);
+      const dur = parseFloat(cs.animationDuration), speed = mid.drift.offsetHeight / 2 / dur;
+      const dir = cs.animationDirection === 'reverse' ? 1 : -1; // 1: moving down
+      let delay = parseFloat(cs.animationDelay) - (dir * best) / speed;
+      if (delay > 0) delay -= dur;
+      mid.drift.style.animationDelay = `${delay}s`;
+    };
     const live = () => { wall.classList.remove('wall-hold', 'wall-fading'); calibrate(); revealOnScreen(); };
     const start = async () => {
       await document.fonts?.ready;
@@ -553,6 +579,7 @@ const entryCount = perEntry.filter((l) => l.length).length;
         b?.forEach((el, i) => { el.style.containIntrinsicSize = `${a[i].offsetWidth}px ${a[i].offsetHeight}px`; });
       });
       wall.classList.add('wall-measure');
+      if (getComputedStyle(runway ?? wall).transform === 'none') frameMiddle();
       calibrate();
       cards.forEach(({ el, col: c }, i) => {
         const want = wanted(c, top(el, c) + ty(c), el.offsetHeight);
