@@ -1,0 +1,40 @@
+[
+  {
+    "id": 1,
+    "subject": "Baseline GPU numbers",
+    "status": "completed",
+    "blockedBy": []
+  },
+  {
+    "id": 2,
+    "subject": "Parked/arrive/leave CSS",
+    "status": "completed",
+    "blockedBy": [
+      1
+    ]
+  },
+  {
+    "id": 3,
+    "subject": "Culling script with one-change queue",
+    "status": "completed",
+    "blockedBy": [
+      2
+    ]
+  },
+  {
+    "id": 4,
+    "subject": "Debug hook and event log",
+    "status": "completed",
+    "blockedBy": [
+      3
+    ]
+  },
+  {
+    "id": 5,
+    "subject": "Verify per spec, founder review",
+    "status": "in_progress",
+    "blockedBy": [
+      4
+    ]
+  }
+]

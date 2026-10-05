@@ -268,6 +268,18 @@ const entryCount = perEntry.filter((l) => l.length).length;
 
   /* Cards fade in through .reveal, which also starts each screen's steps. */
   .wall-card { display: block; }
+  /* Culling (founder, 2026-10-05; script below). A parked card keeps its
+     measured size through contain-intrinsic-size, so the column and the loop
+     seam never move. Waiting is a woken card held invisible until it crosses
+     into view; arriving rises in; leaving fades out before it is parked. None
+     of these touch .wall-runway, whose opacity the theme switch owns. */
+  .wall-card[data-parked] { content-visibility: hidden; }
+  .wall-card[data-state='waiting'] { opacity: 0; transition: none; }
+  .wall-card[data-state='arriving'] { animation: wall-arrive 500ms var(--ease-brand) both; transition: none; }
+  .wall-card[data-state='leaving'] { opacity: 0; transition: opacity 400ms var(--ease-brand); }
+  @keyframes wall-arrive {
+    from { opacity: 0; transform: translateY(14px) scale(0.97); }
+  }
 
   .wall-shot {
     height: 260px;
@@ -341,26 +353,145 @@ const entryCount = perEntry.filter((l) => l.length).length;
 </style>
 
 <script>
-  // The layout's IntersectionObserver misses about half the cards inside the
-  // tilted runway (measured 2026-10-03: 7 of 15 on-screen cards never revealed),
-  // so the wall checks its own cards' boxes until each one has shown.
-  document.querySelectorAll<HTMLElement>('.wall').forEach((wall) => {
-    const pending = new Set(wall.querySelectorAll<HTMLElement>('.wall-card'));
-    const tick = () => {
-      pending.forEach((c) => {
-        const r = c.getBoundingClientRect();
-        if (c.classList.contains('is-visible') || (r.bottom > 0 && r.top < innerHeight && r.right > 0 && r.left < innerWidth)) {
-          c.classList.add('is-visible');
-          pending.delete(c);
+  // Culling (founder, 2026-10-05): only cards in, or about to enter, the visible
+  // stretch of their column stay live; the rest are parked (content-visibility:
+  // hidden, size kept). Positions are taken in column space: layout offsetTop
+  // plus the drift's current translateY, so no 3D maths per frame (rects on the
+  // drift or column are nonsense under the tilt; card rects are only used to
+  // calibrate). One park or wake per tick, never a batch. The same script
+  // starts each screen's steps (is-visible) as its card arrives, since the
+  // layout's IntersectionObserver misses cards inside the tilted runway
+  // (measured 2026-10-03: 7 of 15 on-screen cards never revealed).
+  const wall = document.querySelector<HTMLElement>('.wall');
+  if (wall) {
+    const TICK = 100, TRAIL = 40, LEAD = 40; // LEAD is added to the card's own height
+    const LEAVE = 400, ARRIVE = 500, WRAP = 0.05; // ms; ms; share of a loop
+    const reduce = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+    type Col = { drift: HTMLElement; lo: number; hi: number; dir: number; P: number };
+    const cols = [...wall.querySelectorAll<HTMLElement>('.wall-drift')]
+      .map((drift) => ({ drift, lo: Infinity, hi: -Infinity, dir: 1, P: 0 }) as Col)
+      .filter((c) => c.drift.querySelector('.wall-card'));
+    const cards = cols.flatMap((col) =>
+      [...col.drift.querySelectorAll<HTMLElement>('.wall-card')].map((el) => ({ el, col, els: el.querySelectorAll('*').length + 1 })),
+    );
+    const total = wall.querySelectorAll('*').length;
+    const ty = (c: Col) => new DOMMatrix(getComputedStyle(c.drift).transform).m42;
+    // offsetTop ignores transforms; it is relative to the drift when the drift
+    // is the offsetParent, otherwise to a shared ancestor the drift sits in.
+    const top = (el: HTMLElement, c: Col) => (el.offsetParent === c.drift ? el.offsetTop : el.offsetTop - c.drift.offsetTop);
+
+    // Diagnostics for the benchmark: live counts and the park/wake log.
+    const log: { t: number; op: 'wake' | 'park'; card: number }[] = [];
+    const note = (op: 'wake' | 'park', i: number) => { log.push({ t: Math.round(performance.now()), op, card: i }); if (log.length > 500) log.shift(); };
+    const isParked = (el: HTMLElement) => el.hasAttribute('data-parked');
+    (window as any).__wallCull = {
+      live: () => cards.filter((k) => !isParked(k.el)).length,
+      liveEls: () => total - cards.reduce((n, k) => n + (isParked(k.el) ? k.els : 0), 0),
+      log,
+    };
+
+    // Before calibration (the runway rises for 1.6s) show what is on screen.
+    cards.forEach(({ el }) => {
+      const r = el.getBoundingClientRect();
+      if (r.bottom > 0 && r.top < innerHeight && r.right > 0 && r.left < innerWidth) el.classList.add('is-visible');
+    });
+
+    // Each column's visible stretch, in column space, from the cards that
+    // intersect the wall and the viewport's width. Cards flow in the drift's
+    // direction: reversed (translateY rising) enters at lo and leaves at hi.
+    let ready = false;
+    const calibrate = () => {
+      const w = wall.getBoundingClientRect();
+      cols.forEach((c) => {
+        c.dir = getComputedStyle(c.drift).animationDirection === 'reverse' ? 1 : -1;
+        c.P = c.drift.offsetHeight / 2; // one set: the loop's period
+        c.lo = Infinity;
+        c.hi = -Infinity;
+        const t = ty(c);
+        cards.filter((k) => k.col === c).forEach(({ el }) => {
+          const r = el.getBoundingClientRect();
+          if (r.bottom > w.top && r.top < w.bottom && r.right > 0 && r.left < innerWidth) {
+            const y = top(el, c) + t;
+            c.lo = Math.min(c.lo, y);
+            c.hi = Math.max(c.hi, y + el.offsetHeight);
+          }
+        });
+      });
+      ready = true;
+    };
+    const wanted = (c: Col, y: number, h: number) => {
+      const [a, b] = c.dir > 0 ? [h + LEAD, TRAIL] : [TRAIL, h + LEAD];
+      return y + h > c.lo - a && y < c.hi + b;
+    };
+
+    const park = (el: HTMLElement, i: number) => {
+      el.style.containIntrinsicSize = `${el.offsetWidth}px ${el.offsetHeight}px`;
+      delete el.dataset.state;
+      el.dataset.parked = '';
+      note('park', i);
+    };
+    const wake = (el: HTMLElement, i: number, direct: boolean) => {
+      delete el.dataset.parked;
+      if (direct) { delete el.dataset.state; el.classList.add('is-visible'); }
+      else { el.dataset.state = 'waiting'; }
+      note('wake', i);
+    };
+
+    setInterval(() => {
+      if (document.hidden || !ready) return;
+      const now = performance.now(), rm = reduce();
+      let wk = null as { i: number; direct: boolean; rem: number } | null;
+      let done = -1, pk = -1, pkVisible = false;
+      const ts = new Map(cols.map((c) => [c, ty(c)]));
+      cards.forEach(({ el, col: c }, i) => {
+        const h = el.offsetHeight, y = top(el, c) + ts.get(c)!;
+        const inWin = y + h > c.lo && y < c.hi;
+        const here = wanted(c, y, h);
+        // Just before the loop wraps every card jumps one period, and its twin
+        // takes its place: wake the cards that will be wanted after the jump.
+        const wrapD = c.dir > 0 ? -ts.get(c)! : ts.get(c)! + c.P;
+        const after = wrapD < c.P * WRAP && wanted(c, y - c.dir * c.P, h);
+        const state = el.dataset.state;
+        if (isParked(el)) {
+          if (here || after) {
+            const e = here ? y : y - c.dir * c.P;
+            const rem = c.dir > 0 ? c.lo - (e + h) : e - c.hi;
+            if (!wk || rem < wk.rem) wk = { i, direct: !here || inWin || rm, rem };
+          }
+        } else if (state === 'leaving') {
+          if (now - Number(el.dataset.at) > LEAVE && done < 0) done = i;
+        } else if (state === 'arriving') {
+          if (now - Number(el.dataset.at) > ARRIVE) delete el.dataset.state;
+        } else if (inWin && state === 'waiting') {
+          el.classList.add('is-visible');
+          el.dataset.state = 'arriving';
+          el.dataset.at = String(now);
+        } else if (!here && !after) {
+          if (pk < 0 || (pkVisible && !inWin)) { pk = i; pkVisible = inWin; }
+        } else if (inWin && !el.classList.contains('is-visible')) {
+          el.classList.add('is-visible');
         }
       });
-      if (pending.size) setTimeout(tick, 300);
-    };
-    tick();
-  });
+      // One change: wakes first, nearest the entry edge; then a finished fade;
+      // then a park.
+      if (wk) wake(cards[wk.i].el, wk.i, wk.direct);
+      else if (done >= 0) park(cards[done].el, done);
+      else if (pk >= 0) {
+        const el = cards[pk].el;
+        if (pkVisible && !rm) { el.dataset.state = 'leaving'; el.dataset.at = String(now); }
+        else park(el, pk);
+      }
+    }, TICK);
+
+    // Calibrate once the runway has settled, and again after a resize.
+    const start = () => setTimeout(calibrate, reduce() ? 0 : 1700);
+    if (document.readyState === 'complete') start(); else addEventListener('load', start);
+    let rz = 0;
+    addEventListener('resize', () => { clearTimeout(rz); rz = window.setTimeout(() => ready && calibrate(), 250); });
+  }
 
   // Replay one on-screen card's steps at a time. Cards in the bottom third sit
-  // under the fade, so they are skipped.
+  // under the fade, so they are skipped; parked and fading cards are not live.
   if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
     document.querySelectorAll<HTMLElement>('.wall').forEach((wall) => {
       const cards = [...wall.querySelectorAll<HTMLElement>('.wall-card')];
@@ -369,6 +500,7 @@ const entryCount = perEntry.filter((l) => l.length).length;
         const h = wall.getBoundingClientRect();
         if (document.hidden || h.bottom < 0) return;
         const visible = cards.filter((c, i) => {
+          if (c.hasAttribute('data-parked') || c.dataset.state) return false;
           const r = c.getBoundingClientRect();
           return i !== last && r.bottom > h.top && r.top < h.bottom - h.height * 0.35 && r.right > 0 && r.left < innerWidth;
         });
