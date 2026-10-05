@@ -116,6 +116,7 @@ const entryCount = perEntry.filter((l) => l.length).length;
             <div
               class="wall-card reveal"
               data-tile={tile.screens.length === 2 ? 'pair' : undefined}
+              data-preparked={copy ? '' : undefined}
             >
               <div class="wall-shot" aria-hidden="true">
                 <div class={tile.screens.length === 2 ? 'wall-pair' : undefined}>
@@ -141,6 +142,9 @@ const entryCount = perEntry.filter((l) => l.length).length;
 
   </div>
 
+  <!-- The duplicate set arrives parked (data-preparked), sized from its twins
+       here, before first paint, so the first render handles one set, not two. -->
+  <script is:inline>(function(){var w=document.currentScript.closest('.wall');if(!w||!w.classList.contains('wall-hold'))return;w.querySelectorAll('.wall-drift').forEach(function(d){var s=d.querySelectorAll('.wall-set');if(s.length<2)return;var a=s[0].children,b=s[1].children;for(var i=0;i<b.length;i++)b[i].style.containIntrinsicSize=a[i].offsetWidth+'px '+a[i].offsetHeight+'px';});})();</script>
   <div class="wall-fade pointer-events-none absolute inset-0 z-[1]" aria-hidden="true"></div>
   <div class="wall-grain pointer-events-none absolute inset-0 z-[1]" aria-hidden="true"></div>
 
@@ -262,9 +266,13 @@ const entryCount = perEntry.filter((l) => l.length).length;
   .wall-hold .wall-drift,
   .wall-fading .wall-drift { animation-play-state: paused; }
   .wall-hold .wall-card { opacity: 0; }
+  .wall-hold .wall-card[data-preparked] { content-visibility: hidden; }
+  /* Wall cards fade only: the page-wide .reveal rise would shift each card
+     after its fade. */
+  .wall-card.reveal { transform: none; }
   /* Measured at full size while held, so the loop starts with nothing to wake. */
   .wall-measure .wall-runway { animation: none !important; }
-  .wall-card[data-intro] { animation: wall-arrive 800ms var(--ease-brand) var(--fade-delay) both; }
+  .wall-card[data-intro] { animation: wall-intro 800ms var(--ease-brand) var(--fade-delay) both; }
   /* Entrance: the runway rises out of the ground (its cards fade in on their
      own, above), then the copy follows. */
   @keyframes runway-in {
@@ -293,6 +301,12 @@ const entryCount = perEntry.filter((l) => l.length).length;
   .wall-card[data-state='waiting'] { opacity: 0; transition: none; }
   .wall-card[data-state='arriving'] { animation: wall-arrive 600ms var(--ease-brand) both; transition: none; }
   .wall-card[data-state='leaving'] { opacity: 0; transition: opacity 400ms var(--ease-brand); }
+  /* Explicit end: during the intro the card is not yet .is-visible, whose base
+     opacity is 0. */
+  @keyframes wall-intro {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
   @keyframes wall-arrive {
     from { opacity: 0; }
   }
@@ -509,7 +523,7 @@ const entryCount = perEntry.filter((l) => l.length).length;
           el.dataset.at = String(now);
         } else if (!here && !after) {
           if (pk < 0 || (pkVisible && !inWin)) { pk = i; pkVisible = inWin; }
-        } else if (inWin && !el.classList.contains('is-visible')) {
+        } else if (inWin && !el.classList.contains('is-visible') && !('intro' in el.dataset)) {
           el.classList.add('is-visible');
         }
       });
@@ -529,21 +543,35 @@ const entryCount = perEntry.filter((l) => l.length).length;
     // runway is still at its entrance scale, so the stretch is re-measured once
     // the loop starts.
     const runway = wall.querySelector<HTMLElement>('.wall-runway');
-    const live = () => { wall.classList.remove('wall-hold', 'wall-fading'); calibrate(); };
+    // Timing marks for diagnostics (wall-fade-in, wall-loop), read with
+    // performance.getEntriesByType('mark').
+    const live = () => { wall.classList.remove('wall-hold', 'wall-fading'); calibrate(); revealOnScreen(); performance.mark('wall-loop'); };
     const start = async () => {
       await document.fonts?.ready;
+      // Fonts can change a caption's height: size the pre-parked duplicates
+      // from their twins again.
+      wall.querySelectorAll<HTMLElement>('.wall-drift').forEach((d) => {
+        const [a, b] = [...d.querySelectorAll('.wall-set')].map((set) => [...set.children] as HTMLElement[]);
+        b?.forEach((el, i) => { el.style.containIntrinsicSize = `${a[i].offsetWidth}px ${a[i].offsetHeight}px`; });
+      });
       wall.classList.add('wall-measure');
       calibrate();
       cards.forEach(({ el, col: c }, i) => {
-        if (!wanted(c, top(el, c) + ty(c), el.offsetHeight)) park(el, i);
+        const want = wanted(c, top(el, c) + ty(c), el.offsetHeight);
+        // A pre-parked card that is not wanted is parked without ever being
+        // rendered; one that is wanted renders now, while the wall is held.
+        if (!want) {
+          if ('preparked' in el.dataset) { el.dataset.parked = ''; note('park', i); }
+          else park(el, i);
+        }
+        delete el.dataset.preparked;
       });
       wall.classList.remove('wall-measure');
       await new Promise((ok) => requestAnimationFrame(() => requestAnimationFrame(ok)));
-      revealOnScreen();
       if (reduce() || !runway) return live();
       // Each live card fades in over the same 800ms from a random moment in
-      // the first 900ms; the loop starts once the last one and the runway's
-      // own rise (1.6s) are done.
+      // the first 900ms; the loop starts once every card is in place and the
+      // runway's own rise (1.6s) is done.
       let end = 1600;
       cards.forEach(({ el }) => {
         if (isParked(el)) return;
@@ -551,9 +579,16 @@ const entryCount = perEntry.filter((l) => l.length).length;
         el.style.setProperty('--fade-delay', `${delay}ms`);
         el.dataset.intro = '';
         end = Math.max(end, delay + 800);
+        // Its screen's steps start once its own fade is done (founder,
+        // 2026-10-05), if it is on screen; the rest start as they enter.
+        const r = el.getBoundingClientRect();
+        if (r.bottom > 0 && r.top < innerHeight && r.right > 0 && r.left < innerWidth) {
+          setTimeout(() => el.classList.add('is-visible'), delay + 800);
+        }
       });
       wall.classList.add('wall-fading');
       wall.classList.remove('wall-hold');
+      performance.mark('wall-fade-in');
       setTimeout(() => { cards.forEach(({ el }) => delete el.dataset.intro); live(); }, end);
     };
     if (document.readyState === 'complete') start(); else addEventListener('load', start);

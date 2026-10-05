@@ -93,7 +93,8 @@ const ogImage = new URL('/img/og-placeholder.png', Astro.site ?? site.url).href;
 
     <script>
       // Reveal on scroll.
-      const revealEls = document.querySelectorAll<HTMLElement>('.reveal');
+      // The home wall reveals its own cards (MockWall), after each one's fade.
+      const revealEls = document.querySelectorAll<HTMLElement>('.reveal:not(.wall-card)');
       if ('IntersectionObserver' in window && revealEls.length) {
         const observer = new IntersectionObserver(
           (entries) => {
