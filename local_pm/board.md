@@ -13,7 +13,8 @@ One row per active plan. If it is not here, it does not exist.
 | Mock wall hero (log: [2026-09-26](logs/2026-09-26.md)) | shipped and live at 2216c9e | Done. Reduced-motion path browser-checked 2026-09-26 |
 | [Mock colour](projects/mock-colour/plans/pilot.md) | shipped and live at 93b069e (2026-09-29) | Done for the pilot pages, the wall and landscape desktop screens. Open: fill the 17 newly widened screens with more of each real app; enlarged-text check on them; Safari untested |
 | [Deep signal hero](projects/deep-signal/plans/hero.md) | shipped and live at e1cba2b (2026-10-05) | Next: carry Deep signal through the sections below the hero |
-| [Menu](projects/menu/plans/menu.md) | built on branch `menu`, not merged (2026-10-05) | Founder review, then merge to main (deploys). Body sections follow ([board](https://claude.ai/artifact/24LAHAxg62vSuuMXHpHjuj)) |
+| [Menu](projects/menu/plans/menu.md) | shipped and live at 76214aa (2026-10-05) | Done. Also shipped: theme switch (freeze, wall softens to 50%, colours morph), wall in 5 filled columns, home without the capability strip and How we work. Body sections follow ([board](https://claude.ai/artifact/24LAHAxg62vSuuMXHpHjuj)) |
+| [Wall culling](projects/wall-cull/specs/wall-cull.md) | spec in progress on `wall-cull` (2026-10-05) | Spec, plan, build, benchmark |
 
 ## Loose tasks
 
