@@ -112,6 +112,12 @@ What isn't in that comment:
   phone screens never stand alone: two of one entry share a tile, in order,
   and an entry's odd last phone screen stays off the wall (it still shows on
   its page). `scripts/verify.mjs` checks every wall phone is in a pair.
+  Since 2026-10-05 cards off screen are parked (`content-visibility: hidden`,
+  size kept) and woken one at a time, at most one change per 100ms tick, with
+  a fade in and a fade out. The duplicate loop set is pre-parked at load. Load
+  order is: held, then a random per-card fade-in, then each card's steps start
+  when its own fade ends, then the drift starts once all are in. Spec:
+  `local_pm/projects/wall-cull/specs/wall-cull.md`.
 
 Full spec: `local_pm/projects/mock-animation/specs/mock-animation.md` (the
 Accounting pilot) and `local_pm/projects/mock-rollout/specs/mock-rollout.md`
