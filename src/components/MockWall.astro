@@ -68,11 +68,15 @@ const perEntryTiles: Tile[][] = perEntry.map((list) => {
 
 // Round-robin across entries so neighbouring tiles come from different
 // projects, until the wall holds SCREENS screens (a pair counts as two).
-// Seven columns: the middle five plus one more on each side, which a normal
-// screen crops, so the wall runs off both edges at any width up to ~3,100px
-// (founder, 2026-09-29). SCREENS keeps about five tiles in each column.
+// Seven column tracks: the middle five plus one more on each side, which a
+// normal screen crops, so the wall runs off both edges at any width up to
+// ~3,100px (founder, 2026-09-29). The two leftmost tracks stay empty since
+// 2026-10-05: they sat behind the copy's scrim at every width up to 3,000px
+// yet held 29% of the wall's elements, which every theme switch restyles
+// (founder). SCREENS keeps about five tiles in each filled column.
 const COLS = 7;
-const SCREENS = 40;
+const EMPTY_COLS = 2;
+const SCREENS = 28;
 const tiles: Tile[] = [];
 let screenCount = 0;
 for (let round = 0; screenCount < SCREENS; round++) {
@@ -91,7 +95,9 @@ const captionFor = (t: Tile) => {
   const steps = t.screens.map((s, i) => ({ i, text: s.caption, isStep: s.isStep })).filter((s) => s.isStep);
   return steps.length ? steps : [{ i: 0, text: t.screens[0].caption }];
 };
-const columns = Array.from({ length: COLS }, (_, c) => tiles.filter((_, i) => i % COLS === c));
+const columns = Array.from({ length: COLS }, (_, c) =>
+  c < EMPTY_COLS ? [] : tiles.filter((_, i) => i % (COLS - EMPTY_COLS) === c - EMPTY_COLS),
+);
 const entryCount = perEntry.filter((l) => l.length).length;
 ---
 

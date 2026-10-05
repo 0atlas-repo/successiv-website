@@ -188,20 +188,36 @@ h1, h2, h3 {
 :root[data-theme="light"] [data-logo="dark"] { display: block; }
 :root[data-theme="light"] [data-logo="light"] { display: none; }
 
-/* Theme switch (founder, 2026-10-05): motion freezes, the browser renders the
-   new theme once off-screen, then cross-fades the two finished frames on the
-   GPU. Benchmarked on an M4: any theme change costs one 43-57ms restyle of the
-   wall's 5,500 elements, so it has to land before the fade, not during it.
-   Fading colours per element was choppy throughout (colour is inherited, so
-   the whole wall restyled every frame). The cards sit in the same place in
-   both themes, so with motion frozen the two frames line up. Without View
-   Transitions the theme just switches. */
+/* Theme switch (founder, 2026-10-05): motion freezes, the wall's runway
+   softens, colours morph to the new theme, the runway comes back. Benchmarked
+   on an M4 GPU. A theme change restyles the wall (3,900 elements) once, and
+   text colour is inherited, so the runway must never take part in the colour
+   fade or the whole wall restyles every frame. Rejected: View Transitions
+   (their snapshot drew the 3D wall wrongly on the founder's machine) and a dip
+   through the background (read as a redraw). The script's timings match. */
+@property --sig-ground { syntax: '<color>'; inherits: true; initial-value: transparent; }
+@property --sig-glow-a { syntax: '<color>'; inherits: true; initial-value: transparent; }
+@property --sig-glow-b { syntax: '<color>'; inherits: true; initial-value: transparent; }
 :root.theme-switching * { animation-play-state: paused !important; }
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation-duration: 400ms;
-  animation-timing-function: var(--ease-brand);
+:root.theme-switching .wall-runway {
+  color: var(--color-fg);
+  --sig-ground: transparent;
+  --sig-glow-a: transparent;
+  --sig-glow-b: transparent;
+  will-change: opacity;
+  transition: opacity 200ms var(--ease-brand) !important;
 }
+:root.theme-soft .wall-runway { opacity: 0.3; }
+:root.theme-fade,
+:root.theme-fade *:not(.wall-runway, .wall-runway *),
+:root.theme-fade *:not(.wall-runway, .wall-runway *)::before,
+:root.theme-fade *:not(.wall-runway, .wall-runway *)::after {
+  transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, box-shadow, --sig-ground, --sig-glow-a, --sig-glow-b !important;
+  transition-duration: 400ms !important;
+  transition-timing-function: var(--ease-brand) !important;
+  transition-delay: 0s !important;
+}
+
 
 /* ---------- Hero wash ----------
    Cyan/navy bloom. Rebalanced in light mode or it turns muddy.

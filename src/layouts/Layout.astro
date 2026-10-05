@@ -163,17 +163,23 @@ const ogImage = new URL('/img/og-placeholder.png', Astro.site ?? site.url).href;
         syncControls();
       }
 
-      // Switching freezes motion, lets the browser render the new theme
-      // off-screen, then cross-fades the two frames (founder, 2026-10-05).
-      // See the Theme switch note in global.css for why.
+      // Switching freezes motion, softens the wall, morphs the colours, then
+      // brings the wall back (founder, 2026-10-05). See the Theme switch note
+      // in global.css; the timings below match it.
+      let timers: number[] = [];
+      const later = (ms: number, fn: () => void) => timers.push(window.setTimeout(fn, ms));
       function change(mode: string) {
-        const doc = document as Document & { startViewTransition?: (cb: () => void) => { finished: Promise<void> } };
-        if (!doc.startViewTransition || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
           apply(mode);
           return;
         }
-        root.classList.add('theme-switching');
-        doc.startViewTransition(() => apply(mode)).finished.finally(() => root.classList.remove('theme-switching'));
+        timers.forEach(clearTimeout);
+        timers = [];
+        root.classList.remove('theme-fade');
+        root.classList.add('theme-switching', 'theme-soft');
+        later(200, () => { root.classList.add('theme-fade'); apply(mode); });
+        later(350, () => root.classList.remove('theme-soft'));
+        later(700, () => root.classList.remove('theme-fade', 'theme-switching'));
       }
 
       document.querySelectorAll('[data-theme-toggle]').forEach((el) => {
