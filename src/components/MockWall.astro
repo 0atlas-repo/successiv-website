@@ -102,6 +102,9 @@ const entryCount = perEntry.filter((l) => l.length).length;
 ---
 
 <section class="wall relative isolate overflow-hidden">
+  <!-- Hold the wall before first paint; the script below releases it. With no
+       script nothing is held. -->
+  <script is:inline>document.currentScript.parentElement.classList.add('wall-hold');</script>
   <div class="wall-runway">
   <div class="wall-stage" role="img" aria-label={`Screens from ${entryCount} things we have built`}>
     {columns.map((col, c) => (
@@ -251,6 +254,12 @@ const entryCount = perEntry.filter((l) => l.length).length;
     gap: 44px;
     padding-bottom: 44px;
   }
+  /* Load (founder, 2026-10-05): the wall is held, runway invisible and drift
+     still, while the script pre-renders it (fonts, measuring, parking off-screen
+     cards); then the runway fades in, then the loop starts. */
+  .wall-hold .wall-runway,
+  .wall-hold .wall-drift,
+  .wall-fading .wall-drift { animation-play-state: paused; }
   /* Entrance: the runway rises out of the ground, then the copy follows. */
   @keyframes runway-in {
     from { opacity: 0; scale: 0.9; }
@@ -271,14 +280,15 @@ const entryCount = perEntry.filter((l) => l.length).length;
   /* Culling (founder, 2026-10-05; script below). A parked card keeps its
      measured size through contain-intrinsic-size, so the column and the loop
      seam never move. Waiting is a woken card held invisible until it crosses
-     into view; arriving rises in; leaving fades out before it is parked. None
+     into view; arriving fades in (fade only, founder's call); leaving fades
+     out before it is parked. None
      of these touch .wall-runway, whose opacity the theme switch owns. */
   .wall-card[data-parked] { content-visibility: hidden; }
   .wall-card[data-state='waiting'] { opacity: 0; transition: none; }
   .wall-card[data-state='arriving'] { animation: wall-arrive 500ms var(--ease-brand) both; transition: none; }
   .wall-card[data-state='leaving'] { opacity: 0; transition: opacity 400ms var(--ease-brand); }
   @keyframes wall-arrive {
-    from { opacity: 0; transform: translateY(14px) scale(0.97); }
+    from { opacity: 0; }
   }
 
   .wall-shot {
@@ -366,6 +376,12 @@ const entryCount = perEntry.filter((l) => l.length).length;
   if (wall) {
     const TICK = 100, TRAIL = 40, LEAD = 40; // LEAD is added to the card's own height
     const LEAVE = 400, ARRIVE = 500, WRAP = 0.05; // ms; ms; share of a loop
+    // A woken card waits, invisible, until its leading edge is this many card
+    // heights past the entry edge, so its arrival plays in view rather than
+    // under the runway's far-end fade (founder, 2026-10-05: "couldn't see new
+    // screens being added"). A column that shows little of itself (the right-
+    // most, at 1440 about one card) arrives a third of the way in instead.
+    const ARRIVE_AT = 1.2;
     const reduce = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
     type Col = { drift: HTMLElement; lo: number; hi: number; dir: number; P: number };
     const cols = [...wall.querySelectorAll<HTMLElement>('.wall-drift')]
@@ -388,10 +404,13 @@ const entryCount = perEntry.filter((l) => l.length).length;
       live: () => cards.filter((k) => !isParked(k.el)).length,
       liveEls: () => total - cards.reduce((n, k) => n + (isParked(k.el) ? k.els : 0), 0),
       log,
+      cols,
     };
 
-    // Before calibration (the runway rises for 1.6s) show what is on screen.
-    cards.forEach(({ el }) => {
+    // Mark what is on screen, which starts those screens' steps; done as the
+    // runway fades in, so no step plays while the wall is held.
+    const revealOnScreen = () => cards.forEach(({ el }) => {
+      if (isParked(el)) return;
       const r = el.getBoundingClientRect();
       if (r.bottom > 0 && r.top < innerHeight && r.right > 0 && r.left < innerWidth) el.classList.add('is-visible');
     });
@@ -400,6 +419,17 @@ const entryCount = perEntry.filter((l) => l.length).length;
     // intersect the wall and the viewport's width. Cards flow in the drift's
     // direction: reversed (translateY rising) enters at lo and leaves at hi.
     let ready = false;
+    // After a resize, parked cards still hold the size they were parked at,
+    // which is wrong across the 767px breakpoint (tiles go from 420 to 340px)
+    // and moved the loop seam by up to 340px (measured). Unpark, measure and
+    // re-park them in one task: the browser never paints in between, and every
+    // one of them is off screen.
+    const remeasure = () => {
+      const parked = cards.filter((k) => isParked(k.el)).map((k) => k.el);
+      parked.forEach((el) => { el.style.containIntrinsicSize = ''; delete el.dataset.parked; });
+      const sizes = parked.map((el) => `${el.offsetWidth}px ${el.offsetHeight}px`);
+      parked.forEach((el, i) => { el.style.containIntrinsicSize = sizes[i]; el.dataset.parked = ''; });
+    };
     const calibrate = () => {
       const w = wall.getBoundingClientRect();
       cols.forEach((c) => {
@@ -462,7 +492,7 @@ const entryCount = perEntry.filter((l) => l.length).length;
           if (now - Number(el.dataset.at) > LEAVE && done < 0) done = i;
         } else if (state === 'arriving') {
           if (now - Number(el.dataset.at) > ARRIVE) delete el.dataset.state;
-        } else if (inWin && state === 'waiting') {
+        } else if (state === 'waiting' && (c.dir > 0 ? y + h - c.lo : c.hi - y) > Math.min(h * ARRIVE_AT, (c.hi - c.lo) / 3)) {
           el.classList.add('is-visible');
           el.dataset.state = 'arriving';
           el.dataset.at = String(now);
@@ -483,11 +513,31 @@ const entryCount = perEntry.filter((l) => l.length).length;
       }
     }, TICK);
 
-    // Calibrate once the runway has settled, and again after a resize.
-    const start = () => setTimeout(calibrate, reduce() ? 0 : 1700);
+    // Load: pre-render while held, fade in, then start the loop. Parking at
+    // this point is all at once: nothing on the wall is visible yet. The
+    // runway is still at its entrance scale, so the stretch is re-measured once
+    // the loop starts.
+    const runway = wall.querySelector<HTMLElement>('.wall-runway');
+    const live = () => { wall.classList.remove('wall-hold', 'wall-fading'); calibrate(); };
+    const start = async () => {
+      await document.fonts?.ready;
+      calibrate();
+      cards.forEach(({ el, col: c }, i) => {
+        if (!wanted(c, top(el, c) + ty(c), el.offsetHeight)) park(el, i);
+      });
+      await new Promise((ok) => requestAnimationFrame(() => requestAnimationFrame(ok)));
+      revealOnScreen();
+      if (reduce() || !runway) return live();
+      // Screens' step animations bubble up through the runway too.
+      runway.addEventListener('animationend', (e) => { if (e.target === runway && e.animationName === 'runway-in') live(); });
+      wall.classList.add('wall-fading');
+      wall.classList.remove('wall-hold');
+    };
     if (document.readyState === 'complete') start(); else addEventListener('load', start);
+    // Never leave the wall held if anything above fails.
+    setTimeout(() => { if (wall.matches('.wall-hold, .wall-fading')) live(); }, 4000);
     let rz = 0;
-    addEventListener('resize', () => { clearTimeout(rz); rz = window.setTimeout(() => ready && calibrate(), 250); });
+    addEventListener('resize', () => { clearTimeout(rz); rz = window.setTimeout(() => { if (ready) { remeasure(); calibrate(); } }, 250); });
   }
 
   // Replay one on-screen card's steps at a time. Cards in the bottom third sit
