@@ -163,23 +163,17 @@ const ogImage = new URL('/img/og-placeholder.png', Astro.site ?? site.url).href;
         syncControls();
       }
 
-      // Switching freezes motion, then fades colours to the new theme; the
-      // wall's runway dims across the change instead (founder, 2026-10-05).
-      // It replaced a circle wash whose page snapshot made the drifting wall
-      // jump and snap back. Timings match global.css.
-      let timers: number[] = [];
+      // Switching freezes motion, lets the browser render the new theme
+      // off-screen, then cross-fades the two frames (founder, 2026-10-05).
+      // See the Theme switch note in global.css for why.
       function change(mode: string) {
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const doc = document as Document & { startViewTransition?: (cb: () => void) => { finished: Promise<void> } };
+        if (!doc.startViewTransition || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
           apply(mode);
           return;
         }
-        timers.forEach(clearTimeout);
-        root.classList.add('theme-switching', 'theme-dim');
-        timers = [
-          window.setTimeout(() => apply(mode), 180),
-          window.setTimeout(() => root.classList.remove('theme-dim'), 260),
-          window.setTimeout(() => root.classList.remove('theme-switching'), 700),
-        ];
+        root.classList.add('theme-switching');
+        doc.startViewTransition(() => apply(mode)).finished.finally(() => root.classList.remove('theme-switching'));
       }
 
       document.querySelectorAll('[data-theme-toggle]').forEach((el) => {
