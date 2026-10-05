@@ -205,6 +205,8 @@ const entryCount = perEntry.filter((l) => l.length).length;
     /* A halo of the ground, so a runway caption drifting under the end of the
        first line never reads through it. */
     text-shadow: 0 0 10px var(--sig-ground), 0 0 28px var(--sig-ground), 0 0 52px var(--sig-ground);
+    /* Fades back after a theme switch, which turns it off (global.css). */
+    transition: text-shadow 250ms var(--ease-brand);
   }
   /* Gradient text is clipped to its glyphs, so a shadow would paint over the
      gradient. The second line ends well short of the runway anyway. */

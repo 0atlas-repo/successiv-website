@@ -208,6 +208,10 @@ h1, h2, h3 {
   transition: opacity 200ms var(--ease-brand) !important;
 }
 :root.theme-soft .wall-runway { opacity: 0.3; }
+/* The headline's halo only guards against runway captions drifting behind it.
+   Mid-morph its colour stood out as a ring round the first line, so it leaves
+   with the softened runway and returns after. */
+:root.theme-switching .wall-h1 { text-shadow: none !important; }
 :root.theme-fade,
 :root.theme-fade *:not(.wall-runway, .wall-runway *),
 :root.theme-fade *:not(.wall-runway, .wall-runway *)::before,
