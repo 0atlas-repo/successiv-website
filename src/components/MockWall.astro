@@ -593,12 +593,12 @@ const entryCount = perEntry.filter((l) => l.length).length;
       await new Promise((ok) => requestAnimationFrame(() => requestAnimationFrame(ok)));
       if (reduce() || !runway) return live();
       // Each live card fades in over the same 800ms (only when it starts
-      // varies; founder, 2026-10-05), starting between 400 and 2900ms. The window is cut into one slot per card, dealt in random
+      // varies; founder, 2026-10-05), starting between 400 and 2000ms. The window is cut into one slot per card, dealt in random
       // order with a random moment inside each, so starts never bunch (pure
       // random put 6 of 34 in the first 300ms at 2560px; founder, 2026-10-06).
       // The loop starts once every card is in place and the runway's own rise
       // (1.6s) is done.
-      const FADE_FROM = 400, FADE_TO = 2900;
+      const FADE_FROM = 400, FADE_TO = 2000;
       const shown = cards.filter(({ el }) => !isParked(el));
       const slots = shown.map((_, i) => i);
       for (let i = slots.length - 1; i > 0; i--) {
