@@ -115,8 +115,12 @@ What isn't in that comment:
   Since 2026-10-05 cards off screen are parked (`content-visibility: hidden`,
   size kept) and woken one at a time, at most one change per 100ms tick, with
   a fade in and a fade out. The duplicate loop set is pre-parked at load. Load
-  order is: held, then a random per-card fade-in, then each card's steps start
-  when its own fade ends, then the drift starts once all are in. Spec:
+  order is: held, then a per-card fade-in, then each card's steps start
+  when its own fade ends, then the drift starts once all are in. Since
+  2026-10-06 fade starts are evenly spaced over 400–2900ms (one slot per live
+  card, random order; pure random bunched on wide screens), so the intro runs
+  ~3.7s, and a card rises 36px as it fades — 800ms on load, 600ms when it
+  drifts in later. Spec:
   `local_pm/projects/wall-cull/specs/wall-cull.md`.
 
 Full spec: `local_pm/projects/mock-animation/specs/mock-animation.md` (the
