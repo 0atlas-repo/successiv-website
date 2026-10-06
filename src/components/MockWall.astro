@@ -280,7 +280,7 @@ const entryCount = perEntry.filter((l) => l.length).length;
     from { scale: 0.9; }
   }
   @keyframes copy-in {
-    from { opacity: 0; transform: translateY(18px); }
+    from { opacity: 0; transform: translateY(36px); }
   }
   .wall-copy .pointer-events-auto > * { animation: copy-in 900ms var(--ease-brand) both; }
   .wall-copy .pointer-events-auto > :nth-child(2) { animation-delay: 120ms; }
@@ -295,7 +295,7 @@ const entryCount = perEntry.filter((l) => l.length).length;
   /* Culling (founder, 2026-10-05; script below). A parked card keeps its
      measured size through contain-intrinsic-size, so the column and the loop
      seam never move. Waiting is a woken card held invisible until it crosses
-     into view; arriving fades in and rises 18px (founder, 2026-10-06); leaving fades
+     into view; arriving fades in and rises 36px (founder, 2026-10-06); leaving fades
      out before it is parked. None
      of these touch .wall-runway, whose opacity the theme switch owns. */
   .wall-card[data-parked] { content-visibility: hidden; }
@@ -305,11 +305,11 @@ const entryCount = perEntry.filter((l) => l.length).length;
   /* Explicit end: during the intro the card is not yet .is-visible, whose base
      opacity is 0. */
   @keyframes wall-intro {
-    from { opacity: 0; transform: translateY(18px); }
+    from { opacity: 0; transform: translateY(36px); }
     to { opacity: 1; transform: none; }
   }
   @keyframes wall-arrive {
-    from { opacity: 0; transform: translateY(18px); }
+    from { opacity: 0; transform: translateY(36px); }
   }
 
   .wall-shot {
