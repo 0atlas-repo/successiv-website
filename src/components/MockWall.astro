@@ -595,12 +595,12 @@ const entryCount = perEntry.filter((l) => l.length).length;
       await new Promise((ok) => requestAnimationFrame(() => requestAnimationFrame(ok)));
       if (reduce() || !runway) return live();
       // Each live card fades in over the same 800ms from a random moment in
-      // the first 900ms; the loop starts once every card is in place and the
+      // the first 2900ms; the loop starts once every card is in place and the
       // runway's own rise (1.6s) is done.
       let end = 1600;
       cards.forEach(({ el }) => {
         if (isParked(el)) return;
-        const delay = rand(0, 900);
+        const delay = rand(0, 2900);
         el.style.setProperty('--fade-delay', `${delay}ms`);
         el.dataset.intro = '';
         end = Math.max(end, delay + 800);
@@ -617,7 +617,7 @@ const entryCount = perEntry.filter((l) => l.length).length;
     };
     if (document.readyState === 'complete') start(); else addEventListener('load', start);
     // Never leave the wall held if anything above fails.
-    setTimeout(() => { if (wall.matches('.wall-hold, .wall-fading')) live(); }, 4000);
+    setTimeout(() => { if (wall.matches('.wall-hold, .wall-fading')) live(); }, 6000);
     let rz = 0;
     addEventListener('resize', () => { clearTimeout(rz); rz = window.setTimeout(() => { if (ready) { remeasure(); calibrate(); } }, 250); });
   }
