@@ -267,8 +267,9 @@ const entryCount = perEntry.filter((l) => l.length).length;
   .wall-fading .wall-drift { animation-play-state: paused; }
   .wall-hold .wall-card { opacity: 0; }
   .wall-hold .wall-card[data-preparked] { content-visibility: hidden; }
-  /* Wall cards fade only: the page-wide .reveal rise would shift each card
-     after its fade. */
+  /* The page-wide .reveal rise is off: it would shift each card after its
+     fade. Wall cards rise inside their own fade instead (wall-intro,
+     wall-arrive). */
   .wall-card.reveal { transform: none; }
   /* Measured at full size while held, so the loop starts with nothing to wake. */
   .wall-measure .wall-runway { animation: none !important; }
@@ -294,7 +295,7 @@ const entryCount = perEntry.filter((l) => l.length).length;
   /* Culling (founder, 2026-10-05; script below). A parked card keeps its
      measured size through contain-intrinsic-size, so the column and the loop
      seam never move. Waiting is a woken card held invisible until it crosses
-     into view; arriving fades in (fade only, founder's call); leaving fades
+     into view; arriving fades in and rises 18px (founder, 2026-10-06); leaving fades
      out before it is parked. None
      of these touch .wall-runway, whose opacity the theme switch owns. */
   .wall-card[data-parked] { content-visibility: hidden; }
@@ -304,11 +305,11 @@ const entryCount = perEntry.filter((l) => l.length).length;
   /* Explicit end: during the intro the card is not yet .is-visible, whose base
      opacity is 0. */
   @keyframes wall-intro {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: none; }
   }
   @keyframes wall-arrive {
-    from { opacity: 0; }
+    from { opacity: 0; transform: translateY(18px); }
   }
 
   .wall-shot {
