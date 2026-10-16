@@ -43,7 +43,7 @@ export const capabilities: Capability[] = [
   {
     num: '05',
     title: 'Tools inside software you own',
-    body: 'Line-of-business apps in Microsoft 365 and SharePoint, so staff are not asked for another login.',
+    body: 'Line-of-business apps in Microsoft 365 and SharePoint, so staff keep the login they already have.',
   },
   {
     // Said "operations portals" until 2026-09-18. The ops work is an assistant

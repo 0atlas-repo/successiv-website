@@ -13,7 +13,7 @@ export const site = {
   legacyTagline: 'Business and intelligence, applied successively.',
 
   description:
-    'Successiv builds AI software for commerce, identity, finance, and operations. We also connect that software to the systems you already use, because an assistant that cannot see stock or a check that never reaches the CRM does not help anyone.',
+    'Successiv builds AI software for commerce, identity, finance, and operations — and wires it into the systems you already run. An assistant that cannot see stock, or a check that never reaches the CRM, does not help anyone.',
 
   parent: { name: '0atlas', url: 'https://0atlas.com' },
 
@@ -44,14 +44,14 @@ export const site = {
   ],
 
   teamNote:
-    'A small team of AI developers builds and ships what you see on this site. You talk to the people writing the code.',
+    'A small team of AI developers builds what you see here. You talk to the people writing the code.',
 
   // Carried over from the previous site at the founder's request.
   principles: [
     {
       num: '01',
       title: 'Built against a real workflow',
-      body: 'Every model, agent, and pipeline is measured by what it changes after go-live — not by a benchmark score.',
+      body: 'Every model, agent, and pipeline is judged by what changes after go-live — not by a benchmark score.',
     },
     {
       num: '02',
@@ -61,7 +61,7 @@ export const site = {
     {
       num: '03',
       title: 'You talk to the builders',
-      body: 'No account layer between you and the engineers who ship your code.',
+      body: 'You work with the engineers who ship the code — not an account layer in between.',
     },
   ],
 } as const;

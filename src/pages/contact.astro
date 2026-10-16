@@ -13,7 +13,7 @@ import { site } from '../content/site';
   <PageHero
     kicker="Contact"
     title="Email us what you are building."
-    lede="We will say if a product fits, if it needs custom work, or if we should step aside."
+    lede="We will take it successive — a product, custom work, then the next release."
   />
 
   <section class="py-[90px]">
@@ -21,7 +21,7 @@ import { site } from '../content/site';
       <div class="reveal">
         <h2 class="font-head text-[22px] font-semibold text-fg">Email us</h2>
         <p class="mt-2 max-w-[440px] text-[16px] text-fg-muted">
-          No form on purpose. Mail goes to a person.
+          No form. Your email goes to a person.
         </p>
         <div class="mt-6">
           <Btn href={`mailto:${site.email}`} size="lg">{site.email}</Btn>
@@ -50,16 +50,17 @@ import { site } from '../content/site';
           does not change anything.
         </p>
         <p class="mt-4 max-w-[640px] text-[17px] text-fg-muted">
-          We build and ship our own products, and we take on delivery work when the fit
-          is right. Client work stays confidential — the same discretion you would get —
-          so we show how the systems work instead.
+          We build and ship our own products, and we take on delivery when the fit is right. Client work stays confidential. On this site we show how the systems work.
         </p>
         <p class="mt-4 max-w-[640px] text-[17px] text-fg-muted">
           We scope tightly, ship something usable early, and let each release earn the
           next. That method is in the name.
         </p>
         <p class="mt-8 font-head text-[clamp(18px,2.2vw,22px)] font-medium text-fg">
-          <span class="grad-text">{site.legacyTagline}</span>
+          <span class="grad-text">Success is an event. Successiv is the system.</span>
+        </p>
+        <p class="mt-3 font-head text-[15px] text-fg-subtle">
+          {site.legacyTagline}
         </p>
       </div>
     </div>

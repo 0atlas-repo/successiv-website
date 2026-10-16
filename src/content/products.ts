@@ -96,7 +96,7 @@ const allProducts: Product[] = [
     name: 'Creators Sphere',
     oneLiner: 'Paid brand campaigns for creators: find the work, post it, prove it.',
     problem:
-      'Creator deals still run on DMs and agency threads. A brand can’t easily tell whether the post that went up is the one it paid for.',
+      'Creator deals still run on DMs and agency threads. Brands struggle to tell whether the post that went up is the one they paid for.',
     // 2026-09-24: rebuilt from the shipped app, not from the old copy. See
     // local_pm/research/2026-09-24-creators-sphere-ui-walkthrough.md. There is
     // no balance or payout (the "Paid" status is never written), no slot
@@ -151,7 +151,7 @@ const allProducts: Product[] = [
     // flag without a check, so the page makes no verification claim at all.
     oneLiner: 'Hold identity documents once, and share them only when asked.',
     problem:
-      'The same passport and proof of address get emailed to a dozen counterparties, and every one of them keeps a copy.',
+      'The same passport and proof of address get emailed to a dozen counterparties. Everyone keeps a copy.',
     solution:
       'A holder keeps their documents in one app. A counterparty asks for exactly what it needs with a QR code, and nothing is shared until the holder accepts.',
     steps: [
