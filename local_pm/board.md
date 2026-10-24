@@ -4,7 +4,7 @@ One row per active plan. If it is not here, it does not exist.
 
 | Plan | Status | Next action |
 |---|---|---|
-| [Product-led site build](projects/product-led-site/plans/build.md) | built, awaiting sign-off | Founder review, then enable Pages + DNS |
+| [Product-led site build](projects/product-led-site/plans/build.md) | built, live at successiv.com (2026-10-24) | Founder review |
 | [Capability depth](projects/capability-depth/specs/capability-depth.md) | shipped and live at cb92cd7 | Done. Two products hidden since, see loose tasks |
 | [Mock realism](projects/mock-realism/plans/rollout.md) | shipped and live at 36262da | Done. Three chrome flags open, see the log |
 | [Mock chrome variants](projects/mock-chrome-variants/plans/rollout.md) | shipped and live at c3a86f8 | Done. Founder to eyeball the five shells on the live site |
@@ -39,8 +39,10 @@ One row per active plan. If it is not here, it does not exist.
   contact form forwards to a CRM using a URL taken from the request. Not our repo.
 - Tell the Creators Sphere owner: creatorssphere.sg (double s) does not resolve, so the hello@ address in their footer is dead.
 - Decide whether the three principles get reframed toward buyer value.
-- DECIDE: hosting. Org is on the free plan so private Pages will not serve.
-  Written up now in `docs/DEPLOYMENT.md`, generated from the workflow and verify script.
 - If the repo is ever made public, redact the client mapping table in docs/BRIEF.md first.
 - Replace `public/img/og-placeholder.png` with real Open Graph artwork.
-- Set GitHub Pages source to "GitHub Actions" and point successiv.com DNS at Pages.
+- successiv.com email: add the domain to Hostinger's included email (hPanel → Emails),
+  create ryderlee@ and johnchau@, then swap `TXT v=spf1 -all` at Namecheap for its
+  MX/SPF/DKIM records. Until then the contact addresses on the site bounce.
+- Optional: verify successiv.com for the 0atlas-repo org (org Settings → Pages) so no
+  other account can claim it on Pages.

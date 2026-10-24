@@ -300,11 +300,11 @@ existsSync(join(dist, '.nojekyll'))
   ? pass('.nojekyll present (Pages would otherwise drop _astro/)')
   : fail('.nojekyll missing');
 
-// A CNAME in the output forces the custom domain at the domain root, which
-// breaks the project-page URL. It is kept in deploy/ until the domain is ready.
+// The custom domain lives in the repo's Pages settings. Actions-based deploys
+// ignore a CNAME file, so one in the output would only mislead the next reader.
 existsSync(join(dist, 'CNAME'))
-  ? fail('CNAME is in the build — it will override the project-page URL')
-  : pass('no CNAME in build (correct for the project-page URL)');
+  ? fail('CNAME is in the build — set the domain in Pages settings instead')
+  : pass('no CNAME in build (the domain is set in Pages settings)');
 
 // The whole point of the base path: every asset and internal link must carry it,
 // or the page loads with no CSS. Check what the HTML actually references.

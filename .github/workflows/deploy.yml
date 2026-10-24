@@ -18,6 +18,12 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # Custom domain at the root (see astro.config.mjs and docs/DEPLOYMENT.md).
+    # The domain itself is set in the repo's Pages settings; a CNAME file is
+    # ignored by Actions-based Pages deploys.
+    env:
+      SITE_BASE: /
+      SITE_URL: https://successiv.com
     steps:
       - uses: actions/checkout@v4
 

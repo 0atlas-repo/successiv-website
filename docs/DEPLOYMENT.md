@@ -8,13 +8,14 @@ a log entry from 2026-09-17 saying the options were "written up in
 
 ## Where the site actually is today
 
-**`https://0atlas-repo.github.io/successiv-website/`** — the GitHub project
-page, served under a base path.
+**`https://successiv.com/`** — GitHub Pages with a custom domain, served at the
+domain root, since 2026-10-24. The old project-page URL
+`https://0atlas-repo.github.io/successiv-website/` redirects there.
 
-Not `successiv.com`. The custom domain is the intent, not the state, and the
-build enforces the current shape: `scripts/verify.mjs` **fails** if a `CNAME`
-file reaches `dist/`, because a CNAME would override the project-page URL. See
-the open blocker at the bottom.
+The domain is set in the repository's Pages settings (Settings → Pages → Custom
+domain), not by a `CNAME` file: Actions-based Pages deploys ignore one, and
+`scripts/verify.mjs` **fails** if a `CNAME` reaches `dist/`. DNS is at the
+registrar, Namecheap — see "DNS" at the bottom.
 
 <!-- AUTO-GENERATED: commands -->
 
@@ -53,9 +54,9 @@ project page    SITE_BASE=/successiv-website   SITE_URL=https://0atlas-repo.gith
 custom domain   SITE_BASE=/                    SITE_URL=https://successiv.com
 ```
 
-`.github/workflows/deploy.yml` sets neither, so CI builds with the defaults —
-the project page. Moving to the custom domain is an env change in the workflow
-plus a `CNAME`, not a code change.
+`.github/workflows/deploy.yml` sets both to the custom-domain shape on the build
+job. A local `npm run build` with neither set still builds the project-page
+shape; set both to reproduce what CI ships.
 
 <!-- END AUTO-GENERATED -->
 
@@ -79,7 +80,7 @@ Watch a deploy and confirm it landed:
 ```bash
 gh run list --branch main --limit 1
 gh run watch <run-id> --exit-status
-curl -s -o /dev/null -w '%{http_code}\n' https://0atlas-repo.github.io/successiv-website/
+curl -s -o /dev/null -w '%{http_code}\n' https://successiv.com/
 ```
 
 ## What the build checks before it will ship
@@ -131,7 +132,7 @@ checks are about content, not uptime:
 ```bash
 # every route answers
 for r in / /products/ /work/ /contact/; do
-  curl -s -o /dev/null -w "$r %{http_code}\n" "https://0atlas-repo.github.io/successiv-website$r"
+  curl -s -o /dev/null -w "$r %{http_code}\n" "https://successiv.com$r"
 done
 
 # /about/ and /capabilities/ are redirect stubs (200, meta refresh to /contact/#who and /)
@@ -139,23 +140,28 @@ done
 # the two hidden products are still gone — both must be 404
 for p in leave 1line-ai; do
   curl -s -o /dev/null -w "/products/$p/ %{http_code}\n" \
-    "https://0atlas-repo.github.io/successiv-website/products/$p/"
+    "https://successiv.com/products/$p/"
 done
 ```
 
-## Open blocker: hosting
+## DNS
 
-Recorded on `local_pm/board.md`, unresolved, and the reason the custom domain is
-not live:
+`successiv.com` is registered at Namecheap and uses Namecheap's own nameservers
+(`dns1/dns2.registrar-servers.com`) since 2026-10-24. The website records:
 
-**The organisation is on the free GitHub plan, so Pages will not serve a private
-repository.** Until that is settled one way or the other, the site is served
-from the project-page URL.
+```
+A      @    185.199.108.153  185.199.109.153  185.199.110.153  185.199.111.153
+AAAA   @    2606:50c0:8000::153  2606:50c0:8001::153  2606:50c0:8002::153  2606:50c0:8003::153
+CNAME  www  0atlas-repo.github.io.
+```
 
-Two steps remain once it is:
+`www` redirects to the apex. Mail is separate: until a mail service is set up for
+the domain, `TXT @ v=spf1 -all` stays in place so nobody can send as successiv.com.
 
-1. Set the Pages source to "GitHub Actions" in repository settings.
-2. Point `successiv.com` DNS at Pages, set `SITE_BASE=/` and
-   `SITE_URL=https://successiv.com` in `deploy.yml`, and add a `CNAME` — which
-   also means relaxing the `CNAME` assertion in `scripts/verify.mjs`, since it
-   currently fails the build on exactly that file.
+Check what the domain resolves to:
+
+```bash
+dig +short successiv.com A
+dig +short www.successiv.com CNAME
+gh api repos/0atlas-repo/successiv-website/pages --jq '{cname, https_enforced}'
+```

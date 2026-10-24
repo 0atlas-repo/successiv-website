@@ -143,11 +143,12 @@ a change.
 
 Astro + Tailwind v4 + TypeScript, static output, deployed to GitHub Pages.
 
-Live today at `https://0atlas-repo.github.io/successiv-website/`, the project
-page. **Not** `successiv.com` — that is the intent, not the state, and
-`scripts/verify.mjs` fails the build if a `CNAME` reaches `dist/`, because a
-CNAME would override the project-page URL. Deployment, the two env shapes, the
-rollback procedure and the open hosting blocker are in `docs/DEPLOYMENT.md`.
+Live at `https://successiv.com/` since 2026-10-24, served at the domain root
+(`SITE_BASE=/`, set in `.github/workflows/deploy.yml`). The old project-page URL
+`0atlas-repo.github.io/successiv-website/` redirects there. DNS is at Namecheap;
+the domain is set in the repo's Pages settings, not by a `CNAME` file, and
+`scripts/verify.mjs` still fails the build if one reaches `dist/`. Deployment,
+the two env shapes and the rollback procedure are in `docs/DEPLOYMENT.md`.
 
 `docs/BUILD.md` suggests Next.js; Astro was chosen instead because the existing
 work at `successiv.com/rebuild/` was already Astro with the brand tokens in
