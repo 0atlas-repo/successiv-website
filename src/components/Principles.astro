@@ -1,10 +1,21 @@
 ---
 import { site } from '../content/site';
 import SectionHead from './SectionHead.astro';
+
+interface Props {
+  kicker?: string;
+  title?: string;
+  lede?: string;
+}
+const {
+  kicker = '01 — How we work',
+  title = 'How we work',
+  lede = site.principlesLede,
+} = Astro.props;
 ---
 <section id="approach" class="border-t border-line py-[100px]">
   <div class="mx-auto max-w-[1180px] px-6">
-    <SectionHead kicker="02 — Approach" title="How we work." />
+    <SectionHead kicker={kicker} title={title} lede={lede} />
     <div class="grid gap-6 md:grid-cols-3">
       {site.principles.map((p) => (
         <article class="reveal rounded-[16px] border border-line surface-card p-8 transition-all duration-300 hover:-translate-y-1 hover:border-action/40">
@@ -12,7 +23,9 @@ import SectionHead from './SectionHead.astro';
             {p.num}
           </div>
           <h3 class="mb-2.5 font-head text-[19px] font-semibold text-fg md:min-h-[2lh]">{p.title}</h3>
-          <p class="text-[15px] text-fg-muted">{p.body}</p>
+          {'body' in p && p.body && (
+            <p class="text-[15px] text-fg-muted">{p.body}</p>
+          )}
         </article>
       ))}
     </div>

@@ -1,23 +1,20 @@
 ---
 import { withBase } from '../base';
-import { featuredWork } from '../content/work';
+import { homeWork } from '../content/work';
 import WorkMock from './mocks/WorkMock.astro';
 import SectionHead from './SectionHead.astro';
 import Btn from './Btn.astro';
-
-// Home page shows two; /work shows all four in full.
-const shown = featuredWork.slice(0, 2);
 ---
 <section class="border-t border-line py-[100px]">
   <div class="mx-auto max-w-[1180px] px-6">
     <SectionHead
       kicker="02 — Selected work"
-      title="Delivery work we can show without naming clients."
-      lede="Engagements stay under NDA. We publish the shape of the system — the problem, how we approached it, and what changed."
+      title="Selected work"
+      lede="The problem, how we approached it, and what changed."
     />
 
     <div class="grid gap-6 md:grid-cols-2">
-      {shown.map((w) => (
+      {homeWork.map((w) => (
         <article class="reveal flex flex-col overflow-hidden rounded-[18px] border border-line surface-card">
           <div class="relative overflow-hidden px-6 pt-6">
             <div class="mock-wash pointer-events-none absolute inset-0" aria-hidden="true"></div>
@@ -27,6 +24,7 @@ const shown = featuredWork.slice(0, 2);
             <span class="font-head text-[11px] uppercase tracking-[0.1em] text-fg-subtle">{w.angle}</span>
             <h3 class="mt-1.5 font-head text-[19px] font-semibold text-fg">{w.title}</h3>
             <p class="mt-2 text-[15px] text-fg-muted">{w.problem}</p>
+            {w.solution && <p class="mt-2 text-[15px] text-fg-muted">{w.solution}</p>}
           </div>
         </article>
       ))}
