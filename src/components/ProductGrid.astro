@@ -3,20 +3,53 @@ import { products } from '../content/products';
 import ProductCard from './ProductCard.astro';
 import SectionHead from './SectionHead.astro';
 
-interface Props { kicker?: string; title?: string; lede?: string }
+interface Props {
+  kicker?: string;
+  title?: string;
+  lede?: string;
+  /** Homepage: KYC + Accounting, then Shopmgr + Creators Sphere underneath. */
+  layout?: 'home' | 'lineup';
+}
 const {
-  kicker = '01 — Products',
-  title = 'Four products we build and operate.',
-  lede = 'Each started as work we kept repeating. Screens on this page are illustrations we drew, not customer data.',
+  kicker,
+  title,
+  lede,
+  layout = 'lineup',
 } = Astro.props;
+
+const bySlug = (slug: string) => {
+  const item = products.find((p) => p.slug === slug);
+  if (!item) throw new Error(`Unknown product slug: ${slug}`);
+  return item;
+};
+const homeLead = ['kyc', 'accounting'].map(bySlug);
+const homeAlso = ['shopmgr', 'creators-sphere'].map(bySlug);
+
+const kickerResolved = kicker ?? (layout === 'home' ? '03 — Products we ship' : '01 — Products');
+const titleResolved = title ?? (layout === 'home' ? 'Products we ship' : 'Four products we build and operate.');
+const ledeResolved = lede ?? (layout === 'home'
+  ? 'Screens on this page are illustrations we drew, not customer data.'
+  : 'Each started as work we kept repeating. Screens on this page are illustrations we drew, not customer data.');
 ---
-<section id="products" class="py-[100px]">
+<section id="products" class:list={['py-[100px]', layout === 'home' && 'border-t border-line']}>
   <div class="mx-auto max-w-[1180px] px-6">
-    <SectionHead kicker={kicker} title={title} lede={lede} />
-    <!-- Two columns all the way up: with four products, a third column leaves one
-         card stranded on its own row. Restore xl:grid-cols-3 if a fifth ships. -->
-    <div class="grid gap-6 md:grid-cols-2">
-      {products.map((p, i) => <ProductCard product={p} index={i} />)}
-    </div>
+    <SectionHead kicker={kickerResolved} title={titleResolved} lede={ledeResolved} />
+    {layout === 'home' ? (
+      <>
+        <div class="grid gap-6 md:grid-cols-2">
+          {homeLead.map((p, i) => <ProductCard product={p} index={i} showSolution />)}
+        </div>
+        <h3 class="reveal mb-6 mt-14 font-head text-[22px] font-semibold text-fg">Also in production</h3>
+        <div class="grid gap-6 md:grid-cols-2">
+          {homeAlso.map((p, i) => <ProductCard product={p} index={i + homeLead.length} />)}
+        </div>
+      </>
+    ) : (
+      /* Two columns all the way up: with four products, a third column leaves one
+         card stranded on its own row. Restore xl:grid-cols-3 if a fifth ships. */
+      <div class="grid gap-6 md:grid-cols-2">
+        {products.map((p, i) => <ProductCard product={p} index={i} />)}
+      </div>
+    )}
   </div>
 </section>

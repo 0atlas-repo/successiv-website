@@ -7,18 +7,18 @@ export const site = {
   url: 'https://successiv.com',
 
   // Product-led positioning, locked with the founder in docs/BRIEF.md.
-  tagline: 'Software that runs the work — and delivery when you need it built.',
+  tagline: 'Software that runs the work — for finance and operations.',
   // Carried over from the previous site, then widened by the founder to name
   // the business half as well as the AI half.
   legacyTagline: 'Business and intelligence, applied successively.',
 
   description:
-    'Successiv builds AI software for commerce, identity, finance, and operations. We also connect that software to the systems you already use, because an assistant that cannot see stock or a check that never reaches the CRM does not help anyone.',
+    'Successiv helps finance and operations businesses succeed. We do it through automation and transformation — we consult, we build, and we ship with our clients.',
 
   parent: { name: '0atlas', url: 'https://0atlas.com' },
 
-  // Real address, taken from the live site. Contact is mailto-only by choice.
-  email: 'ryderlee@successiv.com',
+  // Public contact address. Contact is mailto-only by choice.
+  email: 'admin@successiv.com',
 
   nav: [
     { href: '/products/', label: 'Products' },
@@ -28,7 +28,7 @@ export const site = {
 
   // Decorative only (aria-hidden). Says what a buyer gets, not what we use:
   // "deep tech" and "applied AI" told the reader nothing they could act on.
-  marquee: ['PRODUCTS IN PRODUCTION', 'WIRED TO YOUR SYSTEMS', 'SHIP EARLY, ITERATE', 'PEOPLE ON THE HARD CALLS'],
+  marquee: ['FINANCE AND OPERATIONS', 'TESTED IN THE ENTERPRISE', 'AUTOMATE THE WORK', 'PEOPLE ON THE HARD CALLS'],
 
   // The founder's background is here as a risk signal for a buyer — "this will
   // actually get delivered" — not as a CV. Former employers are described, not
@@ -46,22 +46,24 @@ export const site = {
   teamNote:
     'A small team of AI developers builds and ships what you see on this site. You talk to the people writing the code.',
 
-  // Carried over from the previous site at the founder's request.
+  principlesLede:
+    'We build software that has been tested in the enterprise, and is running there — not a chat wrapper, and not a demo that falls apart in production.',
+
+  // Homepage / contact “How we work” items (Successiv Brand, 2026-11-10).
   principles: [
     {
       num: '01',
-      title: 'Built against a real workflow',
-      body: 'Every model, agent, and pipeline is measured by what it changes after go-live — not by a benchmark score.',
+      title: 'Business success is the goal.',
+      body: 'Automation and transformation are how we get there. We measure the work after go-live, not a model score.',
     },
     {
       num: '02',
-      title: 'Each release should make the next one easier',
-      body: 'We design for the next iteration from day one, so later releases get faster and cheaper, not harder.',
+      title: 'Build against a real pain point.',
+      body: 'We start from the problem in the work, and we connect the software to the systems you already run. A process that never reaches the books does not help anyone.',
     },
     {
       num: '03',
-      title: 'You talk to the builders',
-      body: 'No account layer between you and the engineers who ship your code.',
+      title: 'You talk to the people doing the work.',
     },
   ],
 } as const;

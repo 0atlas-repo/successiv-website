@@ -10,7 +10,6 @@
 // renders its cards twice so the loop is seamless; the copy is inert. Each screen plays its own steps as it fades in, then one on-screen
 // card at a time replays, so the wall keeps moving without every screen
 // animating at once.
-import { withBase } from '../base';
 import { site } from '../content/site';
 import { products } from '../content/products';
 import { work } from '../content/work';
@@ -151,14 +150,14 @@ const entryCount = perEntry.filter((l) => l.length).length;
   <div class="wall-copy pointer-events-none absolute inset-0 z-[2] flex items-center">
     <div class="mx-auto w-full max-w-[1180px] px-6">
       <div class="pointer-events-auto max-w-[800px]">
+        <p class="mb-5 font-head text-[13px] font-semibold uppercase tracking-[0.12em] text-accent">AI for finance and operations</p>
         <h1 class="wall-h1 text-fg">
           Software that runs<br />
           <span class="grad-text">the work.</span>
         </h1>
-        <p class="mt-6 max-w-[460px] text-[17px] text-fg-muted">{site.description}</p>
+        <p class="mt-6 max-w-[580px] text-[17px] text-fg-muted">{site.description}</p>
         <div class="mt-6 flex flex-wrap gap-3">
-          <Btn href={withBase('/products/')}>See products</Btn>
-          <Btn href={withBase('/work/')} variant="ghost">Browse the work</Btn>
+          <Btn href={`mailto:${site.email}`}>Email us what you are trying to fix.</Btn>
         </div>
       </div>
     </div>

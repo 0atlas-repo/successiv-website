@@ -82,7 +82,7 @@ export const work: WorkItem[] = [
     angle: 'Intake, checklist, scoring',
     featured: true,
     problem:
-      'Bids arrive by email and get evaluated off separate spreadsheets. When the result is questioned later, nobody can show what was missing, what was asked, or how the scores were reached.',
+      'Bids arrive by email and get scored on separate spreadsheets. When the result is questioned later, nobody can show what was missing, what was asked, or how the scores were reached.',
     approach:
       'One shared record per bid: what each bidder still owes, questions logged against that bidder, and every evaluator’s scores in one place.',
     outcome:
@@ -108,7 +108,7 @@ export const work: WorkItem[] = [
     angle: 'Lifecycle after award',
     featured: true,
     problem:
-      'Large contracts run for years, and everything filed after signing has to be logged, checked against the contract and tracked to a decision. In email and shared drives, nobody knows a contract’s current state.',
+      'Large contracts run for years. Everything filed after signing has to be logged, checked against the contract, and tracked to a decision. In email and shared drives, nobody knows the current state.',
     approach:
       'Treat the contract as a register of typed, versioned entries, each checked against the sections it relates to, so nothing floats in a folder.',
     outcome:
@@ -133,7 +133,7 @@ export const work: WorkItem[] = [
     angle: 'Assemble, redact, release',
     featured: true,
     problem:
-      'Putting a document pack together means gathering files in several formats, blacking out what can’t go, and doing it by hand every time.',
+      'A document pack means gathering files in several formats, blacking out what cannot go, and doing it by hand every time.',
     approach:
       'A service that merges mixed formats into one ordered PDF, fills template values, masks regions by coordinate, and can lock the result.',
     outcome:
@@ -158,7 +158,7 @@ export const work: WorkItem[] = [
     angle: 'During the incident, and after',
     featured: true,
     problem:
-      'During an incident the right procedure usually exists, in a handbook or a policy library, but nobody has time to search for it while the incident is live.',
+      'The right procedure usually exists in a handbook or policy library, but nobody has time to search for it while the incident is live.',
     approach:
       'An assistant that reads the incident conversation, answers from the indexed procedure library with sources, and proposes the action list.',
     outcome:
@@ -281,3 +281,19 @@ export const work: WorkItem[] = [
 export const featuredWork = work.filter((w) => w.featured);
 export const listedWork = work.filter((w) => !w.featured);
 export const getWork = (slug: string) => work.find((w) => w.slug === slug);
+
+/** Homepage selected-work list. Independent of `featured`, so /work banding stays put. */
+export const homeWorkSlugs = [
+  'tender-rfp-management',
+  'contract-lifecycle',
+  'ops-incident-support',
+  'document-bundling-redaction',
+  'sharepoint-extensions',
+  'scheduling-systems',
+] as const;
+
+export const homeWork = homeWorkSlugs.map((slug) => {
+  const item = work.find((w) => w.slug === slug);
+  if (!item) throw new Error(`Unknown homepage work slug: ${slug}`);
+  return item;
+});
